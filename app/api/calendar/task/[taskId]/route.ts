@@ -2,7 +2,7 @@ import { createClient, getUser } from "@/lib/supabase/server";
 import { generateICS, CalendarEvent } from "@/lib/ics";
 import { NextRequest, NextResponse } from "next/server";
 
-// 🔹 Add this at the very top (just below imports)
+// 🔹 Helper to make a safe filename
 function makeSafeFilename(name: string): string {
     return name
         .toLowerCase()
@@ -14,10 +14,12 @@ function makeSafeFilename(name: string): string {
 
 export async function GET(
     _request: NextRequest,
-    { params }: { params: { taskId: string } }
+    context: { params: Promise<{ taskId: string }> }
 ) {
     try {
-        const rawTaskId = params.taskId;
+        // 🔹 Get taskId from the new context shape
+        const { taskId: rawTaskId } = await context.params;
+
         const taskId = rawTaskId.endsWith(".ics")
             ? rawTaskId.slice(0, -4)
             : rawTaskId;
