@@ -24,20 +24,12 @@ export default function Sidebar() {
   return (
     <aside className="hidden w-60 flex-col border-r border-slate-800/70 bg-slate-950 p-6 md:flex">
       {/* Logo */}
-      <Link href="/dashboard" className="mb-10 flex items-center gap-2 hover:opacity-80 transition-opacity">
-        <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-indigo-500 via-sky-500 to-emerald-400 flex items-center justify-center">
-          <span className="text-xs font-semibold tracking-tight text-slate-950" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
-            CL
-          </span>
-        </div>
-        <div className="flex flex-col leading-none">
-          <span className="text-base font-semibold tracking-tight text-slate-100" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" }}>
-            ClearLaunch
-          </span>
-          <span className="text-xs text-slate-400" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
-            Launch with clarity
-          </span>
-        </div>
+      <Link href="/dashboard" className="mb-10 flex items-center hover:opacity-80 transition-opacity">
+        <img
+          src="/Clearlaunch-logo-light.svg"
+          alt="ClearLaunch"
+          className="h-9 w-auto"
+        />
       </Link>
 
       {/* Main Navigation */}
