@@ -78,6 +78,11 @@ export async function generateTaskContentAction(launchId: string, taskId: string
     launch_date: launch.target_date || new Date().toISOString().split("T")[0],
     launch_category: launch.launch_type || launch.launchType || "Product",
     launch_goal: launch.goal || "Sales",
+    summary:
+      launch.summary ||
+      launch.context_notes ||
+      launch.description ||
+      "A new product launch",
     platforms: launchPlatforms,
   };
 

@@ -188,6 +188,7 @@ export async function submitNewOnboarding(data: NewOnboardingData) {
       launch_date: data.launch_date,
       launch_category: data.launch_type,
       launch_goal: data.goal,
+      summary: data.context_notes || data.launch_description || "A new product launch",
       platforms: data.channels, // Already an array
     };
 
