@@ -117,12 +117,12 @@ export function OnboardingWizard() {
       return;
     }
     setError(null);
-    setStep((prev) => Math.min(2, (prev + 1) as Step));
+    setStep((prev) => Math.min(2, prev + 1) as Step);
   };
 
   const goBack = () => {
     setError(null);
-    setStep((prev) => Math.max(0, (prev - 1) as Step));
+    setStep((prev) => Math.max(0, prev - 1) as Step);
   };
 
   const handleSubmit = () => {
@@ -280,7 +280,7 @@ export function OnboardingWizard() {
                     <div>
                       <p className="text-base font-semibold text-slate-100">{platform.label}</p>
                       <p className="text-sm text-slate-400">
-                        {platform.description || "We’ll suggest best windows and content types."}
+                        {"We'll suggest best windows and content types."}
                       </p>
                     </div>
                     <span

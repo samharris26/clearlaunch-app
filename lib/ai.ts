@@ -390,10 +390,12 @@ export async function generateLaunchPlan(context: LaunchContext): Promise<Launch
         title: task.title || `Task ${index + 1}`,
         description: task.description || "",
         category: task.category || "General",
-        beat_code: task.beat_code || null,
+        beat_code: task.beat_code || "",
         phase: task.phase || beatPhaseMap?.[task.beat_code] || "Pre-launch",
         order: index,
-        platform: task.platforms ? task.platforms.join(', ') : (task.platform || null),
+        platform: task.platforms ? task.platforms.join(', ') : (task.platform || ""),
+        day_offset: task.days_from_launch || 0,
+        outline: task.outline || task.description || "",
         due_date: dueBase.toISOString(),
       };
     });

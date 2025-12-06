@@ -93,7 +93,7 @@ const regionOptions = [
   { value: "Other", label: "Other" },
 ];
 
-const brandStepFields = [
+const brandStepFields: FormField[] = [
   {
     id: "company_name",
     label: "Brand name",
@@ -131,7 +131,7 @@ const brandStepFields = [
   },
 ];
 
-const step2Fields = [
+const step2Fields: FormField[] = [
   {
     id: "launch_description",
     label: "What are you launching?",
@@ -155,7 +155,7 @@ const step2Fields = [
   },
 ];
 
-const step3Fields = [
+const step3Fields: FormField[] = [
   {
     id: "channels",
     label: "What platforms are you using?",
@@ -370,7 +370,7 @@ export default function ConversationalOnboarding({
                         <textarea
                           value={formData[field.id as keyof OnboardingData] as string}
                           onChange={(e) => updateFormData(field.id as keyof OnboardingData, e.target.value)}
-                          placeholder={field.placeholder}
+                          placeholder={'placeholder' in field ? field.placeholder : undefined}
                           rows={3}
                           className="w-full px-3 py-2 border border-slate-300 rounded-md focus:border-cyan-500 focus:outline-none bg-white resize-none"
                         />
@@ -428,7 +428,7 @@ export default function ConversationalOnboarding({
                           type="text"
                           value={formData[field.id as keyof OnboardingData] as string}
                           onChange={(e) => updateFormData(field.id as keyof OnboardingData, e.target.value)}
-                          placeholder={field.placeholder}
+                          placeholder={'placeholder' in field ? field.placeholder : undefined}
                           className="w-full px-3 py-2 border border-slate-300 rounded-md focus:border-cyan-500 focus:outline-none bg-white"
                         />
                       )}
