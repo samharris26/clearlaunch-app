@@ -58,18 +58,24 @@ async function getLaunchContext(
           .filter(Boolean)
       : []);
 
-  return {
-    company_name: profile?.company_name || "Your Company",
-    business_type: profile?.business_type || "Product",
-    brand_description:
-      profile?.brand_description || "A brilliant product ready to launch.",
-    audience_focus:
-      profile?.target_audience ||
-      profile?.audience_focus ||
-      "General audience",
-    tone_of_voice: profile?.tone_of_voice || "Professional",
-    region: profile?.region || "United Kingdom",
-    launch_name: launch.launchName || "Untitled Launch",
-    launch_description:
-      launch.context_notes ||
-      launch.des
+      return {
+        company_name: profile?.company_name || "Your Company",
+        business_type: profile?.business_type || "Product",
+        brand_description:
+          profile?.brand_description || "A brilliant product ready to launch.",
+        audience_focus:
+          profile?.target_audience ||
+          profile?.audience_focus ||
+          "General audience",
+        tone_of_voice: profile?.tone_of_voice || "Professional",
+        region: profile?.region || "United Kingdom",
+        launch_name: launch.launchName || "Untitled Launch",
+        launch_description:
+          launch.context_notes ||
+          launch.description ||
+          "A new product launch",
+        launch_date: launch.target_date || new Date().toISOString().split("T")[0],
+        launch_category: launch.launch_type || launch.launchType || "Product",
+        launch_goal: launch.goal || "Sales",
+        platforms: launchPlatforms,
+      };
