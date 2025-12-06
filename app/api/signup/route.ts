@@ -163,6 +163,90 @@ You're receiving this because you signed up for early access.`,
       console.log("Resend API key not configured, skipping welcome email");
     }
 
+    // Send notification email to admin (non-blocking)
+    const notifyEmail = process.env.SIGNUP_NOTIFY_EMAIL || "signup@clearlaunch.co.uk";
+    if (process.env.RESEND_API_KEY && notifyEmail) {
+      try {
+        const { resend } = await import("@/lib/resend");
+        const fromEmail = process.env.RESEND_FROM_EMAIL || "signup@clearlaunch.co.uk";
+        const signupDate = new Date().toLocaleString("en-GB", {
+          timeZone: "Europe/London",
+          dateStyle: "medium",
+          timeStyle: "short",
+        });
+        
+        await resend.emails.send({
+          from: fromEmail,
+          replyTo: normalizedEmail,
+          to: notifyEmail,
+          subject: `New Early Access Signup: ${normalizedEmail}`,
+          html: `
+            <!DOCTYPE html>
+            <html>
+              <head>
+                <meta charset="utf-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              </head>
+              <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #334155; max-width: 600px; margin: 0 auto; padding: 20px;">
+                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; border-radius: 8px 8px 0 0; text-align: center;">
+                  <h1 style="color: white; margin: 0; font-size: 28px; font-weight: 600;">ClearLaunch</h1>
+                </div>
+                
+                <div style="background: #ffffff; padding: 40px; border: 1px solid #e2e8f0; border-top: none; border-radius: 0 0 8px 8px;">
+                  <h2 style="color: #1e293b; margin-top: 0; font-size: 24px;">New Early Access Signup</h2>
+                  
+                  <p style="color: #64748b; font-size: 16px;">
+                    A new user has signed up for early access to ClearLaunch.
+                  </p>
+                  
+                  <div style="background: #f1f5f9; padding: 20px; border-radius: 6px; margin: 20px 0;">
+                    <p style="margin: 0; color: #1e293b; font-size: 16px; font-weight: 600;">
+                      Email:
+                    </p>
+                    <p style="margin: 8px 0 0 0; color: #0ea5e9; font-size: 18px;">
+                      ${normalizedEmail}
+                    </p>
+                  </div>
+                  
+                  <div style="background: #f1f5f9; padding: 20px; border-radius: 6px; margin: 20px 0;">
+                    <p style="margin: 0; color: #1e293b; font-size: 16px; font-weight: 600;">
+                      Signup Date:
+                    </p>
+                    <p style="margin: 8px 0 0 0; color: #64748b; font-size: 16px;">
+                      ${signupDate}
+                    </p>
+                  </div>
+                  
+                  <div style="margin: 30px 0;">
+                    <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://www.clearlaunch.co.uk'}" 
+                       style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-weight: 600;">
+                      View Dashboard
+                    </a>
+                  </div>
+                </div>
+              </body>
+            </html>
+          `,
+          text: `New Early Access Signup
+
+A new user has signed up for early access to ClearLaunch.
+
+Email: ${normalizedEmail}
+Signup Date: ${signupDate}
+
+View dashboard: ${process.env.NEXT_PUBLIC_APP_URL || 'https://www.clearlaunch.co.uk'}`,
+        });
+        
+        console.log("Notification email sent successfully to:", notifyEmail);
+      } catch (notifyError) {
+        // Log error but don't fail the signup
+        console.error("Failed to send notification email:", notifyError);
+        // Continue - signup was successful even if notification email failed
+      }
+    } else {
+      console.log("Resend API key or SIGNUP_NOTIFY_EMAIL not configured, skipping notification email");
+    }
+
     return NextResponse.json(
       { success: true },
       { headers: getCorsHeaders(req) }
