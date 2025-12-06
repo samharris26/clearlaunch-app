@@ -11,13 +11,23 @@ function getCorsHeaders(req: NextRequest) {
     "https://clearlaunch.co.uk", // Production domain (without www)
   ];
 
-  // Check if origin is in allowed list, or allow all in development
-  const allowedOrigin = 
-    origin && allowedOrigins.includes(origin)
-      ? origin
-      : process.env.NODE_ENV === "development"
-      ? origin || "*"
-      : allowedOrigins[0] || "*";
+  // Check if origin is in allowed list
+  let allowedOrigin: string;
+  if (origin && allowedOrigins.includes(origin)) {
+    // Origin is in allowed list - use it
+    allowedOrigin = origin;
+  } else if (process.env.NODE_ENV === "development") {
+    // In development, allow any origin
+    allowedOrigin = origin || "*";
+  } else {
+    // In production, if origin matches marketing site pattern, allow it
+    if (origin && (origin.includes("clearlaunch.co.uk") || origin.includes("localhost"))) {
+      allowedOrigin = origin;
+    } else {
+      // Default to first allowed origin or allow all (fallback)
+      allowedOrigin = allowedOrigins[0] || "*";
+    }
+  }
 
   return {
     "Access-Control-Allow-Origin": allowedOrigin,
