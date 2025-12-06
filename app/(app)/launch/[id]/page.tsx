@@ -93,7 +93,7 @@ export default async function LaunchDetailPage({ params }: Params) {
         completedTasks={completedTasks}
         totalTasks={totalTasks}
         launchId={launchId}
-        hasTasks={tasks && tasks.length > 0}
+        hasTasks={(tasks?.length ?? 0) > 0}
         health={health}
       />
 
@@ -117,7 +117,7 @@ export default async function LaunchDetailPage({ params }: Params) {
             <GenerateAIPlanButton
               launchId={launchId}
               hasTasks={false}
-              initialAIGenerated={launch.initialAIGenerated || false}
+              initialAIGenerated={Boolean(launch.initialAIGenerated)}
             />
           </div>
         )}

@@ -111,7 +111,7 @@ export default function LaunchHeader({
               <GenerateAIPlanButton
                 launchId={launchId}
                 hasTasks={hasTasks}
-                initialAIGenerated={launch.initialAIGenerated || false}
+                initialAIGenerated={Boolean(launch.initialAIGenerated)}
               />
             </div>
           </div>
