@@ -89,10 +89,13 @@ export async function generateTaskContentAction(launchId: string, taskId: string
   const launchTask: LaunchPlanTask = {
     title: task.title ?? "Untitled task",
     description: task.description ?? "",
+    beat_code: task.beat_code ?? "",
+    platform: task.platform ?? "",
+    day_offset: task.day_offset ?? 0,
+    outline: task.outline ?? "",
     category: task.category ?? "General",
     phase: task.phase ?? "Pre-launch",
     order: task.order ?? 0,
-    platform: task.platform ?? undefined,
     due_date: task.due_date ?? undefined,
   };
 
