@@ -36,6 +36,28 @@ interface ConversationalOnboardingProps {
   isSubmitting?: boolean;
 }
 
+type FormFieldWithOptions = {
+  id: keyof OnboardingData;
+  label: string;
+  type: "select" | "multiselect";
+  options: { value: string; label: string }[];
+  required: boolean;
+};
+
+type FormFieldWithoutOptions = {
+  id: keyof OnboardingData;
+  label: string;
+  type: "text" | "textarea" | "date";
+  placeholder?: string;
+  required: boolean;
+};
+
+type FormField = FormFieldWithOptions | FormFieldWithoutOptions;
+
+function hasOptions(field: FormField): field is FormFieldWithOptions {
+  return 'options' in field && Array.isArray(field.options);
+}
+
 const toneOfVoiceOptions = [
   { value: "casual", label: "Casual" },
   { value: "confident", label: "Confident" },
@@ -376,7 +398,7 @@ export default function ConversationalOnboarding({
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent className="w-56 max-h-60 overflow-y-auto">
-                            {field.options?.map((option) => (
+                            {hasOptions(field) && field.options.map((option) => (
                               <DropdownMenuCheckboxItem
                                 key={option.value}
                                 checked={(formData[field.id as keyof OnboardingData] as string[]).includes(option.value)}
@@ -395,7 +417,7 @@ export default function ConversationalOnboarding({
                           className="w-full px-3 py-2 border border-slate-300 rounded-md focus:border-cyan-500 focus:outline-none bg-white"
                         >
                           <option value="">Select {field.label.toLowerCase()}</option>
-                          {field.options?.map((option) => (
+                          {hasOptions(field) && field.options.map((option) => (
                             <option key={option.value} value={option.value}>
                               {option.label}
                             </option>
