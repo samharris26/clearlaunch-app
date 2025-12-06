@@ -77,6 +77,11 @@ async function getLaunchContext(
     launch_date: launch.target_date || new Date().toISOString().split("T")[0],
     launch_category: launch.launch_type || launch.launchType || "Product",
     launch_goal: launch.goal || "Sales",
+    summary:
+      launch.summary ||
+      launch.context_notes ||
+      launch.description ||
+      "A new product launch",
     platforms: launchPlatforms,
   };
 }
@@ -114,19 +119,27 @@ export async function generateContentAction(
   }
 
   // Generate content based on type
+  const taskRequest = {
+    title: task.title || "",
+    description: task.description || null,
+    category: task.category || null,
+    phase: task.phase || null,
+    platform: task.platform || null,
+  };
+
   let result;
   switch (contentType) {
     case "instagram":
-      result = await generateInstagramCopy(context, task.title || "", task.outline || "");
+      result = await generateInstagramCopy(context, taskRequest);
       break;
     case "carousel":
-      result = await generateCarousel(context, task.title || "", task.outline || "");
+      result = await generateCarousel(context, taskRequest);
       break;
     case "reels":
-      result = await generateReelsScript(context, task.title || "", task.outline || "");
+      result = await generateReelsScript(context, taskRequest);
       break;
     case "email":
-      result = await generateEmailCampaign(context, task.title || "", task.outline || "");
+      result = await generateEmailCampaign(context, taskRequest);
       break;
     default:
       throw new Error(`Unsupported content type: ${contentType}`);
