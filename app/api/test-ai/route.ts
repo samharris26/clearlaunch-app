@@ -26,9 +26,11 @@ export async function POST(request: NextRequest) {
       audience_focus: "Developers and tech enthusiasts",
       launch_name: "Test Launch",
       launch_description: "A test product launch",
+      summary: "A test product launch",
       launch_date: "2024-12-01",
       launch_category: "digital",
       launch_goal: "sales",
+      platforms: [],
     };
 
     console.log("Testing AI with context:", testContext);

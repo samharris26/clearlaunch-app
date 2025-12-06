@@ -59,8 +59,8 @@ export default async function LaunchesPage() {
       .select("title, status, order")
       .eq("launchId", launch.id)
       .or("status.eq.active,status.eq.todo,status.eq.in_progress,status.is.null")
-      .order("order", { ascending: true, nullsLast: true })
-      .order("due_date", { ascending: true, nullsLast: true })
+      .order("order", { ascending: true })
+      .order("due_date", { ascending: true })
       .limit(1)
       .maybeSingle();
 
