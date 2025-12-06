@@ -1,20 +1,46 @@
 "use client";
 
 import * as React from "react";
+import { usePathname } from "next/navigation";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
 export function CookieConsent() {
     const [isVisible, setIsVisible] = React.useState(false);
+    const pathname = usePathname();
 
     React.useEffect(() => {
+        // Only show cookie banner on public pages (not in app routes)
+        // App routes are all routes that require authentication
+        if (!pathname) {
+            return; // Wait for pathname to be available
+        }
+
+        const appRoutes = [
+            "/dashboard",
+            "/launches",
+            "/launch",
+            "/profile",
+            "/settings",
+            "/pricing",
+            "/onboarding",
+            "/analytics",
+            "/debug",
+        ];
+
+        const isAppRoute = appRoutes.some(route => pathname.startsWith(route));
+        
+        if (isAppRoute) {
+            return; // Don't show cookie banner in app pages
+        }
+
         // Check if user has already made a choice
         const consent = localStorage.getItem("cookie-consent");
         if (!consent) {
             setIsVisible(true);
         }
-    }, []);
+    }, [pathname]);
 
     const handleAccept = () => {
         localStorage.setItem("cookie-consent", "accepted");
