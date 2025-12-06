@@ -11,35 +11,15 @@ export function CookieConsent() {
     const pathname = usePathname();
 
     React.useEffect(() => {
-        // Only show cookie banner on public pages (not in app routes)
-        // App routes are all routes that require authentication
+        // Don't show cookie banner in the Next.js app
+        // Users come from clearlaunch.co.uk marketing site which handles its own cookie consent
+        // This includes login, sign-up, and all authenticated app routes
         if (!pathname) {
             return; // Wait for pathname to be available
         }
 
-        const appRoutes = [
-            "/dashboard",
-            "/launches",
-            "/launch",
-            "/profile",
-            "/settings",
-            "/pricing",
-            "/onboarding",
-            "/analytics",
-            "/debug",
-        ];
-
-        const isAppRoute = appRoutes.some(route => pathname.startsWith(route));
-        
-        if (isAppRoute) {
-            return; // Don't show cookie banner in app pages
-        }
-
-        // Check if user has already made a choice
-        const consent = localStorage.getItem("cookie-consent");
-        if (!consent) {
-            setIsVisible(true);
-        }
+        // Hide cookie banner on all routes - marketing site handles consent
+        setIsVisible(false);
     }, [pathname]);
 
     const handleAccept = () => {
