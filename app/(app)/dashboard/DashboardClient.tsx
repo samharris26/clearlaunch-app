@@ -3,7 +3,6 @@
 import { useState } from "react";
 import LaunchCardNew from "@/components/dashboard/LaunchCardNew";
 import PromotionalCard from "@/components/dashboard/PromotionalCard";
-import UpgradeModal from "@/components/UpgradeModal";
 import { useUsage } from "@/hooks/useUsage";
 
 type Launch = {
@@ -24,13 +23,10 @@ interface DashboardClientProps {
 
 export default function DashboardClient({ launches }: DashboardClientProps) {
   const { usage, canCreateLaunch, loading } = useUsage();
-  const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
-  const [upgradeType, setUpgradeType] = useState<'launches' | 'ai'>('launches');
 
   const handleCreateLaunch = () => {
     if (!canCreateLaunch) {
-      setUpgradeType('launches');
-      setUpgradeModalOpen(true);
+      window.location.href = '/pricing';
       return;
     }
     // Navigate to create launch page
@@ -108,13 +104,6 @@ export default function DashboardClient({ launches }: DashboardClientProps) {
           </div>
         )}
       </div>
-
-      <UpgradeModal
-        isOpen={upgradeModalOpen}
-        onClose={() => setUpgradeModalOpen(false)}
-        type={upgradeType}
-        currentPlan={usage?.plan || 'free'}
-      />
     </>
   );
 }

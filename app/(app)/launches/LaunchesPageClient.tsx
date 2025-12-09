@@ -5,7 +5,6 @@ import LaunchCardNew from "@/components/dashboard/LaunchCardNew";
 import PromotionalCard from "@/components/dashboard/PromotionalCard";
 import AddLaunchCard from "@/components/dashboard/AddLaunchCard";
 import CTABanner from "@/components/dashboard/CTABanner";
-import UpgradeModal from "@/components/UpgradeModal";
 import { useUsage } from "@/hooks/useUsage";
 import { cn } from "@/lib/utils";
 import { AI_BUTTON_ACTIVE_CLASS } from "@/lib/aiButtonStyles";
@@ -27,13 +26,10 @@ interface LaunchesPageClientProps {
 
 export default function LaunchesPageClient({ launches }: LaunchesPageClientProps) {
   const { usage, canCreateLaunch, launchesRemaining, loading } = useUsage();
-  const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
-  const [upgradeType, setUpgradeType] = useState<'launches' | 'ai'>('launches');
 
   const handleCreateLaunch = () => {
     if (!canCreateLaunch) {
-      setUpgradeType('launches');
-      setUpgradeModalOpen(true);
+      window.location.href = '/pricing';
       return;
     }
     // Navigate to create launch page
@@ -181,13 +177,6 @@ export default function LaunchesPageClient({ launches }: LaunchesPageClientProps
         )}
 
       </div>
-
-      <UpgradeModal
-        isOpen={upgradeModalOpen}
-        onClose={() => setUpgradeModalOpen(false)}
-        type={upgradeType}
-        currentPlan={usage?.plan || 'free'}
-      />
     </>
   );
 }

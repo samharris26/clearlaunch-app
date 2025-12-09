@@ -45,9 +45,9 @@ export default function Sidebar() {
               <Link
                 key={href}
                 href={href}
-                className={`flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm transition-colors ${active
+                className={`flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm transition-colors cursor-pointer ${active
                   ? "bg-[var(--card)] text-[color:var(--heading)] font-semibold border border-[color:var(--border-strong)] shadow-[var(--shadow-subtle)]"
-                  : "text-[color:var(--muted)] hover:text-[color:var(--text)] hover:bg-[color-mix(in_srgb,var(--surface)_85%,transparent)]"
+                  : "text-[color:var(--muted)] hover:text-[color:var(--text)] hover:bg-[color-mix(in_srgb,var(--card)_70%,transparent)]"
                   }`}
                 style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}
               >
@@ -72,17 +72,18 @@ export default function Sidebar() {
           <div className="space-y-1.5">
             {bottomNav.map(({ href, label, icon: Icon }) => {
               const isLogout = href === "/logout";
+              const active = pathname === href || (href !== "/" && pathname?.startsWith(href));
               return (
                 <Link
                   key={href}
                   href={href}
-                  className={`flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm transition-colors ${isLogout
-                    ? "text-[color:var(--muted)] hover:text-[color:var(--text)] hover:bg-[color-mix(in_srgb,var(--surface)_85%,transparent)]"
-                    : "text-[color:var(--muted)] hover:text-[color:var(--text)] hover:bg-[color-mix(in_srgb,var(--surface)_85%,transparent)]"
+                  className={`flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm transition-colors cursor-pointer ${active
+                    ? "bg-[var(--card)] text-[color:var(--heading)] font-semibold border border-[color:var(--border-strong)] shadow-[var(--shadow-subtle)]"
+                    : "text-[color:var(--muted)] hover:text-[color:var(--text)] hover:bg-[color-mix(in_srgb,var(--card)_70%,transparent)]"
                     }`}
                   style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}
                 >
-                  <Icon className="h-4 w-4" />
+                  <Icon className={`h-4 w-4 ${active ? "text-[color:var(--heading)]" : "text-[color:var(--muted)]"}`} />
                   <span>{label}</span>
                 </Link>
               );

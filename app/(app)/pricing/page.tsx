@@ -86,7 +86,7 @@ export default async function PricingPage({
   const showCanceled = params.canceled === "true";
 
   return (
-    <div className="flex flex-col items-center gap-16 py-12 px-4 sm:px-6 lg:px-8 min-h-screen bg-slate-950">
+    <div className="flex flex-col items-center gap-16 py-12 px-4 sm:px-6 lg:px-8 min-h-screen bg-[var(--background)]">
       {/* Background Gradients */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[500px] bg-indigo-500/10 blur-[120px] rounded-full mix-blend-screen" />
@@ -95,10 +95,10 @@ export default async function PricingPage({
 
       {/* Header */}
       <div className="relative z-10 text-center max-w-3xl space-y-4">
-        <h1 className="text-4xl sm:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-slate-50 to-slate-400 tracking-tight">
+        <h1 className="text-4xl sm:text-5xl font-bold text-[color:var(--heading)] tracking-tight" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" }}>
           Choose your plan
         </h1>
-        <p className="text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto">
+        <p className="text-lg sm:text-xl text-[color:var(--muted)] max-w-2xl mx-auto" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
           Start free and upgrade as you grow. All plans include our core features.
         </p>
       </div>
@@ -107,9 +107,9 @@ export default async function PricingPage({
       {showSuccess && (
         <div className="relative z-10 max-w-2xl w-full bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-4 flex items-start gap-3">
           <div className="p-1 bg-emerald-500/20 rounded-full">
-            <Check className="h-4 w-4 text-emerald-400" />
+            <Check className="h-4 w-4 text-emerald-500" />
           </div>
-          <p className="text-emerald-200 text-sm leading-6">
+          <p className="text-emerald-600 dark:text-emerald-400 text-sm leading-6" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
             <strong>Payment successful!</strong> Your plan has been upgraded. You can now access all the features of your new plan.
           </p>
         </div>
@@ -117,9 +117,9 @@ export default async function PricingPage({
       {showCanceled && (
         <div className="relative z-10 max-w-2xl w-full bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 flex items-start gap-3">
           <div className="p-1 bg-amber-500/20 rounded-full">
-            <HelpCircle className="h-4 w-4 text-amber-400" />
+            <HelpCircle className="h-4 w-4 text-amber-500" />
           </div>
-          <p className="text-amber-200 text-sm leading-6">
+          <p className="text-amber-600 dark:text-amber-400 text-sm leading-6" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
             Payment was canceled. No charges were made. You can try again anytime.
           </p>
         </div>
@@ -135,9 +135,9 @@ export default async function PricingPage({
           return (
             <div
               key={plan.name}
-              className={`relative flex flex-col rounded-2xl border p-8 transition-all duration-300 ${isPro
-                  ? 'bg-slate-900/80 border-indigo-500/30 shadow-2xl shadow-indigo-500/10 ring-1 ring-indigo-500/30'
-                  : 'bg-slate-950/50 border-slate-800 hover:border-slate-700 hover:bg-slate-900/50'
+              className={`relative flex flex-col rounded-2xl border border-[color:var(--border)] p-8 transition-all duration-300 ${isPro
+                  ? 'bg-[var(--card)] border-indigo-500/30 shadow-[var(--shadow-soft)] ring-1 ring-indigo-500/30'
+                  : 'bg-[var(--card)] border-[color:var(--border)] hover:border-[color:var(--border-strong)] hover:shadow-[var(--shadow-subtle)]'
                 }`}
             >
               {isPro && (
@@ -149,38 +149,38 @@ export default async function PricingPage({
               {/* Plan Icon & Header */}
               <div className="mb-8">
                 <div className="flex items-center justify-between mb-6">
-                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${isPro ? 'bg-indigo-500/20 text-indigo-300' :
-                      isPower ? 'bg-sky-500/20 text-sky-300' :
-                        'bg-slate-800 text-slate-400'
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${isPro ? 'bg-indigo-500/20 text-indigo-500' :
+                      isPower ? 'bg-sky-500/20 text-sky-500' :
+                        'bg-[color-mix(in_srgb,var(--surface)_90%,transparent)] text-[color:var(--muted)]'
                     }`}>
                     {plan.name === 'Free' && <Crown className="h-6 w-6" />}
                     {plan.name === 'Pro' && <Zap className="h-6 w-6" />}
                     {plan.name === 'Power' && <Sparkles className="h-6 w-6" />}
                   </div>
                   {isCurrentPlan && (
-                    <span className="px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-xs font-medium text-slate-300">
+                    <span className="px-3 py-1 rounded-full bg-[color-mix(in_srgb,var(--surface)_90%,transparent)] border border-[color:var(--border)] text-xs font-medium text-[color:var(--muted)]" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
                       Current
                     </span>
                   )}
                 </div>
 
-                <h3 className="text-2xl font-bold text-slate-100 mb-2">{plan.name}</h3>
-                <p className="text-slate-400 text-sm h-10">{plan.description}</p>
+                <h3 className="text-2xl font-bold text-[color:var(--heading)] mb-2" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" }}>{plan.name}</h3>
+                <p className="text-[color:var(--muted)] text-sm h-10" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>{plan.description}</p>
               </div>
 
               {/* Price */}
               <div className="mb-8 flex items-baseline gap-1">
-                <span className="text-4xl font-bold text-slate-50">{plan.price}</span>
-                <span className="text-slate-500">{plan.period}</span>
+                <span className="text-4xl font-bold text-[color:var(--heading)]" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" }}>{plan.price}</span>
+                <span className="text-[color:var(--muted)]" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>{plan.period}</span>
               </div>
 
               {/* Features */}
               <ul className="space-y-4 mb-8 flex-1">
                 {plan.features.map((feature, featureIndex) => (
-                  <li key={featureIndex} className="flex items-start gap-3 text-sm text-slate-300">
-                    <Check className={`h-5 w-5 flex-shrink-0 ${isPro ? 'text-indigo-400' :
-                        isPower ? 'text-sky-400' :
-                          'text-slate-500'
+                  <li key={featureIndex} className="flex items-start gap-3 text-sm text-[color:var(--text)]" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
+                    <Check className={`h-5 w-5 flex-shrink-0 ${isPro ? 'text-indigo-500' :
+                        isPower ? 'text-sky-500' :
+                          'text-[color:var(--muted)]'
                       }`} />
                     <span>{feature}</span>
                   </li>
@@ -190,23 +190,24 @@ export default async function PricingPage({
               {/* Action Button */}
               <div className="mt-auto">
                 {isCurrentPlan ? (
-                  <button disabled className="w-full py-3 px-6 rounded-xl bg-slate-800/50 border border-slate-800 text-slate-500 font-medium cursor-not-allowed">
+                  <button disabled className="w-full py-3 px-6 rounded-xl bg-[color-mix(in_srgb,var(--surface)_90%,transparent)] border border-[color:var(--border)] text-[color:var(--muted)] font-medium cursor-not-allowed" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
                     Current Plan
                   </button>
                 ) : plan.name === "Free" ? (
-                  <button disabled className="w-full py-3 px-6 rounded-xl bg-slate-900 border border-slate-800 text-slate-500 font-medium cursor-not-allowed hover:bg-slate-800 transition-colors">
+                  <button disabled className="w-full py-3 px-6 rounded-xl bg-[color-mix(in_srgb,var(--surface)_90%,transparent)] border border-[color:var(--border)] text-[color:var(--muted)] font-medium cursor-not-allowed" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
                     Downgrade to Free
                   </button>
                 ) : (
                   <CheckoutButton
                     plan={plan.name.toLowerCase() as "pro" | "power"}
                     currentPlan={currentPlan}
-                    className={`w-full py-3 px-6 rounded-xl font-semibold transition-all duration-200 ${isPro
-                        ? "bg-gradient-to-r from-indigo-600 to-sky-600 text-white hover:from-indigo-500 hover:to-sky-500 shadow-lg shadow-indigo-900/20"
+                    className={`w-full py-3 px-6 rounded-xl font-semibold transition-all duration-200 cursor-pointer ${isPro
+                        ? "bg-gradient-to-r from-indigo-500 to-cyan-500 text-white hover:from-indigo-400 hover:to-cyan-400 shadow-[var(--shadow-subtle)] hover:shadow-[var(--shadow-soft)] hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-[color:var(--background)]"
                         : isPower
-                          ? "bg-sky-600 text-white hover:bg-sky-500 shadow-lg shadow-sky-900/20"
-                          : "bg-slate-100 text-slate-900 hover:bg-white"
+                          ? "bg-gradient-to-r from-sky-500 to-indigo-500 text-white hover:from-sky-400 hover:to-indigo-400 shadow-[var(--shadow-subtle)] hover:shadow-[var(--shadow-soft)] hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 focus:ring-offset-[color:var(--background)]"
+                          : "bg-[color-mix(in_srgb,var(--surface)_90%,transparent)] text-[color:var(--text)] hover:bg-[color-mix(in_srgb,var(--surface)_80%,transparent)] border border-[color:var(--border)]"
                       }`}
+                    style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}
                   >
                     {plan.buttonText}
                   </CheckoutButton>
@@ -219,7 +220,7 @@ export default async function PricingPage({
 
       {/* FAQ Section */}
       <div className="relative z-10 max-w-4xl w-full pt-12 pb-20">
-        <h2 className="text-2xl font-bold text-slate-200 text-center mb-10">
+        <h2 className="text-2xl font-bold text-[color:var(--heading)] text-center mb-10" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" }}>
           Frequently Asked Questions
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
@@ -230,10 +231,10 @@ export default async function PricingPage({
             { q: "Is there a free trial?", a: "Our Free plan is essentially a free trial with no time limit. You can use it indefinitely." }
           ].map((item, i) => (
             <div key={i} className="space-y-3">
-              <h3 className="text-lg font-semibold text-slate-200">
+              <h3 className="text-lg font-semibold text-[color:var(--heading)]" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" }}>
                 {item.q}
               </h3>
-              <p className="text-slate-400 leading-relaxed">
+              <p className="text-[color:var(--muted)] leading-relaxed" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
                 {item.a}
               </p>
             </div>

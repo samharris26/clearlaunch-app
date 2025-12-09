@@ -5,7 +5,6 @@ import { Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { AI_BUTTON_ACTIVE_CLASS, AI_BUTTON_DISABLED_CLASS } from "@/lib/aiButtonStyles";
 import LoadingOverlay from "@/components/LoadingOverlay";
-import UpgradeModal from "@/components/UpgradeModal";
 import { useUsage } from "@/hooks/useUsage";
 import { generateAILaunchPlan } from "./generate-ai-plan/action";
 
@@ -17,7 +16,6 @@ type GenerateAIPlanButtonProps = {
 
 function GenerateAIPlanButton({ launchId, hasTasks, initialAIGenerated }: GenerateAIPlanButtonProps) {
   const [isGenerating, setIsGenerating] = useState(false);
-  const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
   const { usage, canMakeAiCall, aiCallsRemaining } = useUsage();
   const [error, setError] = useState<string | null>(null);
   const [launchInitialAIGenerated, setLaunchInitialAIGenerated] = useState<boolean | null>(initialAIGenerated ?? null);
@@ -47,7 +45,7 @@ function GenerateAIPlanButton({ launchId, hasTasks, initialAIGenerated }: Genera
 
   const handleGenerate = async () => {
     if (!canMakeAiCall) {
-      setUpgradeModalOpen(true);
+      window.location.href = '/pricing';
       return;
     }
 
@@ -64,7 +62,7 @@ function GenerateAIPlanButton({ launchId, hasTasks, initialAIGenerated }: Genera
       const errorMessage = err instanceof Error ? err.message : "Failed to generate plan";
       setError(errorMessage);
       if (errorMessage.includes("limit") || errorMessage.includes("upgrade") || errorMessage.includes("already generated")) {
-        setUpgradeModalOpen(true);
+        window.location.href = '/pricing';
       }
     } finally {
       setIsGenerating(false);
@@ -120,12 +118,6 @@ function GenerateAIPlanButton({ launchId, hasTasks, initialAIGenerated }: Genera
       <>
         <LoadingOverlay show={isGenerating} description="Give us a few seconds while we craft your campaign beats." />
         {renderButton(true)}
-        <UpgradeModal
-          isOpen={upgradeModalOpen}
-          onClose={() => setUpgradeModalOpen(false)}
-          type="ai"
-          currentPlan={usage?.plan || "free"}
-        />
       </>
     );
   }
@@ -139,12 +131,6 @@ function GenerateAIPlanButton({ launchId, hasTasks, initialAIGenerated }: Genera
           {error}
         </p>
       )}
-      <UpgradeModal
-        isOpen={upgradeModalOpen}
-        onClose={() => setUpgradeModalOpen(false)}
-        type="ai"
-        currentPlan={usage?.plan || "free"}
-      />
     </div>
   );
 }
