@@ -1,6 +1,6 @@
 import { getUser, createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import { Check, Zap, Crown, Sparkles, HelpCircle } from "lucide-react";
+import { Check, Zap, Crown, Sparkles, HelpCircle, Clock } from "lucide-react";
 import CheckoutButton from "@/components/CheckoutButton";
 
 const plans = [
@@ -12,8 +12,7 @@ const plans = [
     features: [
       '1 active launch',
       '3 plan regenerations per month',
-      'Manual task changes only',
-      'AI task tools greyed out'
+      'Manual task changes only'
     ],
     current: false,
     recommended: false,
@@ -145,6 +144,12 @@ export default async function PricingPage({
                   Most Popular
                 </div>
               )}
+              {isPower && (
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-[color-mix(in_srgb,var(--surface)_90%,transparent)] border border-[color:var(--border)] rounded-full text-xs font-medium text-[color:var(--muted)] shadow-[var(--shadow-subtle)] flex items-center gap-1.5">
+                  <Clock className="h-3 w-3" />
+                  Coming Soon
+                </div>
+              )}
 
               {/* Plan Icon & Header */}
               <div className="mb-8">
@@ -197,15 +202,17 @@ export default async function PricingPage({
                   <button disabled className="w-full py-3 px-6 rounded-xl bg-[color-mix(in_srgb,var(--surface)_90%,transparent)] border border-[color:var(--border)] text-[color:var(--muted)] font-medium cursor-not-allowed" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
                     Downgrade to Free
                   </button>
+                ) : isPower ? (
+                  <button disabled className="w-full py-3 px-6 rounded-xl bg-[color-mix(in_srgb,var(--surface)_70%,transparent)] border border-[color:var(--border)] text-[color:var(--muted)] font-medium cursor-not-allowed opacity-60" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
+                    Coming Soon
+                  </button>
                 ) : (
                   <CheckoutButton
                     plan={plan.name.toLowerCase() as "pro" | "power"}
                     currentPlan={currentPlan}
                     className={`w-full py-3 px-6 rounded-xl font-semibold transition-all duration-200 cursor-pointer ${isPro
                         ? "bg-gradient-to-r from-indigo-500 to-cyan-500 text-white hover:from-indigo-400 hover:to-cyan-400 shadow-[var(--shadow-subtle)] hover:shadow-[var(--shadow-soft)] hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-[color:var(--background)]"
-                        : isPower
-                          ? "bg-gradient-to-r from-sky-500 to-indigo-500 text-white hover:from-sky-400 hover:to-indigo-400 shadow-[var(--shadow-subtle)] hover:shadow-[var(--shadow-soft)] hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 focus:ring-offset-[color:var(--background)]"
-                          : "bg-[color-mix(in_srgb,var(--surface)_90%,transparent)] text-[color:var(--text)] hover:bg-[color-mix(in_srgb,var(--surface)_80%,transparent)] border border-[color:var(--border)]"
+                        : "bg-[color-mix(in_srgb,var(--surface)_90%,transparent)] text-[color:var(--text)] hover:bg-[color-mix(in_srgb,var(--surface)_80%,transparent)] border border-[color:var(--border)]"
                       }`}
                   >
                     {plan.buttonText}
