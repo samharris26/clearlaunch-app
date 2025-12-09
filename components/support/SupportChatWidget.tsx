@@ -10,6 +10,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { X, Send, MessageCircle } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 
 interface SupportMessage {
   name?: string;
@@ -23,6 +24,7 @@ export default function SupportChatWidget() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [userEmail, setUserEmail] = useState<string>("");
   
   const [formData, setFormData] = useState<SupportMessage>({
     name: "",
@@ -33,6 +35,32 @@ export default function SupportChatWidget() {
 
   const messageInputRef = useRef<HTMLTextAreaElement>(null);
   const emailInputRef = useRef<HTMLInputElement>(null);
+
+  // Fetch user email on mount
+  useEffect(() => {
+    const fetchUserEmail = async () => {
+      try {
+        const supabase = createClient();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        
+        if (user?.email) {
+          setUserEmail(user.email);
+          setFormData((prev) => ({
+            ...prev,
+            email: user.email || "",
+            name: user.user_metadata?.full_name || prev.name,
+          }));
+        }
+      } catch (err) {
+        console.error("Failed to fetch user email:", err);
+        // Silently fail - user can still enter email manually
+      }
+    };
+
+    fetchUserEmail();
+  }, []);
 
   // Update pageUrl when component mounts or when panel opens
   useEffect(() => {
