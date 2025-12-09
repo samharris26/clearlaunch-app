@@ -2,6 +2,7 @@
 "use client";
 import Sidebar from "@/components/Sidebar";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import SupportChatWidget from "@/components/support/SupportChatWidget";
 
 export default function AppLayout({
   children,
@@ -25,6 +26,9 @@ export default function AppLayout({
           </div>
         </main>
       </div>
+
+      {/* Support Chat Widget */}
+      <SupportChatWidget />
 
       {/* Slideout removed; individual launch now uses dedicated route */}
     </div>
