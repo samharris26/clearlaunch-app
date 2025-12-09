@@ -9,10 +9,10 @@ export const metadata: Metadata = {
   description: "Plan and manage product launches with ease.",
   icons: {
     icon: [
-      { url: "/ClearLaunch-favicon.ico", sizes: "any" },
+      { url: "/favicon.png", sizes: "any" },
     ],
-    shortcut: "/ClearLaunch-favicon.ico",
-    apple: "/ClearLaunch-favicon.ico",
+    shortcut: "/favicon.png",
+    apple: "/favicon.png",
   },
 };
 
