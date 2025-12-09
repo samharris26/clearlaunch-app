@@ -53,31 +53,31 @@ export default function LaunchesPageClient({ launches }: LaunchesPageClientProps
 
   const createButtonLabel = canCreateLaunch ? "Create new launch" : "Upgrade to add more";
   const createButtonClassName = cn(
-    "inline-flex items-center justify-center rounded-full px-5 py-2 text-sm font-semibold shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed",
+    "inline-flex items-center justify-center rounded-full px-5 py-2 text-sm font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer",
     canCreateLaunch
-      ? "border border-sky-400/60 bg-sky-500 text-slate-950 hover:bg-sky-400 shadow-[0_8px_24px_rgba(14,165,233,0.35)]"
-      : "border border-emerald-400/40 bg-emerald-500/10 text-emerald-200 shadow-emerald-900/30 hover:border-emerald-300"
+      ? "border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_90%,transparent)] text-[color:var(--text)] hover:bg-[color-mix(in_srgb,var(--surface)_80%,transparent)] hover:border-[color:var(--border-strong)] shadow-[var(--shadow-subtle)]"
+      : "bg-gradient-to-r from-indigo-500 to-cyan-500 text-white shadow-[var(--shadow-subtle)] hover:shadow-[var(--shadow-soft)] hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-[color:var(--background)]"
   );
 
   return (
     <>
       <div className="flex w-full flex-col items-center gap-12 px-4 pt-12 pb-20">
         {/* Header */}
-        <div className="flex w-full max-w-6xl flex-col gap-4 rounded-2xl border border-slate-800 bg-slate-950/60 p-6 shadow-xl shadow-slate-950/60">
+        <div className="flex w-full max-w-6xl flex-col gap-4 rounded-3xl border border-[color:var(--border)] bg-[var(--card)]/80 p-7 shadow-[var(--shadow-subtle)] backdrop-blur">
           <div className="flex flex-col gap-2">
-            <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-slate-500">
+            <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-[color:var(--muted)]">
               Launch library
             </p>
             <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
               <div className="flex flex-col gap-2">
                 <h1
-                  className="text-2xl font-semibold text-slate-50 sm:text-3xl"
+                  className="text-2xl font-semibold text-[color:var(--heading)] sm:text-3xl"
                   style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" }}
                 >
                   My launches
                 </h1>
                 <p
-                  className="text-base text-slate-300"
+                  className="text-base text-[color:var(--muted)]"
                   style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}
                 >
                   {usageSummary}
@@ -94,7 +94,7 @@ export default function LaunchesPageClient({ launches }: LaunchesPageClientProps
                   {createButtonLabel}
                 </button>
                 {usage && typeof usage.maxLaunches === "number" && canCreateLaunch && (
-                  <span className="text-xs text-slate-400" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
+                  <span className="text-xs text-[color:var(--muted)]" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
                     {safeLaunchesRemaining} launch{safeLaunchesRemaining === 1 ? "" : "es"} remaining
                   </span>
                 )}
@@ -167,15 +167,15 @@ export default function LaunchesPageClient({ launches }: LaunchesPageClientProps
             <button
               onClick={handleCreateLaunch}
               className={cn(
-                "inline-flex items-center justify-center rounded-full px-5 py-2 text-sm font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed",
+                "inline-flex items-center justify-center rounded-full px-5 py-2 text-sm font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer",
                 canCreateLaunch
                   ? AI_BUTTON_ACTIVE_CLASS
-                  : "border border-emerald-400/50 bg-emerald-500/10 text-emerald-200 shadow-[0_8px_24px_rgba(16,185,129,0.25)] hover:border-emerald-300 hover:text-emerald-100"
+                  : "bg-gradient-to-r from-indigo-500 to-cyan-500 text-white shadow-[var(--shadow-subtle)] hover:shadow-[var(--shadow-soft)] hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-[color:var(--background)]"
               )}
               style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}
               disabled={loading}
             >
-              Create Your First Launch
+              {canCreateLaunch ? "Create Your First Launch" : "Upgrade to add more"}
             </button>
           </div>
         )}

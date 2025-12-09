@@ -9,10 +9,10 @@ export type ShellProps = {
 
 export function Shell({ children }: ShellProps) {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
       <Sidebar />
       <div className="pl-60">
-        <div className="px-6 py-6">{children}</div>
+        <div className="px-8 py-8">{children}</div>
       </div>
     </div>
   );

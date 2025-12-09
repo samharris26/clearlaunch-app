@@ -16,13 +16,13 @@ export default function SectionHeader({
   return (
     <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
       <div className="flex flex-col gap-1">
-        <h2 className="text-xl font-semibold text-slate-50" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" }}>{title}</h2>
-        <p className="text-base text-slate-300" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>{description}</p>
+        <h2 className="text-xl font-semibold text-[color:var(--heading)]" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" }}>{title}</h2>
+        <p className="text-base text-[color:var(--muted)] leading-7" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>{description}</p>
       </div>
       {href ? (
         <Link
           href={href}
-          className="rounded-full border border-slate-700 bg-slate-900/80 px-4 py-2 text-sm font-medium text-slate-50 hover:bg-slate-900 hover:border-slate-600 transition-colors"
+          className="rounded-full border border-[color:var(--border)] bg-[var(--surface)] px-4 py-2 text-sm font-medium text-[color:var(--text)] shadow-[var(--shadow-subtle)] hover:border-[color:var(--border-strong)] transition-colors"
           style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}
         >
           {buttonText}

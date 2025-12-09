@@ -71,18 +71,18 @@ export default function LaunchHeader({
 
   return (
     <>
-      <div className="flex w-full max-w-6xl flex-col gap-6 rounded-3xl border border-slate-800 bg-slate-950/70 p-6 shadow-2xl shadow-slate-950/70">
+      <div className="flex w-full max-w-6xl flex-col gap-7 rounded-3xl border border-[color:var(--border)] bg-[var(--card)] p-7 shadow-[var(--shadow-soft)]">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div className="flex-1 space-y-4">
             <div>
               <h1
-                className="text-2xl font-semibold text-slate-50 sm:text-3xl"
+                className="text-2xl font-semibold text-[color:var(--heading)] sm:text-3xl"
                 style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" }}
               >
                 {launch.launchName || "Untitled Launch"}
               </h1>
               <p
-                className="mt-1 text-sm text-slate-400 sm:text-base"
+                className="mt-1 text-sm text-[color:var(--muted)] sm:text-base leading-6"
                 style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}
               >
                 {launch.description || "Launch details and progress tracking"}
@@ -90,10 +90,10 @@ export default function LaunchHeader({
             </div>
             {formattedLaunchDate && (
               <div className="flex flex-col gap-1">
-                <span className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-slate-500">
+                <span className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-[color:var(--muted)]">
                   Launch date
                 </span>
-                <span className="text-base font-semibold text-slate-100">{formattedLaunchDate}</span>
+                <span className="text-base font-semibold text-[color:var(--text)]">{formattedLaunchDate}</span>
               </div>
             )}
           </div>
@@ -101,7 +101,7 @@ export default function LaunchHeader({
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setIsSettingsOpen(true)}
-                className="flex items-center justify-center rounded-xl border border-slate-800/80 p-2 text-slate-400 transition-colors hover:bg-slate-900/70 hover:text-slate-50"
+                className="flex items-center justify-center rounded-xl border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_90%,transparent)] p-2 text-[color:var(--muted)] transition-colors hover:border-[color:var(--border-strong)] hover:text-[color:var(--text)] shadow-[var(--shadow-subtle)]"
                 aria-label="Launch settings"
               >
                 <Settings className="h-5 w-5" />
@@ -118,37 +118,37 @@ export default function LaunchHeader({
         </div>
 
         <div className="grid gap-4 sm:grid-cols-3">
-          <div className="group relative overflow-hidden rounded-2xl border border-slate-800 bg-gradient-to-br from-slate-950 via-slate-950 to-slate-900 p-5 transition-all hover:-translate-y-1 hover:border-emerald-500/30 hover:shadow-lg hover:shadow-emerald-900/20">
+          <div className="group relative overflow-hidden rounded-2xl border border-[color:var(--border)] bg-[var(--surface)] p-5 transition-all hover:-translate-y-0.5 hover:border-[color:var(--border-strong)] hover:shadow-[var(--shadow-subtle)]">
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
-            <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-slate-500 group-hover:text-emerald-400/80 transition-colors">
+            <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-[color:var(--muted)] group-hover:text-emerald-500 transition-colors">
               Plan completeness
             </p>
-            <p className="mt-2 text-3xl font-semibold text-emerald-300">
+            <p className="mt-2 text-3xl font-semibold text-emerald-500">
               {metrics.planCompleteness}%
             </p>
-            <p className="mt-1 text-sm text-slate-400 group-hover:text-slate-300 transition-colors">{getCompletenessCopy(metrics.planCompleteness)}</p>
+            <p className="mt-1 text-sm text-[color:var(--muted)] group-hover:text-[color:var(--text)] transition-colors">{getCompletenessCopy(metrics.planCompleteness)}</p>
           </div>
 
-          <div className="group relative overflow-hidden rounded-2xl border border-slate-800 bg-gradient-to-br from-slate-950 via-slate-950 to-slate-900 p-5 transition-all hover:-translate-y-1 hover:border-sky-500/30 hover:shadow-lg hover:shadow-sky-900/20">
+          <div className="group relative overflow-hidden rounded-2xl border border-[color:var(--border)] bg-[var(--surface)] p-5 transition-all hover:-translate-y-0.5 hover:border-[color:var(--border-strong)] hover:shadow-[var(--shadow-subtle)]">
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-sky-500/5 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
-            <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-slate-500 group-hover:text-sky-400/80 transition-colors">
+            <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-[color:var(--muted)] group-hover:text-sky-500 transition-colors">
               Platform coverage
             </p>
-            <p className="mt-2 text-3xl font-semibold text-sky-300">
+            <p className="mt-2 text-3xl font-semibold text-sky-500">
               {metrics.platformCoverageCount}
             </p>
-            <p className="mt-1 text-sm text-slate-400 group-hover:text-slate-300 transition-colors">Active channels in this plan</p>
+            <p className="mt-1 text-sm text-[color:var(--muted)] group-hover:text-[color:var(--text)] transition-colors">Active channels in this plan</p>
           </div>
 
-          <div className="group relative overflow-hidden rounded-2xl border border-slate-800 bg-gradient-to-br from-slate-950 via-slate-950 to-slate-900 p-5 transition-all hover:-translate-y-1 hover:border-amber-500/30 hover:shadow-lg hover:shadow-amber-900/20">
+          <div className="group relative overflow-hidden rounded-2xl border border-[color:var(--border)] bg-[var(--surface)] p-5 transition-all hover:-translate-y-0.5 hover:border-[color:var(--border-strong)] hover:shadow-[var(--shadow-subtle)]">
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-amber-500/5 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
-            <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-slate-500 group-hover:text-amber-400/80 transition-colors">
+            <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-[color:var(--muted)] group-hover:text-amber-500 transition-colors">
               Workload
             </p>
-            <p className="mt-2 text-3xl font-semibold text-amber-300">
+            <p className="mt-2 text-3xl font-semibold text-amber-500">
               {metrics.teamWorkloadLabel}
             </p>
-            <p className="mt-1 text-sm text-slate-400 group-hover:text-slate-300 transition-colors">
+            <p className="mt-1 text-sm text-[color:var(--muted)] group-hover:text-[color:var(--text)] transition-colors">
               {metrics.averageTasksPerDay.toFixed(1)} tasks per day
             </p>
           </div>

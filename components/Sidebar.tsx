@@ -14,7 +14,6 @@ const nav = [
 
 const bottomNav = [
   { href: "/settings", label: "Settings", icon: Settings },
-  { href: "/privacy", label: "Privacy", icon: FileText },
   { href: "/logout", label: "Logout", icon: LogOut },
 ];
 
@@ -22,20 +21,20 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="hidden w-60 flex-col border-r border-slate-800/70 bg-slate-950 p-6 md:flex">
+    <aside className="hidden w-64 flex-col border-r border-[color:var(--border)] bg-[var(--surface)] p-7 text-[color:var(--text)] md:flex">
       {/* Logo */}
-      <Link href="/dashboard" className="mb-10 flex items-center hover:opacity-80 transition-opacity">
+      <Link href="/dashboard" className="mb-12 flex items-center hover:opacity-80 transition-opacity">
         <img
-          src="/Clearlaunch-logo-light.svg"
+          src="/ClearLaunch-logo.svg"
           alt="ClearLaunch"
           className="h-9 w-auto"
         />
       </Link>
 
       {/* Main Navigation */}
-      <nav className="flex flex-1 flex-col justify-between">
+      <nav className="flex flex-1 flex-col justify-between gap-6">
         {/* Top Menu Items */}
-        <div className="space-y-1">
+        <div className="space-y-1.5">
           {nav.map(({ href, label, icon: Icon }) => {
             const isLaunchesRoute = href === "/launches" && pathname?.startsWith("/launch/");
             const active =
@@ -46,17 +45,17 @@ export default function Sidebar() {
               <Link
                 key={href}
                 href={href}
-                className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors ${active
-                  ? "bg-slate-900/80 text-slate-50 font-medium border border-slate-800"
-                  : "text-slate-300 hover:text-slate-50 hover:bg-slate-900/40"
+                className={`flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm transition-colors ${active
+                  ? "bg-[var(--card)] text-[color:var(--heading)] font-semibold border border-[color:var(--border-strong)] shadow-[var(--shadow-subtle)]"
+                  : "text-[color:var(--muted)] hover:text-[color:var(--text)] hover:bg-[color-mix(in_srgb,var(--surface)_85%,transparent)]"
                   }`}
                 style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}
               >
-                <Icon className="h-4 w-4" />
+                <Icon className="h-4 w-4 text-[color:var(--muted)]" />
                 <span className="flex items-center gap-2">
                   {label}
                   {href === "/templates" && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-slate-900 border border-slate-700 px-2 py-0.5 text-[0.625rem] font-medium text-slate-400">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-[color-mix(in_srgb,var(--card)_90%,transparent)] border border-[color:var(--border)] px-2 py-0.5 text-[0.625rem] font-medium text-[color:var(--muted)]">
                       <Clock className="h-3 w-3" />
                       Soon
                     </span>
@@ -68,18 +67,18 @@ export default function Sidebar() {
         </div>
 
         {/* Bottom Menu Items */}
-        <div className="space-y-1">
-          <div className="h-px bg-slate-800/70"></div>
-          <div className="space-y-1">
+        <div className="space-y-2">
+          <div className="h-px bg-[color:var(--border)]"></div>
+          <div className="space-y-1.5">
             {bottomNav.map(({ href, label, icon: Icon }) => {
               const isLogout = href === "/logout";
               return (
                 <Link
                   key={href}
                   href={href}
-                  className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors ${isLogout
-                    ? "text-slate-500 hover:text-slate-300 hover:bg-slate-900/40"
-                    : "text-slate-300 hover:text-slate-50 hover:bg-slate-900/40"
+                  className={`flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm transition-colors ${isLogout
+                    ? "text-[color:var(--muted)] hover:text-[color:var(--text)] hover:bg-[color-mix(in_srgb,var(--surface)_85%,transparent)]"
+                    : "text-[color:var(--muted)] hover:text-[color:var(--text)] hover:bg-[color-mix(in_srgb,var(--surface)_85%,transparent)]"
                     }`}
                   style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}
                 >

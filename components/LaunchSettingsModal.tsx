@@ -69,24 +69,24 @@ export default function LaunchSettingsModal({ isOpen, onClose, launch }: LaunchS
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl border border-slate-800 bg-slate-950 shadow-2xl shadow-slate-950">
+      <DialogContent className="max-w-2xl bg-[var(--card)] border-[color:var(--border)] text-[color:var(--text)] shadow-[var(--shadow-soft)]">
         <DialogHeader>
-          <DialogTitle className="text-xl font-semibold text-slate-50">Launch Settings</DialogTitle>
-          <DialogDescription className="text-slate-400">
+          <DialogTitle className="text-xl font-semibold text-[color:var(--heading)]">Launch Settings</DialogTitle>
+          <DialogDescription className="text-[color:var(--muted)]">
             Update your launch details and settings
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-5 mt-2">
           {error && (
-            <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-3 text-sm text-red-400">
+            <div className="rounded-md border border-red-500/20 bg-red-500/10 p-3 text-sm text-red-400">
               {error}
             </div>
           )}
 
-          <div className="space-y-1.5">
-            <label htmlFor="launchName" className="block text-sm font-medium text-slate-300">
-              Launch Name <span className="text-rose-500">*</span>
+          <div className="space-y-2">
+            <label htmlFor="launchName" className="text-sm font-medium text-[color:var(--muted)]">
+              Launch Name <span className="text-red-500">*</span>
             </label>
             <input
               id="launchName"
@@ -94,13 +94,13 @@ export default function LaunchSettingsModal({ isOpen, onClose, launch }: LaunchS
               value={formData.launchName}
               onChange={(e) => setFormData({ ...formData, launchName: e.target.value })}
               required
-              className="w-full rounded-lg border border-slate-800 bg-slate-900/50 px-3 py-2.5 text-sm text-slate-200 placeholder:text-slate-600 focus:border-sky-500/50 focus:outline-none focus:ring-2 focus:ring-sky-500/20 transition-all"
+              className="w-full rounded-md border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_94%,transparent)] px-3 py-2 text-sm text-[color:var(--text)] placeholder:text-[color:var(--muted)] focus:border-sky-500/50 focus:outline-none focus:ring-1 focus:ring-sky-500/50"
               placeholder="My Product Launch"
             />
           </div>
 
-          <div className="space-y-1.5">
-            <label htmlFor="description" className="block text-sm font-medium text-slate-300">
+          <div className="space-y-2">
+            <label htmlFor="description" className="text-sm font-medium text-[color:var(--muted)]">
               Description
             </label>
             <textarea
@@ -108,14 +108,14 @@ export default function LaunchSettingsModal({ isOpen, onClose, launch }: LaunchS
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               rows={3}
-              className="w-full rounded-lg border border-slate-800 bg-slate-900/50 px-3 py-2.5 text-sm text-slate-200 placeholder:text-slate-600 focus:border-sky-500/50 focus:outline-none focus:ring-2 focus:ring-sky-500/20 transition-all resize-none"
+              className="w-full rounded-md border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_94%,transparent)] px-3 py-2 text-sm text-[color:var(--text)] placeholder:text-[color:var(--muted)] focus:border-sky-500/50 focus:outline-none focus:ring-1 focus:ring-sky-500/50 resize-none"
               placeholder="Describe your launch..."
             />
           </div>
 
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-            <div className="space-y-1.5">
-              <label htmlFor="target_date" className="block text-sm font-medium text-slate-300">
+            <div className="space-y-2">
+              <label htmlFor="target_date" className="text-sm font-medium text-[color:var(--muted)]">
                 Target Launch Date
               </label>
               <input
@@ -123,27 +123,27 @@ export default function LaunchSettingsModal({ isOpen, onClose, launch }: LaunchS
                 type="date"
                 value={formData.target_date}
                 onChange={(e) => setFormData({ ...formData, target_date: e.target.value })}
-                className="w-full rounded-lg border border-slate-800 bg-slate-900/50 px-3 py-2.5 text-sm text-slate-200 placeholder:text-slate-600 focus:border-sky-500/50 focus:outline-none focus:ring-2 focus:ring-sky-500/20 transition-all [color-scheme:dark]"
+                className="w-full rounded-md border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_94%,transparent)] px-3 py-2 text-sm text-[color:var(--text)] focus:border-sky-500/50 focus:outline-none focus:ring-1 focus:ring-sky-500/50"
               />
             </div>
 
-            <div className="space-y-1.5">
-              <label htmlFor="launchType" className="block text-sm font-medium text-slate-300">
+            <div className="space-y-2">
+              <label htmlFor="launchType" className="text-sm font-medium text-[color:var(--muted)]">
                 Launch Type
               </label>
               <select
                 id="launchType"
                 value={formData.launchType}
                 onChange={(e) => setFormData({ ...formData, launchType: e.target.value })}
-                className="w-full rounded-lg border border-slate-800 bg-slate-900/50 px-3 py-2.5 text-sm text-slate-200 focus:border-sky-500/50 focus:outline-none focus:ring-2 focus:ring-sky-500/20 transition-all appearance-none"
+                className="w-full rounded-md border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_94%,transparent)] px-3 py-2 text-sm text-[color:var(--text)] focus:border-sky-500/50 focus:outline-none focus:ring-1 focus:ring-sky-500/50 cursor-pointer"
               >
-                <option value="" className="bg-slate-950 text-slate-400">Select a type</option>
-                <option value="product" className="bg-slate-950">Product</option>
-                <option value="service" className="bg-slate-950">Service</option>
-                <option value="course" className="bg-slate-950">Course</option>
-                <option value="app" className="bg-slate-950">App</option>
-                <option value="saas" className="bg-slate-950">SaaS</option>
-                <option value="other" className="bg-slate-950">Other</option>
+                <option value="">Select a type</option>
+                <option value="product">Product</option>
+                <option value="service">Service</option>
+                <option value="course">Course</option>
+                <option value="app">App</option>
+                <option value="saas">SaaS</option>
+                <option value="other">Other</option>
               </select>
             </div>
           </div>
@@ -154,14 +154,14 @@ export default function LaunchSettingsModal({ isOpen, onClose, launch }: LaunchS
               variant="ghost"
               onClick={onClose}
               disabled={isSaving}
-              className="text-slate-400 hover:bg-slate-900 hover:text-slate-200"
+              className="text-[color:var(--muted)] hover:!bg-[color-mix(in_srgb,var(--surface)_85%,transparent)] hover:!text-[color:var(--text)] cursor-pointer transition-colors"
             >
               Cancel
             </Button>
             <Button
               type="submit"
               disabled={isSaving}
-              className="bg-gradient-to-r from-sky-500 to-indigo-500 text-white shadow-lg shadow-sky-900/20 hover:from-sky-400 hover:to-indigo-400 hover:shadow-sky-900/40 transition-all"
+              className="bg-gradient-to-r from-sky-500 to-indigo-500 text-white shadow-[var(--shadow-subtle)] hover:shadow-[var(--shadow-soft)] hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-[color:var(--background)] transition-all cursor-pointer"
             >
               {isSaving ? "Saving..." : "Save Changes"}
             </Button>

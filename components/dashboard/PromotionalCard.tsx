@@ -14,22 +14,22 @@ export default function PromotionalCard({ type, onUpgrade, onAddLaunch, variant 
   if (type === "upgrade") {
     if (variant === 'full') {
       return (
-        <div className="group relative flex w-full flex-col items-center justify-between gap-6 rounded-2xl border border-slate-800 bg-gradient-to-br from-slate-950 via-slate-950 to-slate-900 p-8 shadow-xl shadow-slate-950/60 transition-all hover:-translate-y-1 hover:border-emerald-500/30 sm:flex-row">
+        <div className="group relative flex w-full flex-col items-center justify-between gap-6 rounded-2xl border border-[color:var(--border)] bg-[var(--card)] p-8 shadow-[var(--shadow-soft)] transition-all hover:-translate-y-0.5 hover:border-[color:var(--border-strong)] sm:flex-row">
           <div className="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-emerald-500/5 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
 
           <div className="relative flex flex-col gap-2">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 group-hover:bg-emerald-500/20 transition-colors">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-500 group-hover:bg-emerald-500/20 transition-colors">
                 <Zap className="h-6 w-6" />
               </div>
               <h3
-                className="text-2xl font-semibold text-slate-50"
+                className="text-2xl font-semibold text-[color:var(--heading)]"
                 style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" }}
               >
                 Pro Launch Plan
               </h3>
             </div>
-            <p className="text-base text-slate-300 max-w-xl" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
+            <p className="text-base text-[color:var(--muted)] max-w-xl leading-7" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
               Unlock the full potential of your launches with AI power, priority support, and advanced analytics.
             </p>
           </div>
@@ -37,7 +37,7 @@ export default function PromotionalCard({ type, onUpgrade, onAddLaunch, variant 
           <div className="relative">
             <Link
               href="/pricing"
-              className="inline-flex items-center justify-center whitespace-nowrap rounded-full bg-gradient-to-r from-emerald-400 to-emerald-600 px-8 py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-emerald-900/20 transition-transform hover:-translate-y-0.5 hover:shadow-emerald-900/40"
+              className="inline-flex items-center justify-center whitespace-nowrap rounded-full bg-gradient-to-r from-indigo-500 to-cyan-500 px-6 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-subtle)] transition-transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-[color:var(--card)]"
               style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}
             >
               Upgrade Now
@@ -48,7 +48,7 @@ export default function PromotionalCard({ type, onUpgrade, onAddLaunch, variant 
     }
 
     return (
-      <div className="group relative flex h-full w-full flex-col justify-between rounded-2xl border border-slate-800 bg-gradient-to-br from-slate-950 via-slate-950 to-slate-900 p-6 shadow-xl shadow-slate-950/60 transition-all hover:-translate-y-1 hover:border-emerald-500/30">
+      <div className="group relative flex h-full w-full flex-col justify-between rounded-2xl border border-[color:var(--border)] bg-[var(--card)] p-6 shadow-[var(--shadow-soft)] transition-all hover:-translate-y-0.5 hover:border-[color:var(--border-strong)]">
         <div className="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-emerald-500/5 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
 
         <div className="relative space-y-6">
@@ -64,18 +64,18 @@ export default function PromotionalCard({ type, onUpgrade, onAddLaunch, variant 
 
             <div className="flex flex-col gap-2">
               <h3
-                className="text-2xl font-semibold text-slate-50"
+                className="text-2xl font-semibold text-[color:var(--heading)]"
                 style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" }}
               >
                 Pro Launch Plan
               </h3>
-              <p className="text-sm text-slate-400" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
+              <p className="text-sm text-[color:var(--muted)] leading-6" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
                 Unlock the full potential of your launches with AI power.
               </p>
             </div>
           </div>
 
-          <ul className="space-y-3 text-sm text-slate-300" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
+          <ul className="space-y-3 text-sm text-[color:var(--text)]" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
             {[
               "3 active launches",
               "100 AI calls per month",
@@ -95,7 +95,7 @@ export default function PromotionalCard({ type, onUpgrade, onAddLaunch, variant 
         <div className="relative mt-6">
           <Link
             href="/pricing"
-            className="inline-flex w-full items-center justify-center rounded-full bg-gradient-to-r from-emerald-400 to-emerald-600 py-2.5 text-sm font-semibold text-slate-950 shadow-lg shadow-emerald-900/20 transition-transform hover:-translate-y-0.5 hover:shadow-emerald-900/40"
+            className="inline-flex w-full items-center justify-center rounded-full bg-gradient-to-r from-indigo-500 to-cyan-500 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-subtle)] transition-transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-[color:var(--card)]"
             style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}
           >
             Upgrade Now
@@ -108,7 +108,7 @@ export default function PromotionalCard({ type, onUpgrade, onAddLaunch, variant 
   // Add Launch card
   return (
     <div
-      className="group relative flex h-[364px] w-full flex-col justify-between gap-7 rounded-2xl border border-slate-700/70 bg-gradient-to-br from-slate-950 via-slate-950 to-slate-900 p-6 shadow-2xl shadow-slate-950/60 transition-all hover:-translate-y-1 hover:border-sky-500/40"
+      className="group relative flex h-[364px] w-full flex-col justify-between gap-7 rounded-2xl border border-[color:var(--border)] bg-[var(--card)] p-7 shadow-[var(--shadow-soft)] transition-all hover:-translate-y-0.5 hover:border-[color:var(--border-strong)]"
       onClick={onAddLaunch}
       role="button"
       tabIndex={0}
@@ -132,7 +132,7 @@ export default function PromotionalCard({ type, onUpgrade, onAddLaunch, variant 
               </svg>
             </div>
             <h3
-              className="text-xl font-semibold text-slate-50 sm:text-2xl"
+              className="text-xl font-semibold text-[color:var(--heading)] sm:text-2xl"
               style={{
                 fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif",
                 lineHeight: "calc(var(--spacing) * 8)",
@@ -142,10 +142,10 @@ export default function PromotionalCard({ type, onUpgrade, onAddLaunch, variant 
             </h3>
           </div>
           <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-3">
-            <span className="text-base text-slate-300" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
+            <span className="text-base text-[color:var(--muted)]" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
               Start planning your next launch
             </span>
-            <span className="inline-flex h-7 items-center rounded-full bg-sky-500/10 border border-sky-500/30 px-3 text-xs font-semibold text-sky-300" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
+            <span className="inline-flex h-7 items-center rounded-full bg-sky-500/10 border border-sky-500/30 px-3 text-xs font-semibold text-sky-600" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
               New
             </span>
           </div>
@@ -154,15 +154,15 @@ export default function PromotionalCard({ type, onUpgrade, onAddLaunch, variant 
         {/* Benefits Section */}
         <div className="flex flex-col gap-3">
           <div className="space-y-2">
-            <p className="text-sm text-slate-300 flex items-center gap-2" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
+            <p className="text-sm text-[color:var(--muted)] flex items-center gap-2" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
               <Target className="h-4 w-4 text-sky-400" />
               AI-powered planning
             </p>
-            <p className="text-sm text-slate-300 flex items-center gap-2" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
+            <p className="text-sm text-[color:var(--muted)] flex items-center gap-2" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
               <Calendar className="h-4 w-4 text-sky-400" />
               Timeline management
             </p>
-            <p className="text-sm text-slate-300 flex items-center gap-2" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
+            <p className="text-sm text-[color:var(--muted)] flex items-center gap-2" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
               <CheckCircle className="h-4 w-4 text-sky-400" />
               Task tracking
             </p>

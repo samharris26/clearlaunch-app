@@ -96,23 +96,22 @@ const DATABASE_STATUS_MAP: Record<StatusOption["value"], string> = {
   completed: "completed",
 };
 
-const STATUS_META: Record<StatusOption["value"], { label: string; badge: string; button: string; helper: string }>
-  = {
+const STATUS_META: Record<StatusOption["value"], { label: string; badge: string; button: string; helper: string }> = {
   todo: {
     label: "To do",
-    badge: "bg-slate-900 text-slate-300 border border-slate-700",
+    badge: "bg-[color-mix(in_srgb,var(--surface)_92%,transparent)] text-[color:var(--muted)] border border-[color:var(--border)]",
     button: "Mark as in progress",
     helper: "Ready to kick off",
   },
   in_progress: {
     label: "In progress",
-    badge: "bg-sky-500/10 text-sky-300 border border-sky-500/30",
+    badge: "bg-sky-500/12 text-sky-600 border border-sky-400/50",
     button: "Mark as complete",
     helper: "Work underway",
   },
   completed: {
     label: "Completed",
-    badge: "bg-emerald-500/10 text-emerald-300 border border-emerald-500/30",
+    badge: "bg-emerald-500/12 text-emerald-600 border border-emerald-400/60",
     button: "Reopen task",
     helper: "All done",
   },
@@ -178,15 +177,15 @@ function RichTextEditor({ value, onChange, onBlur, placeholder, showToolbar = tr
   return (
     <div
       className={cn(
-        "flex flex-col gap-2 rounded-xl border border-slate-800 bg-slate-950/60 shadow-xl shadow-slate-950/60 transition-shadow focus-within:shadow-xl focus-within:ring-2 focus-within:ring-sky-500/30",
+        "flex flex-col gap-2 rounded-xl border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_94%,transparent)] shadow-[var(--shadow-subtle)] transition-shadow focus-within:shadow-[var(--shadow-soft)] focus-within:ring-2 focus-within:ring-sky-400/40",
         !showToolbar && "overflow-hidden"
       )}
     >
       {showToolbar && (
-        <div className="flex items-center gap-1 border-b border-slate-800 bg-slate-900/80 px-3 py-2">
+        <div className="flex items-center gap-1 border-b border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_92%,transparent)] px-3 py-2">
           <button
             type="button"
-            className="inline-flex h-8 w-8 items-center justify-center rounded-md text-slate-400 hover:bg-slate-800 hover:text-slate-200 transition-colors"
+            className="inline-flex h-8 w-8 items-center justify-center rounded-md text-[color:var(--muted)] hover:bg-[color-mix(in_srgb,var(--surface)_88%,transparent)] hover:text-[color:var(--text)] transition-colors"
             onClick={() => applyCommand("bold")}
             aria-label="Bold"
             title="Bold"
@@ -195,7 +194,7 @@ function RichTextEditor({ value, onChange, onBlur, placeholder, showToolbar = tr
           </button>
           <button
             type="button"
-            className="inline-flex h-8 w-8 items-center justify-center rounded-md text-slate-400 hover:bg-slate-800 hover:text-slate-200 transition-colors"
+            className="inline-flex h-8 w-8 items-center justify-center rounded-md text-[color:var(--muted)] hover:bg-[color-mix(in_srgb,var(--surface)_88%,transparent)] hover:text-[color:var(--text)] transition-colors"
             onClick={() => applyCommand("italic")}
             aria-label="Italic"
             title="Italic"
@@ -204,17 +203,17 @@ function RichTextEditor({ value, onChange, onBlur, placeholder, showToolbar = tr
           </button>
           <button
             type="button"
-            className="inline-flex h-8 w-8 items-center justify-center rounded-md text-slate-400 hover:bg-slate-800 hover:text-slate-200 transition-colors"
+            className="inline-flex h-8 w-8 items-center justify-center rounded-md text-[color:var(--muted)] hover:bg-[color-mix(in_srgb,var(--surface)_88%,transparent)] hover:text-[color:var(--text)] transition-colors"
             onClick={() => applyCommand("underline")}
             aria-label="Underline"
             title="Underline"
           >
             <Underline className="h-4 w-4" />
           </button>
-          <div className="mx-1 h-6 w-px bg-slate-700" />
+          <div className="mx-1 h-6 w-px bg-[color:var(--border)]" />
           <button
             type="button"
-            className="inline-flex h-8 w-8 items-center justify-center rounded-md text-slate-400 hover:bg-slate-800 hover:text-slate-200 transition-colors"
+            className="inline-flex h-8 w-8 items-center justify-center rounded-md text-[color:var(--muted)] hover:bg-[color-mix(in_srgb,var(--surface)_88%,transparent)] hover:text-[color:var(--text)] transition-colors"
             onClick={() => applyCommand("insertUnorderedList")}
             aria-label="Bullet list"
             title="Bullet list"
@@ -223,7 +222,7 @@ function RichTextEditor({ value, onChange, onBlur, placeholder, showToolbar = tr
           </button>
           <button
             type="button"
-            className="inline-flex h-8 w-8 items-center justify-center rounded-md text-slate-400 hover:bg-slate-800 hover:text-slate-200 transition-colors"
+            className="inline-flex h-8 w-8 items-center justify-center rounded-md text-[color:var(--muted)] hover:bg-[color-mix(in_srgb,var(--surface)_88%,transparent)] hover:text-[color:var(--text)] transition-colors"
             onClick={() => applyCommand("insertOrderedList")}
             aria-label="Numbered list"
             title="Numbered list"
@@ -235,7 +234,7 @@ function RichTextEditor({ value, onChange, onBlur, placeholder, showToolbar = tr
       <div
         ref={editorRef as React.RefObject<HTMLDivElement>}
         className={cn(
-          "min-h-[300px] max-h-[600px] w-full px-4 py-4 text-base leading-7 text-slate-200 focus:outline-none overflow-y-auto",
+          "min-h-[300px] max-h-[600px] w-full px-4 py-4 text-base leading-7 text-[color:var(--text)] focus:outline-none overflow-y-auto",
           showToolbar ? "rounded-b-xl" : "rounded-xl"
         )}
         contentEditable
@@ -798,7 +797,7 @@ export function TaskDrawer({ task, tasks, open, onClose, onTaskChange }: TaskDra
         <>
           <motion.div
             key="backdrop"
-            className="fixed inset-0 z-40 bg-slate-950/80 backdrop-blur-sm"
+            className="fixed inset-0 z-40 bg-black/30 backdrop-blur-[2px]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -808,7 +807,7 @@ export function TaskDrawer({ task, tasks, open, onClose, onTaskChange }: TaskDra
 
           <motion.aside
             key="drawer"
-            className="fixed right-0 top-0 z-50 flex h-screen w-full flex-col border-l border-slate-800 bg-slate-950 shadow-2xl sm:w-[600px] md:w-[700px] lg:w-[800px]"
+            className="fixed right-0 top-0 z-50 flex h-screen w-full flex-col border-l border-[color:var(--border)] bg-[var(--surface)] shadow-[var(--shadow-soft)] sm:w-[600px] md:w-[700px] lg:w-[800px]"
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
@@ -820,20 +819,20 @@ export function TaskDrawer({ task, tasks, open, onClose, onTaskChange }: TaskDra
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header - Minimal & Sticky */}
-            <div className="flex h-14 items-center justify-between border-b border-slate-800/50 bg-slate-950/80 px-6 backdrop-blur-md z-10 absolute top-0 left-0 right-0">
+            <div className="flex h-14 items-center justify-between border-b border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_92%,transparent)] px-6 backdrop-blur-md z-10 absolute top-0 left-0 right-0">
               <div className="flex items-center gap-2">
-                <button
+                  <button
                   onClick={() => handleNavigateTask(previousTask)}
                   disabled={!previousTask}
-                  className="group flex h-8 w-8 items-center justify-center rounded-full border border-slate-800 bg-slate-900/50 text-slate-400 transition-all hover:border-slate-700 hover:bg-slate-800 hover:text-slate-200 disabled:opacity-30 disabled:cursor-not-allowed"
+                  className="group flex h-8 w-8 items-center justify-center rounded-full border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_92%,transparent)] text-[color:var(--muted)] transition-all hover:border-[color:var(--border-strong)] hover:text-[color:var(--text)] disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
                   aria-label="Previous task"
                 >
                   <ChevronLeft className="h-4 w-4" />
                 </button>
-                <button
+                  <button
                   onClick={() => handleNavigateTask(nextTask)}
                   disabled={!nextTask}
-                  className="group flex h-8 w-8 items-center justify-center rounded-full border border-slate-800 bg-slate-900/50 text-slate-400 transition-all hover:border-slate-700 hover:bg-slate-800 hover:text-slate-200 disabled:opacity-30 disabled:cursor-not-allowed"
+                  className="group flex h-8 w-8 items-center justify-center rounded-full border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_92%,transparent)] text-[color:var(--muted)] transition-all hover:border-[color:var(--border-strong)] hover:text-[color:var(--text)] disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
                   aria-label="Next task"
                 >
                   <ChevronRight className="h-4 w-4" />
@@ -841,7 +840,7 @@ export function TaskDrawer({ task, tasks, open, onClose, onTaskChange }: TaskDra
               </div>
 
               <div className="flex items-center gap-3">
-                <div className="flex items-center gap-2 rounded-full border border-slate-800 bg-slate-900/50 px-1 py-1">
+                <div className="flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-[color:var(--surface)] px-1 py-1 shadow-[var(--shadow-subtle)]">
                   {STATUS_OPTIONS.map((option) => {
                     const isActive = statusValue === option.value;
                     return (
@@ -850,10 +849,10 @@ export function TaskDrawer({ task, tasks, open, onClose, onTaskChange }: TaskDra
                         onClick={() => handleStatusChange(option.value)}
                         disabled={isPending}
                         className={cn(
-                          "px-3 py-1 rounded-full text-xs font-medium transition-all",
+                          "px-3 py-1 rounded-full text-xs font-medium transition-all border border-transparent",
                           isActive
-                            ? "bg-slate-800 text-slate-200 shadow-sm"
-                            : "text-slate-500 hover:text-slate-300",
+                            ? "bg-[color-mix(in_srgb,var(--surface)_90%,transparent)] text-[color:var(--heading)] border-[color:var(--border-strong)] shadow-[var(--shadow-subtle)]"
+                            : "text-[color:var(--muted)] hover:text-[color:var(--heading)] hover:bg-[color-mix(in_srgb,var(--surface)_82%,transparent)] hover:border-[color:var(--border-strong)]",
                           isPending && "opacity-50 cursor-not-allowed"
                         )}
                         style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}
@@ -863,27 +862,27 @@ export function TaskDrawer({ task, tasks, open, onClose, onTaskChange }: TaskDra
                     );
                   })}
                 </div>
-                <div className="h-6 w-px bg-slate-800" />
+                <div className="h-6 w-px bg-[color:var(--border)]" />
                 <div className="flex items-center gap-2">
                   <Dialog>
                     <DialogTrigger asChild>
                       <button
-                        className="inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-400 transition-colors hover:bg-red-500/10 hover:text-red-400"
+                        className="inline-flex h-8 w-8 items-center justify-center rounded-full text-[color:var(--muted)] transition-colors hover:bg-red-500/10 hover:text-red-500"
                         title="Delete task"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>
                     </DialogTrigger>
-                    <DialogContent className="bg-slate-950 border-slate-800 sm:max-w-[425px]">
+                    <DialogContent className="bg-[var(--surface)] border-[color:var(--border)] text-[color:var(--text)] sm:max-w-[425px] shadow-[var(--shadow-soft)]">
                       <DialogHeader>
-                        <DialogTitle className="text-slate-100">Delete Task</DialogTitle>
-                        <DialogDescription className="text-slate-400">
+                        <DialogTitle className="text-[color:var(--heading)]">Delete Task</DialogTitle>
+                        <DialogDescription className="text-[color:var(--muted)]">
                           Are you sure you want to delete this task? This action cannot be undone.
                         </DialogDescription>
                       </DialogHeader>
                       <DialogFooter className="gap-2 sm:gap-0">
                         <DialogClose asChild>
-                          <Button variant="outline" className="border-slate-700 bg-transparent text-slate-300 hover:bg-slate-800 hover:text-slate-100">
+                          <Button variant="outline" className="border-[color:var(--border)] bg-transparent text-[color:var(--text)] hover:bg-[color-mix(in_srgb,var(--surface)_94%,transparent)]">
                             Cancel
                           </Button>
                         </DialogClose>
@@ -899,7 +898,7 @@ export function TaskDrawer({ task, tasks, open, onClose, onTaskChange }: TaskDra
                   </Dialog>
                   <button
                     onClick={onClose}
-                    className="inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-400 transition-colors hover:bg-slate-800 hover:text-slate-200"
+                    className="inline-flex h-8 w-8 items-center justify-center rounded-full text-[color:var(--muted)] transition-colors hover:bg-[color-mix(in_srgb,var(--surface)_92%,transparent)] hover:text-[color:var(--text)]"
                   >
                     <X className="h-5 w-5" />
                   </button>
@@ -910,7 +909,7 @@ export function TaskDrawer({ task, tasks, open, onClose, onTaskChange }: TaskDra
             {/* Scrollable Content */}
             <div className="flex-1 overflow-y-auto pt-14">
               {/* Hero Section */}
-              <div className="relative border-b border-slate-800 bg-gradient-to-b from-slate-900/50 to-slate-950 px-8 py-10">
+              <div className="relative border-b border-[color:var(--border)] bg-[color:var(--card)] px-8 py-10 shadow-[var(--shadow-subtle)]">
                 <div className="space-y-6">
                   <div className="flex flex-wrap items-center gap-3">
                     <span
@@ -921,14 +920,14 @@ export function TaskDrawer({ task, tasks, open, onClose, onTaskChange }: TaskDra
                       style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}
                     >
                       <span className="relative flex h-2 w-2">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-current"></span>
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-40 bg-current"></span>
                         <span className="relative inline-flex rounded-full h-2 w-2 bg-current"></span>
                       </span>
                       {statusMeta.label}
                     </span>
 
                     {dueDate && (
-                      <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-800 bg-slate-900/50 px-3 py-1 text-xs font-medium text-slate-400">
+                      <span className="inline-flex items-center gap-1.5 rounded-full border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_94%,transparent)] px-3 py-1 text-xs font-medium text-[color:var(--muted)]">
                         <Calendar className="h-3.5 w-3.5" />
                         Due {dueDate}
                       </span>
@@ -938,7 +937,7 @@ export function TaskDrawer({ task, tasks, open, onClose, onTaskChange }: TaskDra
                   <div className="group relative">
                     {editingTitle ? (
                       <input
-                        className="w-full bg-transparent text-4xl font-bold leading-tight text-slate-50 placeholder-slate-600 focus:outline-none"
+                        className="w-full bg-transparent text-4xl font-bold leading-tight text-[color:var(--heading)] placeholder-[color:var(--muted)] focus:outline-none"
                         style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" }}
                         value={titleValue}
                         onChange={(e) => handleTitleChange(e.target.value)}
@@ -949,7 +948,7 @@ export function TaskDrawer({ task, tasks, open, onClose, onTaskChange }: TaskDra
                       />
                     ) : (
                       <h1
-                        className="text-4xl font-bold leading-tight text-slate-50 cursor-text hover:opacity-90 transition-opacity"
+                        className="text-4xl font-bold leading-tight text-[color:var(--heading)] cursor-text hover:opacity-90 transition-opacity"
                         style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" }}
                         onClick={() => setEditingTitle(true)}
                       >
@@ -963,20 +962,20 @@ export function TaskDrawer({ task, tasks, open, onClose, onTaskChange }: TaskDra
               <div className="p-8 space-y-8">
                 {/* The Brief */}
                 <section className="space-y-4">
-                  <div className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-slate-500">
+                  <div className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-[color:var(--muted)]">
                     <List className="h-4 w-4" />
                     The Brief
                   </div>
-                  <div className="rounded-2xl border border-slate-800 bg-slate-900/30 p-6">
+                  <div className="rounded-2xl border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_94%,transparent)] p-6 shadow-[var(--shadow-subtle)]">
                     {hasDescription ? (
                       <div
-                        className="prose prose-invert prose-sm max-w-none text-slate-300 leading-relaxed"
+                        className="prose prose-sm max-w-none text-[color:var(--text)] leading-relaxed"
                         style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}
                         dangerouslySetInnerHTML={{ __html: descriptionHtml }}
                       />
                     ) : (
                       <div className="flex flex-col items-center justify-center py-8 text-center">
-                        <p className="text-slate-500">No brief provided for this task.</p>
+                        <p className="text-[color:var(--muted)]">No brief provided for this task.</p>
                       </div>
                     )}
                   </div>
@@ -1060,14 +1059,14 @@ export function TaskDrawer({ task, tasks, open, onClose, onTaskChange }: TaskDra
                   </div>
 
                   {aiError && (
-                    <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-300">
+                    <div className="rounded-lg border border-red-500/20 bg-red-500/8 p-4 text-sm text-red-700">
                       <p className="font-medium">Generation failed</p>
                       <p className="mt-1 opacity-80">{aiError}</p>
                     </div>
                   )}
 
                   {error && (
-                    <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-300">
+                    <div className="rounded-lg border border-red-500/20 bg-red-500/8 p-4 text-sm text-red-700">
                       <p className="font-medium">Error</p>
                       <p className="mt-1 opacity-80">{error}</p>
                     </div>
@@ -1079,13 +1078,13 @@ export function TaskDrawer({ task, tasks, open, onClose, onTaskChange }: TaskDra
               <div className="h-20" />
             </div>
             {/* Footer */}
-            <div className="border-t border-slate-800 bg-slate-950 p-4">
+            <div className="border-t border-[color:var(--border)] bg-[var(--surface)] p-4 shadow-[var(--shadow-subtle)]">
               <div className="flex items-center justify-between">
                 {localTask?.id && localTask?.post_time ? (
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-9 gap-2 rounded-full border-slate-700 bg-slate-900/50 text-slate-300 hover:bg-slate-800 hover:text-slate-200"
+                    className="h-9 gap-2 rounded-full border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_92%,transparent)] text-[color:var(--text)] hover:bg-[color-mix(in_srgb,var(--surface)_88%,transparent)]"
                     asChild
                     title="Add to calendar"
                   >
@@ -1098,7 +1097,7 @@ export function TaskDrawer({ task, tasks, open, onClose, onTaskChange }: TaskDra
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-9 gap-2 rounded-full border-slate-800 bg-slate-900/30 text-slate-600 cursor-not-allowed"
+                    className="h-9 gap-2 rounded-full border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_94%,transparent)] text-[color:var(--muted)] cursor-not-allowed"
                     disabled
                     title="Set a date & time to add this task to your calendar"
                   >

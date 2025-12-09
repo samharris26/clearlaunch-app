@@ -280,7 +280,7 @@ export default function TaskGrid({ tasks }: TaskGridProps) {
 
   return (
     <>
-      <div className="mb-8 flex flex-wrap items-center gap-2">
+      <div className="mb-8 flex flex-wrap items-center gap-3">
         <div className="flex flex-wrap gap-2">
           {[
             { key: "all", label: "All Tasks", icon: Clock },
@@ -292,13 +292,13 @@ export default function TaskGrid({ tasks }: TaskGridProps) {
             <button
               key={key}
               onClick={() => setPhaseFilter(key as PhaseFilter)}
-              className={`group relative flex items-center gap-2 rounded-full border px-4 py-1.5 text-sm font-semibold transition-all ${phaseFilter === key
-                ? "border-sky-500/50 bg-gradient-to-r from-sky-500/20 to-indigo-500/20 text-sky-100 shadow-lg shadow-sky-900/20"
-                : "border-slate-800 bg-slate-950/40 text-slate-400 hover:border-slate-700 hover:bg-slate-900 hover:text-slate-200"
+              className={`group relative flex items-center gap-2 rounded-full border px-4 py-1.5 text-sm font-semibold transition-all cursor-pointer ${phaseFilter === key
+                ? "border-sky-500 bg-white text-sky-700 shadow-[var(--shadow-subtle)]"
+                : "border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_96%,transparent)] text-[color:var(--muted)] hover:border-[color:var(--border-strong)] hover:text-[color:var(--text)]"
                 }`}
               style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}
             >
-              <Icon className={`h-4 w-4 transition-colours ${phaseFilter === key ? "text-sky-300" : "text-slate-500 group-hover:text-slate-400"
+              <Icon className={`h-4 w-4 transition-colours ${phaseFilter === key ? "text-sky-600" : "text-[color:var(--muted)] group-hover:text-[color:var(--text)]"
                 }`} />
               {label}
               {phaseFilter === key && (
@@ -315,8 +315,8 @@ export default function TaskGrid({ tasks }: TaskGridProps) {
             <div className="mb-10 space-y-8">
               <div className="flex items-center gap-3">
                 <Calendar className="h-5 w-5 text-sky-400" />
-                <h3 className="text-lg font-semibold text-slate-50" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" }}>Pre-launch</h3>
-                <span className="text-sm text-slate-400" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
+                <h3 className="text-lg font-semibold text-[color:var(--heading)]" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" }}>Pre-launch</h3>
+                <span className="text-sm text-[color:var(--muted)]" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
                   ({preLaunchTasks.length} tasks)
                 </span>
               </div>
@@ -330,8 +330,8 @@ export default function TaskGrid({ tasks }: TaskGridProps) {
             <div className="mb-10 space-y-8">
               <div className="flex items-center gap-3">
                 <Rocket className="h-5 w-5 text-amber-400" />
-                <h3 className="text-lg font-semibold text-slate-50" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" }}>Launch Day</h3>
-                <span className="text-sm text-slate-400" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
+                <h3 className="text-lg font-semibold text-[color:var(--heading)]" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" }}>Launch Day</h3>
+                <span className="text-sm text-[color:var(--muted)]" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
                   ({launchDayTasks.length} tasks)
                 </span>
               </div>
@@ -345,8 +345,8 @@ export default function TaskGrid({ tasks }: TaskGridProps) {
             <div className="mb-10 space-y-8">
               <div className="flex items-center gap-3">
                 <CheckCircle className="h-5 w-5 text-emerald-400" />
-                <h3 className="text-lg font-semibold text-slate-50" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" }}>Post-launch</h3>
-                <span className="text-sm text-slate-400" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
+                <h3 className="text-lg font-semibold text-[color:var(--heading)]" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" }}>Post-launch</h3>
+                <span className="text-sm text-[color:var(--muted)]" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
                   ({postLaunchTasks.length} tasks)
                 </span>
               </div>
@@ -360,8 +360,8 @@ export default function TaskGrid({ tasks }: TaskGridProps) {
             <div className="space-y-8">
               <div className="flex items-center gap-3">
                 <CheckCircle className="h-5 w-5 text-slate-400" />
-                <h3 className="text-lg font-semibold text-slate-50" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" }}>Completed</h3>
-                <span className="text-sm text-slate-400" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
+                <h3 className="text-lg font-semibold text-[color:var(--heading)]" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" }}>Completed</h3>
+                <span className="text-sm text-[color:var(--muted)]" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
                   ({completedTasks.length} tasks)
                 </span>
               </div>
@@ -386,7 +386,7 @@ export default function TaskGrid({ tasks }: TaskGridProps) {
             {phaseFilter === "completed" && (
               <CheckCircle className="h-5 w-5 text-slate-400" />
             )}
-            <h3 className="text-lg font-semibold text-slate-50" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" }}>
+            <h3 className="text-lg font-semibold text-[color:var(--heading)]" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" }}>
               {phaseFilter === "pre-launch"
                 ? "Pre-launch"
                 : phaseFilter === "launch-day"
@@ -395,7 +395,7 @@ export default function TaskGrid({ tasks }: TaskGridProps) {
                     ? "Post-launch"
                     : "Completed"}
             </h3>
-            <span className="text-sm text-slate-400" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
+            <span className="text-sm text-[color:var(--muted)]" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
               ({filteredTasks.length} tasks)
             </span>
           </div>

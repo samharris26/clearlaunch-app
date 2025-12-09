@@ -286,7 +286,7 @@ export default function ConversationalOnboarding({
           <div className="flex flex-col items-center justify-center p-12 gap-8 w-full h-full bg-slate-50 rounded-xl">
             {/* Logo */}
             <div className="flex flex-row items-center p-0 gap-2 w-[146px] h-[25px] flex-none order-0 flex-grow-0">
-              <img src="/Clearlaunch-logo-light.svg" alt="ClearLaunch" className="h-6 w-auto" />
+              <img src="/ClearLaunch-logo.svg" alt="ClearLaunch" className="h-6 w-auto" />
             </div>
 
             {/* Generating Content */}
@@ -333,7 +333,7 @@ export default function ConversationalOnboarding({
             <div className="flex flex-col items-start p-0 gap-6 w-[460px] flex-none order-0 self-stretch flex-grow-0">
               {/* Logo and Branding */}
               <div className="flex flex-row items-center p-0 gap-2 w-[146px] h-[25px] flex-none order-0 flex-grow-0">
-                <img src="/Clearlaunch-logo-light.svg" alt="ClearLaunch" className="h-6 w-auto" />
+                <img src="/ClearLaunch-logo.svg" alt="ClearLaunch" className="h-6 w-auto" />
               </div>
 
               {/* Welcome Message */}

@@ -111,7 +111,7 @@ export default async function DashboardPage() {
   const planLimits = getPlanLimits(userPlan);
   const canCreateLaunch = totalLaunches < planLimits.maxLaunches;
   return (
-    <div className="flex w-full flex-col items-center gap-12 px-4 pt-12 pb-20">
+    <div className="flex w-full max-w-6xl flex-col items-center gap-14 px-2 sm:px-4 pt-14 pb-24">
       {/* Header Banner */}
       <HeaderBanner
         userName={displayName}

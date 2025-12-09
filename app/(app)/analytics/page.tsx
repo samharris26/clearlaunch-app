@@ -48,10 +48,10 @@ export default async function AnalyticsPage() {
     const tasksInProgress = allTasks.filter(t => t.status === "in_progress").length;
 
     return (
-        <div className="flex flex-col gap-8 p-8 w-full max-w-7xl mx-auto">
+        <div className="flex flex-col gap-8 p-8 w-full max-w-7xl mx-auto text-[color:var(--text)]">
             <div className="flex flex-col gap-2">
-                <h1 className="text-3xl font-bold text-slate-50">Analytics Overview</h1>
-                <p className="text-slate-400">
+                <h1 className="text-3xl font-bold text-[color:var(--heading)]">Analytics Overview</h1>
+                <p className="text-[color:var(--muted)]">
                     Track progress across all your launches
                 </p>
             </div>
@@ -60,7 +60,7 @@ export default async function AnalyticsPage() {
                 <div className="space-y-12">
                     {/* Global Stats (Aggregated) */}
                     <section>
-                        <h2 className="text-xl font-semibold text-slate-200 mb-6">Global Performance</h2>
+                        <h2 className="text-xl font-semibold text-[color:var(--heading)] mb-6">Global Performance</h2>
                         <GlobalAnalyticsStats
                             totalLaunches={totalLaunches}
                             totalTasks={totalTasks}
@@ -71,14 +71,14 @@ export default async function AnalyticsPage() {
 
                     {/* Per-Launch Breakdown */}
                     <section>
-                        <h2 className="text-xl font-semibold text-slate-200 mb-6">Launch Breakdown</h2>
+                        <h2 className="text-xl font-semibold text-[color:var(--heading)] mb-6">Launch Breakdown</h2>
                         <LaunchAnalyticsTable launches={launches} allTasks={allTasks} />
                     </section>
                 </div>
             ) : (
-                <div className="flex flex-col items-center justify-center py-20 rounded-2xl border border-dashed border-slate-800 bg-slate-950/50">
-                    <p className="text-slate-400 mb-4">No launches found</p>
-                    <a href="/launches" className="px-4 py-2 rounded-full bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-500 transition-colors">
+                <div className="flex flex-col items-center justify-center py-20 rounded-2xl border border-dashed border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_95%,transparent)]">
+                    <p className="text-[color:var(--muted)] mb-4">No launches found</p>
+                    <a href="/launches" className="px-4 py-2 rounded-full border border-sky-200 bg-white text-sm font-semibold text-slate-900 hover:bg-sky-50 transition-colors shadow-[var(--shadow-subtle)]">
                         Create your first launch
                     </a>
                 </div>

@@ -70,18 +70,18 @@ export default async function LaunchDetailPage({ params }: Params) {
   );
 
   return (
-    <div className="flex w-full flex-col items-center gap-8 px-4 pt-8 pb-14">
+    <div className="flex w-full max-w-6xl flex-col items-center gap-10 px-2 sm:px-4 pt-12 pb-18">
       {/* Breadcrumbs */}
-      <nav className="flex w-full max-w-6xl items-center gap-1 text-sm text-slate-400" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
-        <Link href="/dashboard" className="hover:text-slate-200 transition-colors">
+      <nav className="flex w-full max-w-6xl items-center gap-1 text-sm text-[color:var(--muted)]" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
+        <Link href="/dashboard" className="hover:text-[color:var(--text)] transition-colors">
           Dashboard
         </Link>
-        <ChevronRight className="h-4 w-4 text-slate-500" />
-        <Link href="/launches" className="hover:text-slate-200 transition-colors">
+        <ChevronRight className="h-4 w-4 text-[color:var(--border-strong)]" />
+        <Link href="/launches" className="hover:text-[color:var(--text)] transition-colors">
           Launches
         </Link>
-        <ChevronRight className="h-4 w-4 text-slate-500" />
-        <span className="text-slate-300 font-medium">
+        <ChevronRight className="h-4 w-4 text-[color:var(--border-strong)]" />
+        <span className="text-[color:var(--text)] font-medium">
           {launch.launchName || "Untitled Launch"}
         </span>
       </nav>
@@ -104,14 +104,14 @@ export default async function LaunchDetailPage({ params }: Params) {
         {tasks && tasks.length > 0 ? (
           <TaskGrid tasks={tasks} />
         ) : (
-          <div className="rounded-2xl border border-dashed border-slate-700 bg-slate-950/60 p-8 text-center">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-slate-800 border border-slate-700">
-              <svg className="h-6 w-6 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="rounded-2xl border border-dashed border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_94%,transparent)] p-9 text-center shadow-[var(--shadow-subtle)]">
+            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[var(--card)] border border-[color:var(--border)]">
+              <svg className="h-6 w-6 text-[color:var(--muted)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
               </svg>
             </div>
-            <h3 className="mb-2 text-lg font-semibold text-slate-50" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" }}>No tasks yet</h3>
-            <p className="mb-4 text-sm text-slate-300" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
+            <h3 className="mb-2 text-lg font-semibold text-[color:var(--heading)]" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" }}>No tasks yet</h3>
+            <p className="mb-4 text-sm text-[color:var(--muted)] leading-6" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
               Generate an AI-powered launch plan or create tasks manually to get started.
             </p>
             <GenerateAIPlanButton

@@ -1,15 +1,71 @@
 @import "tailwindcss";
 
 :root {
-  --background: #020617;
-  --surface: #0f172a;
-  --text: #f1f5f9;
-  --muted: #94a3b8;
-  --primary: #0ea5e9;
-  --accent: #10b981;
+  --background: #050816;
+  --surface: #0b1224;
+  --card: #0f172a;
+  --text: #e3e8f4;
+  --heading: #f8fafc;
+  --muted: #9ca3af;
+  --primary: #38bdf8;
+  --accent: #22c55e;
   --foreground: var(--text);
-  --border: #1e293b;
+  --border: #1f2937;
+  --border-strong: #273449;
+  --shadow-soft: 0 4px 12px rgba(3, 7, 18, 0.12);
+  --shadow-subtle: 0 2px 6px rgba(3, 7, 18, 0.1);
   --spacing: 4px;
+  --space-2: calc(var(--spacing) * 2);
+  --space-3: calc(var(--spacing) * 3);
+  --space-4: calc(var(--spacing) * 4);
+  --radius-lg: 22px;
+  --gutter: 28px;
+
+  /* chip tokens (dark) */
+  --chip-blue-bg: rgba(14, 165, 233, 0.10);
+  --chip-blue-border: rgba(14, 165, 233, 0.30);
+  --chip-blue-text: #7dd3fc;
+  --chip-green-bg: rgba(16, 185, 129, 0.10);
+  --chip-green-border: rgba(16, 185, 129, 0.30);
+  --chip-green-text: #6ee7b7;
+  --chip-red-bg: rgba(239, 68, 68, 0.10);
+  --chip-red-border: rgba(239, 68, 68, 0.30);
+  --chip-red-text: #fca5a5;
+  --chip-orange-bg: rgba(245, 158, 11, 0.10);
+  --chip-orange-border: rgba(245, 158, 11, 0.30);
+  --chip-orange-text: #fcd34d;
+}
+
+.theme-light {
+  --background: #f6f8fc;
+  --surface: #ffffff;
+  --card: #ffffff;
+  --text: #0f172a;
+  --heading: #0b1120;
+  --muted: #4b5563;
+  --primary: #2563eb;
+  --accent: #0ea5e9;
+  --foreground: var(--text);
+  --border: #e5e7eb;
+  --border-strong: #cbd5e1;
+  --shadow-soft: 0 4px 12px rgba(15, 23, 42, 0.06);
+  --shadow-subtle: 0 2px 6px rgba(15, 23, 42, 0.05);
+  --radius-lg: 20px;
+  --gutter: 32px;
+
+  /* chip tokens (light) */
+  --chip-blue-bg: rgba(14, 165, 233, 0.12);
+  --chip-blue-border: rgba(14, 165, 233, 0.30);
+  --chip-blue-text: #075985;
+  --chip-green-bg: rgba(16, 185, 129, 0.12);
+  --chip-green-border: rgba(16, 185, 129, 0.30);
+  --chip-green-text: #065f46;
+  --chip-red-bg: rgba(239, 68, 68, 0.12);
+  --chip-red-border: rgba(239, 68, 68, 0.30);
+  --chip-red-text: #991b1b;
+  --chip-orange-bg: rgba(245, 158, 11, 0.12);
+  --chip-orange-border: rgba(245, 158, 11, 0.30);
+  --chip-orange-text: #92400e;
 }
 
 @theme inline {
@@ -29,4 +85,21 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
+  transition: background-color 200ms ease, color 200ms ease;
+}
+
+.surface-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-subtle);
+}
+
+.surface-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-soft);
+}
+
+.text-muted {
+  color: var(--muted);
 }

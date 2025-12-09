@@ -33,10 +33,10 @@ type TaskCardProps = {
 };
 
 const chipToneToClasses: Record<"blue" | "green" | "red" | "orange", { bg: string; border: string; text: string }> = {
-  blue: { bg: "bg-sky-500/10", border: "border-sky-500/30", text: "text-sky-300" },
-  green: { bg: "bg-emerald-500/10", border: "border-emerald-500/30", text: "text-emerald-300" },
-  red: { bg: "bg-red-500/10", border: "border-red-500/30", text: "text-red-300" },
-  orange: { bg: "bg-amber-500/10", border: "border-amber-500/30", text: "text-amber-300" },
+  blue: { bg: "bg-[color:var(--chip-blue-bg)]", border: "border-[color:var(--chip-blue-border)]", text: "text-[color:var(--chip-blue-text)]" },
+  green: { bg: "bg-[color:var(--chip-green-bg)]", border: "border-[color:var(--chip-green-border)]", text: "text-[color:var(--chip-green-text)]" },
+  red: { bg: "bg-[color:var(--chip-red-bg)]", border: "border-[color:var(--chip-red-border)]", text: "text-[color:var(--chip-red-text)]" },
+  orange: { bg: "bg-[color:var(--chip-orange-bg)]", border: "border-[color:var(--chip-orange-border)]", text: "text-[color:var(--chip-orange-text)]" },
 };
 
 const statusColors = {
@@ -143,13 +143,13 @@ export default function TaskCard({
   const hasPostTime = !!postTime;
 
   return (
-    <div className="group relative flex h-full w-full flex-col rounded-2xl border border-slate-800 bg-gradient-to-br from-slate-950 via-slate-950 to-slate-900 p-6 shadow-xl shadow-slate-950/60 transition-all hover:-translate-y-1 hover:border-slate-700 hover:shadow-2xl hover:shadow-slate-900/50">
-      <div className="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-slate-800/10 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+    <div className="group relative flex h-full w-full flex-col rounded-2xl border border-[color:var(--border)] bg-[var(--card)] p-6 shadow-[var(--shadow-subtle)] transition-all hover:-translate-y-0.5 hover:border-[color:var(--border-strong)] hover:shadow-[var(--shadow-soft)]">
+      <div className="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-sky-500/6 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
       <div className="relative flex flex-1 flex-col gap-6">
         <div className="flex flex-col gap-2">
           <div className="flex flex-col gap-1">
             <h3
-              className={`${titleSizeClass} tracking-[-0.02em] text-slate-50 line-clamp-2`}
+              className={`${titleSizeClass} tracking-[-0.02em] text-[color:var(--heading)] line-clamp-2`}
               style={{
                 fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif",
                 lineHeight: "calc(var(--spacing) * 8)",
@@ -159,7 +159,7 @@ export default function TaskCard({
             </h3>
             <div className="flex items-center gap-3">
               <p
-                className="text-sm leading-6 text-slate-300 line-clamp-3"
+                className="text-sm leading-6 text-[color:var(--muted)] line-clamp-3"
                 style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}
               >
                 {description}
@@ -176,14 +176,14 @@ export default function TaskCard({
         <div className="flex flex-col gap-3">
           {overview ? (
             <p
-              className="text-sm leading-6 text-slate-400 line-clamp-3"
+              className="text-sm leading-6 text-[color:var(--muted)] line-clamp-3"
               style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}
             >
               {overview}
             </p>
           ) : null}
 
-          <div className="flex flex-wrap items-center gap-2 text-xs text-slate-400">
+          <div className="flex flex-wrap items-center gap-2 text-xs text-[color:var(--muted)]">
             {chip && chipTone ? (
               <span
                 className={["inline-flex items-center gap-1 rounded-full border px-3 py-1 font-medium", chipTone.bg, chipTone.border, chipTone.text].join(" ")}
@@ -192,7 +192,7 @@ export default function TaskCard({
                 {chip.label}
               </span>
             ) : null}
-            {ownerName && <span className="text-slate-500">Owner: {ownerName}</span>}
+            {ownerName && <span className="text-[color:var(--muted)]/80">Owner: {ownerName}</span>}
           </div>
 
           <div className="flex items-center gap-2">
@@ -203,7 +203,7 @@ export default function TaskCard({
                   e.stopPropagation();
                   onCopyOutline();
                 }}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-900/60 px-2.5 py-1 text-xs text-slate-300 transition-colours hover:border-slate-600 hover:bg-slate-900"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-[color:var(--border)] bg-[color:var(--surface)] px-2.5 py-1 text-xs text-[color:var(--text)] transition-colours hover:border-[color:var(--border-strong)]"
               >
                 <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
@@ -217,9 +217,9 @@ export default function TaskCard({
         </div>
       </div>
 
-      <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-slate-800 pt-4 text-xs font-medium">
+      <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-[color:var(--border)] pt-4 text-xs font-medium">
         {dueLabel && (
-          <span className="inline-flex items-center rounded-full border border-slate-700 bg-slate-900/70 px-3 py-1 text-slate-200">
+          <span className="inline-flex items-center rounded-full border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_92%,transparent)] px-3 py-1 text-[color:var(--text)]">
             {dueLabel}
           </span>
         )}
@@ -228,10 +228,10 @@ export default function TaskCard({
             className={[
               "inline-flex items-center rounded-full border px-3 py-1",
               reviewStatus === "approved"
-                ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
+                ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-600"
                 : reviewStatus === "needs_review"
-                  ? "border-amber-500/30 bg-amber-500/10 text-amber-300"
-                  : "border-slate-700 bg-slate-800 text-slate-400",
+                  ? "border-amber-500/30 bg-amber-500/10 text-amber-600"
+                  : "border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_92%,transparent)] text-[color:var(--muted)]",
             ].join(" ")}
           >
             {reviewStatus === "approved"
