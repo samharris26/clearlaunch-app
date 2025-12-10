@@ -75,9 +75,9 @@ STRIPE_WEBHOOK_SECRET=whsec_... # Your webhook signing secret
 STRIPE_PRICE_ID_PRO=price_... # Pro plan price ID
 STRIPE_PRICE_ID_TEAM=price_... # Team plan price ID
 
-# App URL (for redirects)
+# App URL (for redirects and OAuth)
 NEXT_PUBLIC_APP_URL=http://localhost:3000 # For local dev
-# NEXT_PUBLIC_APP_URL=https://yourdomain.com # For production
+# NEXT_PUBLIC_APP_URL=https://app.clearlaunch.co.uk # For production (app subdomain)
 ```
 
 ## Step 5: Test the Integration
