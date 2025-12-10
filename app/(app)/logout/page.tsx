@@ -1,22 +1,32 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 export default function LogoutPage() {
   const router = useRouter();
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
 
   useEffect(() => {
     const handleLogout = async () => {
-      await supabase.auth.signOut();
-      router.push("/login");
-      router.refresh();
+      try {
+        const { error } = await supabase.auth.signOut();
+        if (error) {
+          console.error("Logout error:", error);
+        }
+        // Clear any local storage or session data if needed
+        // Redirect to login page
+        window.location.href = "/login";
+      } catch (error) {
+        console.error("Logout error:", error);
+        // Still redirect even if there's an error
+        window.location.href = "/login";
+      }
     };
 
     handleLogout();
-  }, [router, supabase]);
+  }, [supabase]);
 
   return (
     <div className="flex min-h-screen items-center justify-center">
