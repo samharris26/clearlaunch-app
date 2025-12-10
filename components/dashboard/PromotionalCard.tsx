@@ -167,7 +167,7 @@ export default function PromotionalCard({ type, onUpgrade, onAddLaunch, variant 
       <div className="relative">
         <button
           onClick={onAddLaunch}
-          className="inline-flex w-full items-center justify-center rounded-full bg-gradient-to-r from-sky-400 via-indigo-500 to-emerald-400 py-2.5 text-sm font-semibold text-white shadow-lg shadow-sky-900/30 transition-transform hover:-translate-y-0.5 hover:shadow-sky-900/40"
+          className="inline-flex w-full items-center justify-center rounded-full bg-gradient-to-r from-indigo-500 to-cyan-500 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-subtle)] transition-transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-[color:var(--card)]"
           style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}
         >
           Create Launch

@@ -78,7 +78,7 @@ export default async function AnalyticsPage() {
             ) : (
                 <div className="flex flex-col items-center justify-center py-20 rounded-2xl border border-dashed border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_95%,transparent)]">
                     <p className="text-[color:var(--muted)] mb-4">No launches found</p>
-                    <a href="/launches" className="px-4 py-2 rounded-full border border-sky-200 bg-white text-sm font-semibold text-slate-900 hover:bg-sky-50 transition-colors shadow-[var(--shadow-subtle)]">
+                    <a href="/launches" className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-indigo-500 to-cyan-500 px-6 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-subtle)] transition-transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-[color:var(--background)]">
                         Create your first launch
                     </a>
                 </div>
