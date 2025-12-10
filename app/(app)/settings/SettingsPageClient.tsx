@@ -44,8 +44,8 @@ export default function SettingsPageClient({ launches }: SettingsPageClientProps
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center gap-12 p-3">
-        <div className="w-full max-w-4xl">
+      <div className="flex w-full max-w-6xl flex-col items-center gap-14 px-2 sm:px-4 pt-14 pb-24">
+        <div className="w-full">
           <div className="animate-pulse">
             <div className="h-8 bg-[color-mix(in_srgb,var(--surface)_92%,transparent)] rounded w-48 mb-4"></div>
             <div className="h-4 bg-[color-mix(in_srgb,var(--surface)_92%,transparent)] rounded w-96 mb-8"></div>
@@ -62,8 +62,8 @@ export default function SettingsPageClient({ launches }: SettingsPageClientProps
 
   if (error || !usage) {
     return (
-      <div className="flex flex-col items-center gap-12 p-3">
-        <div className="w-full max-w-4xl text-center">
+      <div className="flex w-full max-w-6xl flex-col items-center gap-14 px-2 sm:px-4 pt-14 pb-24">
+        <div className="w-full text-center">
           <h1 className="text-2xl font-bold text-[color:var(--heading)] mb-4">Settings</h1>
           <p className="text-[color:var(--muted)]">Unable to load your plan information. Please try again later.</p>
         </div>
@@ -77,8 +77,8 @@ export default function SettingsPageClient({ launches }: SettingsPageClientProps
   const aiCallsPercentage = (usage.currentAiCalls / usage.maxAiCalls) * 100;
 
   return (
-    <div className="flex flex-col items-center gap-12 p-6 pb-20 text-[color:var(--text)]">
-      <div className="w-full max-w-4xl space-y-8">
+    <div className="flex w-full max-w-6xl flex-col items-center gap-14 px-2 sm:px-4 pt-14 pb-24 text-[color:var(--text)]">
+      <div className="w-full space-y-8">
         <div>
           <h1
             className="text-3xl font-bold text-[color:var(--heading)] mb-2"
