@@ -66,9 +66,24 @@ function LoginForm() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#f6f5f4] p-4">
-      <div className="w-full max-w-md rounded-lg border border-white/70 bg-white/95 p-8 shadow-[0_24px_55px_-28px_rgba(34,71,136,0.35)] backdrop-blur">
-        <h1 className="mb-6 text-2xl font-bold text-slate-800">Sign in to ClearLaunch</h1>
+    <div className="flex min-h-screen items-center justify-center bg-[#f6f8fc] p-4 relative overflow-hidden">
+      {/* Background accents */}
+      <div className="absolute inset-0 -z-10 overflow-hidden">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 h-[500px] w-[800px] rounded-full bg-sky-500/10 blur-[100px]" />
+        <div className="absolute bottom-0 right-1/4 h-[400px] w-[600px] rounded-full bg-cyan-500/10 blur-[80px]" />
+      </div>
+
+      <div className="w-full max-w-md rounded-xl border border-white/70 bg-white/95 p-8 shadow-[0_24px_55px_-28px_rgba(14,165,233,0.15)] backdrop-blur-sm">
+        {/* Logo */}
+        <div className="mb-8 flex justify-center">
+          <img
+            src="/ClearLaunch-logo.svg"
+            alt="ClearLaunch"
+            className="h-10 w-auto"
+          />
+        </div>
+        
+        <h1 className="mb-6 text-center text-2xl font-bold text-slate-800">Sign in to ClearLaunch</h1>
         
         {error && (
           <div className="mb-4 rounded bg-red-50 p-3 text-sm text-red-800">
@@ -110,7 +125,7 @@ function LoginForm() {
           <button
             type="submit"
             disabled={loading || oauthLoading}
-            className="w-full rounded-md bg-cyan-600 px-4 py-2 font-medium text-white hover:bg-cyan-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full rounded-md bg-cyan-600 px-4 py-2.5 font-semibold text-white hover:bg-cyan-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm hover:shadow-md"
           >
             {loading ? "Signing in..." : "Sign in"}
           </button>
@@ -129,7 +144,7 @@ function LoginForm() {
         <button
           onClick={handleGoogleLogin}
           disabled={oauthLoading || loading}
-          className="w-full rounded-md border border-slate-300 bg-white px-4 py-2 font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          className="w-full rounded-md border border-slate-300 bg-white px-4 py-2.5 font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-colors shadow-sm hover:shadow-md"
         >
           <svg className="h-5 w-5" viewBox="0 0 24 24">
             <path
@@ -166,10 +181,21 @@ function LoginForm() {
 export default function LoginPage() {
   return (
     <Suspense fallback={
-      <div className="flex min-h-screen items-center justify-center bg-[#f6f5f4] p-4">
-        <div className="w-full max-w-md rounded-lg border border-white/70 bg-white/95 p-8 shadow-[0_24px_55px_-28px_rgba(34,71,136,0.35)] backdrop-blur">
-          <h1 className="mb-6 text-2xl font-bold text-slate-800">Sign in to ClearLaunch</h1>
-          <p className="text-slate-600">Loading...</p>
+      <div className="flex min-h-screen items-center justify-center bg-[#f6f8fc] p-4 relative overflow-hidden">
+        <div className="absolute inset-0 -z-10 overflow-hidden">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 h-[500px] w-[800px] rounded-full bg-sky-500/10 blur-[100px]" />
+          <div className="absolute bottom-0 right-1/4 h-[400px] w-[600px] rounded-full bg-cyan-500/10 blur-[80px]" />
+        </div>
+        <div className="w-full max-w-md rounded-xl border border-white/70 bg-white/95 p-8 shadow-[0_24px_55px_-28px_rgba(14,165,233,0.15)] backdrop-blur-sm">
+          <div className="mb-8 flex justify-center">
+            <img
+              src="/ClearLaunch-logo.svg"
+              alt="ClearLaunch"
+              className="h-10 w-auto"
+            />
+          </div>
+          <h1 className="mb-6 text-center text-2xl font-bold text-slate-800">Sign in to ClearLaunch</h1>
+          <p className="text-center text-slate-600">Loading...</p>
         </div>
       </div>
     }>
