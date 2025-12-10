@@ -177,7 +177,7 @@ function RichTextEditor({ value, onChange, onBlur, placeholder, showToolbar = tr
   return (
     <div
       className={cn(
-        "flex flex-col gap-2 rounded-xl border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_94%,transparent)] shadow-[var(--shadow-subtle)] transition-shadow focus-within:shadow-[var(--shadow-soft)] focus-within:ring-2 focus-within:ring-sky-400/40",
+        "flex flex-col gap-2 rounded-lg border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_94%,transparent)] shadow-[var(--shadow-subtle)] transition-shadow focus-within:shadow-[var(--shadow-soft)] focus-within:ring-2 focus-within:ring-sky-400/40",
         !showToolbar && "overflow-hidden"
       )}
     >
@@ -235,7 +235,7 @@ function RichTextEditor({ value, onChange, onBlur, placeholder, showToolbar = tr
         ref={editorRef as React.RefObject<HTMLDivElement>}
         className={cn(
           "min-h-[300px] max-h-[600px] w-full px-4 py-4 text-base leading-7 text-[color:var(--text)] focus:outline-none overflow-y-auto",
-          showToolbar ? "rounded-b-xl" : "rounded-xl"
+          showToolbar ? "rounded-b-lg" : "rounded-lg"
         )}
         contentEditable
         data-placeholder={placeholder}
@@ -1018,7 +1018,7 @@ export function TaskDrawer({ task, tasks, open, onClose, onTaskChange }: TaskDra
                   </div>
 
                   <div className="relative group">
-                    <div className="absolute -inset-0.5 rounded-2xl bg-gradient-to-br from-sky-500/20 to-indigo-500/20 opacity-0 transition-opacity group-focus-within:opacity-100 blur-sm" />
+                    <div className="absolute -inset-0.5 rounded-lg bg-gradient-to-br from-sky-500/20 to-indigo-500/20 opacity-0 transition-opacity group-focus-within:opacity-100 blur-sm" />
                     <div className="relative">
                       <RichTextEditor
                         editorRef={workspaceEditorRef as React.RefObject<HTMLDivElement>}

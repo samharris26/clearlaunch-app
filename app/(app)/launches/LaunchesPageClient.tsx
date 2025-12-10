@@ -52,17 +52,17 @@ export default function LaunchesPageClient({ launches, archivedLaunches = [] }: 
 
   const createButtonLabel = canCreateLaunch ? "Create new launch" : "Upgrade to add more";
   const createButtonClassName = cn(
-    "inline-flex items-center justify-center rounded-full px-6 py-2.5 text-sm font-semibold transition-transform disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer",
+    "inline-flex items-center justify-center rounded-full px-6 py-2.5 text-sm font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer",
     canCreateLaunch
-      ? "bg-gradient-to-r from-sky-400 via-indigo-500 to-emerald-400 text-white shadow-lg shadow-sky-900/30 hover:-translate-y-0.5 hover:shadow-sky-900/40"
-      : "bg-gradient-to-r from-indigo-500 to-cyan-500 text-white shadow-[var(--shadow-subtle)] hover:shadow-[var(--shadow-soft)] hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-[color:var(--background)]"
+      ? "bg-emerald-500 text-white shadow-sm shadow-emerald-900/40 hover:bg-emerald-400"
+      : "bg-indigo-500 text-white shadow-[var(--shadow-subtle)] hover:bg-indigo-400 hover:shadow-[var(--shadow-soft)] focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-[color:var(--background)]"
   );
 
   return (
     <>
       <div className="flex w-full max-w-6xl flex-col items-center gap-14 px-2 sm:px-4 pt-14 pb-24">
         {/* Header */}
-        <div className="flex w-full max-w-6xl flex-col gap-4 rounded-2xl border border-[color:var(--border)] bg-[var(--card)]/80 p-7 shadow-[var(--shadow-subtle)] backdrop-blur">
+        <div className="flex w-full max-w-6xl flex-col gap-4 rounded-xl border border-[color:var(--border)] bg-[var(--card)]/80 p-7 shadow-[var(--shadow-subtle)] backdrop-blur">
             <div className="flex flex-col gap-2">
               <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-[color:var(--muted)]">
                 Launch library
@@ -156,25 +156,25 @@ export default function LaunchesPageClient({ launches, archivedLaunches = [] }: 
             )}
           </div>
         ) : (
-          <div className="w-full max-w-6xl rounded-2xl border border-dashed border-slate-800 bg-slate-950/60 p-12 text-center">
-            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-slate-900">
-              <svg className="h-8 w-8 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="w-full max-w-6xl rounded-xl border border-dashed border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_94%,transparent)] p-12 text-center shadow-[var(--shadow-subtle)]">
+            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[var(--card)] border border-[color:var(--border)]">
+              <svg className="h-8 w-8 text-[color:var(--muted)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
               </svg>
             </div>
-            <h3 className="mb-3 text-xl font-semibold text-slate-50" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" }}>
+            <h3 className="mb-3 text-xl font-semibold text-[color:var(--heading)]" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" }}>
               No launches yet
             </h3>
-            <p className="mb-6 text-slate-400" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
+            <p className="mb-6 text-[color:var(--muted)]" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
               Create your first launch to start planning and tracking your product launch journey.
             </p>
             <button
               onClick={handleCreateLaunch}
               className={cn(
-                "inline-flex items-center justify-center rounded-full px-6 py-2.5 text-sm font-semibold transition-transform disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer",
+                "inline-flex items-center justify-center rounded-full px-6 py-2.5 text-sm font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer",
                 canCreateLaunch
-                  ? "bg-gradient-to-r from-sky-400 via-indigo-500 to-emerald-400 text-white shadow-lg shadow-sky-900/30 hover:-translate-y-0.5 hover:shadow-sky-900/40"
-                  : "bg-gradient-to-r from-indigo-500 to-cyan-500 text-white shadow-[var(--shadow-subtle)] hover:shadow-[var(--shadow-soft)] hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-[color:var(--background)]"
+                  ? "bg-emerald-500 text-white shadow-sm shadow-emerald-900/40 hover:bg-emerald-400"
+                  : "bg-indigo-500 text-white shadow-[var(--shadow-subtle)] hover:bg-indigo-400 hover:shadow-[var(--shadow-soft)] focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-[color:var(--background)]"
               )}
               style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}
               disabled={loading}
