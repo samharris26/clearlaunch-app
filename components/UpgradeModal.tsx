@@ -17,7 +17,7 @@ const plans = [
     price: '$0',
     period: '/month',
     description: 'Perfect for getting started',
-    features: ['1 active launch', '3 plan regenerations per month', 'AI task tools disabled'],
+    features: ['1 active launch', '20 AI credits per month', 'AI task tools disabled'],
     current: false,
     recommended: false,
   },

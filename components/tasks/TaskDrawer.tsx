@@ -353,8 +353,8 @@ export function TaskDrawer({ task, tasks, open, onClose, onTaskChange }: TaskDra
   const totalCredits = usage?.maxAiCalls ?? undefined;
 
   const isFreePlan = usage?.plan === 'free';
-  const creditLabel = isFreePlan ? "plan regeneration" : "AI credit";
-  const creditsLabel = isFreePlan ? "plan regenerations" : "AI credits";
+  const creditLabel = "AI credit";
+  const creditsLabel = "AI credits";
   const creditsDetailText = usageLoading
     ? "Checking…"
     : totalCredits !== undefined

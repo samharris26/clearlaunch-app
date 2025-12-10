@@ -11,8 +11,10 @@ const plans = [
     description: 'Perfect for getting started',
     features: [
       '1 active launch',
-      '3 plan regenerations per month',
-      'Manual task changes only'
+      '20 AI credits per month',
+      'AI-powered launch planning',
+      'Task management & tracking',
+      'Basic launch templates'
     ],
     current: false,
     recommended: false,

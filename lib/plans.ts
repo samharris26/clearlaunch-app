@@ -11,7 +11,7 @@ export interface PlanLimits {
 export const PLAN_LIMITS: Record<Plan, PlanLimits> = {
   free: {
     maxLaunches: 1,
-    maxAiCalls: 5,
+    maxAiCalls: 20,
     name: 'Free',
     description: 'Perfect for getting started',
     priceMonthly: 0

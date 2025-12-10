@@ -405,9 +405,9 @@ export function TaskModal({ task, open, onClose, onTaskChange }: TaskModalProps)
   // Check if user is on free plan and if initial AI generation has been done
   const isFreePlan = usage?.plan === 'free';
 
-  // For free plan, show "plan regenerations", for others show "AI credits"
-  const creditLabel = isFreePlan ? "plan regeneration" : "AI credit";
-  const creditsLabel = isFreePlan ? "plan regenerations" : "AI credits";
+  // Show "AI credits" for all plans
+  const creditLabel = "AI credit";
+  const creditsLabel = "AI credits";
   const creditsDetailText = usageLoading
     ? "Checking…"
     : totalCredits !== undefined

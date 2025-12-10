@@ -85,7 +85,7 @@ function GenerateAIPlanButton({ launchId, hasTasks, initialAIGenerated }: Genera
       title={
         !canMakeAiCall
           ? isFreePlan
-            ? "You've used all your plan regenerations this month. Upgrade to Pro for more."
+            ? "You've used all your AI credits this month. Upgrade to Pro for more."
             : "You've hit your monthly AI limit. Upgrade for more calls."
           : undefined
       }
@@ -99,8 +99,8 @@ function GenerateAIPlanButton({ launchId, hasTasks, initialAIGenerated }: Genera
         <>
           <Sparkles className="h-4 w-4" />
           {isFreePlan
-            ? `${isCompact ? "Regenerate" : "Generate"} Plan (${aiCallsRemaining} ${
-                aiCallsRemaining === 1 ? "regeneration" : "regenerations"
+            ? `${isCompact ? "Generate" : "Generate AI Plan"} (${aiCallsRemaining} ${
+                aiCallsRemaining === 1 ? "credit" : "credits"
               } remaining)`
             : `${isCompact ? "Generate" : "Generate AI Plan"} (${aiCallsRemaining} remaining)`}
         </>

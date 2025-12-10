@@ -163,27 +163,24 @@ export default function SettingsPageClient({ launches }: SettingsPageClientProps
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <h3 className="text-sm font-medium text-[color:var(--muted)]">
-                  {usage.plan === 'free' ? 'Plan Regenerations' : 'AI Credits'}
+                  {usage.plan === 'free' ? 'AI Credits' : 'AI Credits'}
                 </h3>
                 <span className="text-sm font-medium text-[color:var(--heading)]">
-                  {usage.plan === 'free' ? Math.min(usage.currentAiCalls, 3) : usage.currentAiCalls}
-                  <span className="text-[color:var(--muted)]"> / {usage.plan === 'free' ? 3 : usage.maxAiCalls}</span>
+                  {usage.currentAiCalls}
+                  <span className="text-[color:var(--muted)]"> / {usage.maxAiCalls}</span>
                 </span>
               </div>
               <div className="relative h-2.5 w-full overflow-hidden rounded-full bg-[color-mix(in_srgb,var(--surface)_94%,transparent)] border border-[color:var(--border)]">
                 <div
-                  className={`h-full rounded-full transition-all duration-500 ease-out ${(usage.plan === 'free' ? (Math.min(usage.currentAiCalls, 3) / 3) * 100 : aiCallsPercentage) >= 90 ? 'bg-gradient-to-r from-red-500 to-orange-500' :
-                    (usage.plan === 'free' ? (Math.min(usage.currentAiCalls, 3) / 3) * 100 : aiCallsPercentage) >= 70 ? 'bg-gradient-to-r from-amber-400 to-orange-500' :
+                  className={`h-full rounded-full transition-all duration-500 ease-out ${aiCallsPercentage >= 90 ? 'bg-gradient-to-r from-red-500 to-orange-500' :
+                    aiCallsPercentage >= 70 ? 'bg-gradient-to-r from-amber-400 to-orange-500' :
                       'bg-gradient-to-r from-indigo-400 to-purple-500'
                     }`}
-                  style={{ width: `${Math.min((usage.plan === 'free' ? (Math.min(usage.currentAiCalls, 3) / 3) * 100 : aiCallsPercentage), 100)}%` }}
+                  style={{ width: `${Math.min(aiCallsPercentage, 100)}%` }}
                 ></div>
               </div>
               <p className="text-xs text-[color:var(--muted)]">
-                {usage.plan === 'free'
-                  ? `${Math.max(0, 3 - Math.min(usage.currentAiCalls, 3))} regenerations remaining this month`
-                  : `${usage.maxAiCalls - usage.currentAiCalls} credits remaining this month`
-                }
+                {usage.maxAiCalls - usage.currentAiCalls} credits remaining this month
               </p>
             </div>
           </div>

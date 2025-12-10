@@ -182,7 +182,7 @@ export async function canFreeUserUseAI(launchId: string, actionType: 'initial_ge
     }
 
     // Free plan: allow initial generation and regenerations (subject to AI call limit)
-    // Free users get 5 AI calls/month = 1 initial + 2 regenerations (3 total plan generations)
+    // Free users get 20 AI credits/month
     if (actionType === 'initial_generation') {
       // Check monthly AI limit (this covers both initial and regenerations for free plan)
       const aiLimitCheck = await canMakeAICall();
