@@ -22,12 +22,13 @@ export default async function LaunchDetailPage({ params }: Params) {
   const { id: launchId } = await params;
 
   const supabase = await createClient();
-  // Fetch launch data
+  // Fetch launch data (allow archived, but not deleted)
   const { data: launch, error: launchError } = await supabase
     .from("launches")
     .select("*")
     .eq("id", launchId)
     .eq("userId", userId)
+    .neq("status", "deleted")
     .single();
 
   if (launchError || !launch) {
@@ -70,7 +71,7 @@ export default async function LaunchDetailPage({ params }: Params) {
   );
 
   return (
-    <div className="flex w-full max-w-6xl flex-col items-center gap-10 px-2 sm:px-4 pt-12 pb-18">
+    <div className="flex w-full max-w-6xl flex-col items-center gap-14 px-2 sm:px-4 pt-14 pb-24">
       {/* Breadcrumbs */}
       <nav className="flex w-full max-w-6xl items-center gap-1 text-sm text-[color:var(--muted)]" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
         <Link href="/dashboard" className="hover:text-[color:var(--text)] transition-colors">
@@ -88,7 +89,10 @@ export default async function LaunchDetailPage({ params }: Params) {
 
       {/* Header banner */}
       <LaunchHeader
-        launch={launch}
+        launch={{
+          ...launch,
+          status: launch.status || "active",
+        }}
         progress={progress}
         completedTasks={completedTasks}
         totalTasks={totalTasks}

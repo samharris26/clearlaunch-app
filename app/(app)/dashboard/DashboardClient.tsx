@@ -96,7 +96,8 @@ export default function DashboardClient({ launches }: DashboardClientProps) {
             </p>
             <button
               onClick={handleCreateLaunch}
-              className="inline-flex items-center rounded-md bg-cyan-600 px-4 py-2 text-sm font-medium text-white hover:bg-cyan-700 disabled:opacity-50 shadow-[var(--shadow-subtle)]"
+              className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-sky-400 via-indigo-500 to-emerald-400 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-sky-900/30 transition-transform hover:-translate-y-0.5 hover:shadow-sky-900/40 disabled:opacity-50"
+              style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}
               disabled={!canCreateLaunch}
             >
               Create Launch

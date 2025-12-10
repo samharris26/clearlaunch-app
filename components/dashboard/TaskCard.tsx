@@ -25,7 +25,6 @@ type TaskCardProps = {
   overview?: string; // subtle paragraph
   platform?: string | null;
   dueLabel?: string | null;
-  reviewStatus?: string | null;
   ownerName?: string | null;
   outline?: string | null;
   postTime?: string | null;
@@ -77,7 +76,6 @@ export default function TaskCard({
   overview,
   platform,
   dueLabel,
-  reviewStatus,
   ownerName,
   outline,
   postTime,
@@ -192,27 +190,6 @@ export default function TaskCard({
                 {chip.label}
               </span>
             ) : null}
-            {ownerName && <span className="text-[color:var(--muted)]/80">Owner: {ownerName}</span>}
-          </div>
-
-          <div className="flex items-center gap-2">
-            {outline && onCopyOutline && (
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  onCopyOutline();
-                }}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-[color:var(--border)] bg-[color:var(--surface)] px-2.5 py-1 text-xs text-[color:var(--text)] transition-colours hover:border-[color:var(--border-strong)]"
-              >
-                <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                </svg>
-                Copy outline
-              </button>
-            )}
-
-
           </div>
         </div>
       </div>
@@ -221,24 +198,6 @@ export default function TaskCard({
         {dueLabel && (
           <span className="inline-flex items-center rounded-full border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_92%,transparent)] px-3 py-1 text-[color:var(--text)]">
             {dueLabel}
-          </span>
-        )}
-        {reviewStatus && (
-          <span
-            className={[
-              "inline-flex items-center rounded-full border px-3 py-1",
-              reviewStatus === "approved"
-                ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-600"
-                : reviewStatus === "needs_review"
-                  ? "border-amber-500/30 bg-amber-500/10 text-amber-600"
-                  : "border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_92%,transparent)] text-[color:var(--muted)]",
-            ].join(" ")}
-          >
-            {reviewStatus === "approved"
-              ? "Approved"
-              : reviewStatus === "needs_review"
-                ? "Needs review"
-                : "Draft"}
           </span>
         )}
       </div>

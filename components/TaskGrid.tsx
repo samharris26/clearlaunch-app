@@ -268,7 +268,6 @@ export default function TaskGrid({ tasks }: TaskGridProps) {
             : "Task description"}
           platform={task.platform}
           dueLabel={dueDateDisplay || null}
-          reviewStatus={task.review_status || null}
           ownerName={task.owner_name || null}
           outline={task.outline || null}
           postTime={task.post_time || null}

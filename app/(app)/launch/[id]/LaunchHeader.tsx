@@ -1,9 +1,10 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Settings, Calendar as CalendarIcon } from "lucide-react";
+import { Settings, Calendar as CalendarIcon, MoreVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import LaunchSettingsModal from "@/components/LaunchSettingsModal";
+import LaunchActionsModal from "@/components/LaunchActionsModal";
 import GenerateAIPlanButton from "./GenerateAIPlanButton";
 import type { LaunchHealthMetrics } from "@/lib/launchHealth";
 
@@ -15,6 +16,7 @@ interface LaunchHeaderProps {
     target_date?: string | null;
     launchType?: string | null;
     initialAIGenerated?: boolean | null;
+    status?: string | null;
   };
   progress: number;
   completedTasks: number;
@@ -61,6 +63,7 @@ export default function LaunchHeader({
   health,
 }: LaunchHeaderProps) {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isActionsOpen, setIsActionsOpen] = useState(false);
   const formattedLaunchDate = useMemo(() => formatDate(launch.target_date), [launch.target_date]);
   const metrics = {
     planCompleteness: health?.planCompleteness ?? 0,
@@ -71,7 +74,7 @@ export default function LaunchHeader({
 
   return (
     <>
-      <div className="flex w-full max-w-6xl flex-col gap-7 rounded-3xl border border-[color:var(--border)] bg-[var(--card)] p-7 shadow-[var(--shadow-soft)]">
+      <div className="flex w-full max-w-6xl flex-col gap-7 rounded-2xl border border-[color:var(--border)] bg-[var(--card)] p-7 shadow-[var(--shadow-soft)]">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div className="flex-1 space-y-4">
             <div>
@@ -105,6 +108,13 @@ export default function LaunchHeader({
                 aria-label="Launch settings"
               >
                 <Settings className="h-5 w-5" />
+              </button>
+              <button
+                onClick={() => setIsActionsOpen(true)}
+                className="flex items-center justify-center rounded-xl border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_90%,transparent)] p-2 text-[color:var(--muted)] transition-colors hover:border-[color:var(--border-strong)] hover:text-[color:var(--text)] shadow-[var(--shadow-subtle)]"
+                aria-label="Launch actions"
+              >
+                <MoreVertical className="h-5 w-5" />
               </button>
             </div>
             <div className="w-full sm:w-auto">
@@ -159,6 +169,13 @@ export default function LaunchHeader({
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
         launch={launch}
+      />
+      <LaunchActionsModal
+        isOpen={isActionsOpen}
+        onClose={() => setIsActionsOpen(false)}
+        launchId={launchId}
+        launchName={launch.launchName || "Untitled Launch"}
+        launchStatus={launch.status || "active"}
       />
     </>
   );

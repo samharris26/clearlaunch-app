@@ -41,27 +41,38 @@ export default function Sidebar() {
               isLaunchesRoute ||
               pathname === href ||
               (href !== "/" && pathname?.startsWith(href));
+            const isTemplates = href === "/templates";
             return (
-              <Link
+              <div
                 key={href}
-                href={href}
-                className={`flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm transition-colors cursor-pointer ${active
+                onClick={isTemplates ? (e) => e.preventDefault() : undefined}
+                className={`flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm transition-colors ${isTemplates ? "cursor-not-allowed opacity-60" : "cursor-pointer"} ${active && !isTemplates
                   ? "bg-[var(--card)] text-[color:var(--heading)] font-semibold border border-[color:var(--border-strong)] shadow-[var(--shadow-subtle)]"
                   : "text-[color:var(--muted)] hover:text-[color:var(--text)] hover:bg-[color-mix(in_srgb,var(--card)_70%,transparent)]"
                   }`}
                 style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}
               >
-                <Icon className="h-4 w-4 text-[color:var(--muted)]" />
-                <span className="flex items-center gap-2">
-                  {label}
-                  {href === "/templates" && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-[color-mix(in_srgb,var(--card)_90%,transparent)] border border-[color:var(--border)] px-2 py-0.5 text-[0.625rem] font-medium text-[color:var(--muted)]">
-                      <Clock className="h-3 w-3" />
-                      Soon
+                {isTemplates ? (
+                  <>
+                    <Icon className="h-4 w-4 text-[color:var(--muted)]" />
+                    <span className="flex items-center gap-2">
+                      {label}
+                      <span className="inline-flex items-center gap-1 rounded-full bg-[color-mix(in_srgb,var(--card)_90%,transparent)] border border-[color:var(--border)] px-2 py-0.5 text-[0.625rem] font-medium text-[color:var(--muted)]">
+                        <Clock className="h-3 w-3" />
+                        Soon
+                      </span>
                     </span>
-                  )}
-                </span>
-              </Link>
+                  </>
+                ) : (
+                  <Link
+                    href={href}
+                    className="flex items-center gap-3 w-full"
+                  >
+                    <Icon className="h-4 w-4 text-[color:var(--muted)]" />
+                    <span>{label}</span>
+                  </Link>
+                )}
+              </div>
             );
           })}
         </div>

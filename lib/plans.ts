@@ -50,10 +50,17 @@ export function getUpgradeMessage(type: 'launches' | 'ai', currentPlan: Plan): s
   const limits = getPlanLimits(currentPlan);
   
   if (type === 'launches') {
-    return `You've reached your plan limit of ${limits.maxLaunches} active launch${limits.maxLaunches === 1 ? '' : 'es'}. Upgrade to create more launches.`;
+    if (currentPlan === 'free') {
+      return `Free plan includes 1 launch slot. Archive or reset your current launch, or upgrade to create more.`;
+    }
+    return `You've reached your plan limit of ${limits.maxLaunches} launch slot${limits.maxLaunches === 1 ? '' : 's'}. Upgrade to create more launches.`;
   } else {
     return `You've reached your monthly AI limit of ${limits.maxAiCalls} calls. Upgrade to unlock more AI-powered features.`;
   }
+}
+
+export function isFreePlan(plan: Plan): boolean {
+  return plan === 'free';
 }
 
 export function getNextPlan(currentPlan: Plan): Plan | null {

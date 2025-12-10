@@ -43,11 +43,14 @@ export default async function DashboardPage() {
   // Get user plan
   const userPlan = (profile.plan as "free" | "pro" | "power") || "free";
 
-  // Fetch real launches from Supabase
+  // Fetch active launches (exclude deleted and archived)
   const { data: launchesData, error: launchesError } = await supabase
     .from("launches")
     .select("*")
     .eq("userId", userId)
+    .neq("status", "deleted")
+    .neq("status", "archived")
+    .in("status", ["active", "planning"])
     .order("target_date", { ascending: true })
     .order("createdAt", { ascending: false });
 

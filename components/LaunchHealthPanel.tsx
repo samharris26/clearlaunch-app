@@ -121,11 +121,6 @@ export default function LaunchHealthPanel({ launch, tasks, metrics, template: te
                       )}
                     </div>
                   </div>
-                  <span className="rounded-full bg-slate-950 border border-slate-700 px-2 py-0.5 text-[0.625rem] text-slate-300">
-                    {task.review_status === "approved" ? "Approved" :
-                      task.review_status === "needs_review" ? "Needs review" :
-                        "Draft"}
-                  </span>
                 </div>
               );
             })}

@@ -29,20 +29,31 @@ export async function checkLaunchLimit(): Promise<UsageCheckResult> {
       return { allowed: false, message: "User not found" };
     }
 
-    const { data: launches, error: launchesError } = await supabase
+    const plan = (userData.plan as Plan) || 'free';
+    
+    // For free users: count ALL launches ever created (including deleted)
+    // For paid users: count only active and archived (exclude deleted)
+    let launchesQuery = supabase
       .from("launches")
-      .select("id")
-      .eq("userId", userId)
-      .neq("status", "completed");
+      .select("id", { count: 'exact', head: true })
+      .eq("userId", userId);
+
+    if (plan === 'free') {
+      // Count all launches for free users - no status filter
+      // This prevents abuse by deleting to create new launches
+    } else {
+      // For paid users, exclude deleted launches (they free up slots)
+      // Include "planning" for backward compatibility with existing launches
+      launchesQuery = launchesQuery.in("status", ['active', 'archived', 'planning']);
+    }
+
+    const { count: currentLaunches, error: launchesError } = await launchesQuery;
 
     if (launchesError) {
       return { allowed: false, message: "Error checking launches" };
     }
 
-    const currentLaunches = launches?.length || 0;
-    const plan = (userData.plan as Plan) || 'free';
-
-    if (!canCreateLaunch(plan, currentLaunches)) {
+    if (!canCreateLaunch(plan, currentLaunches || 0)) {
       return {
         allowed: false,
         message: getUpgradeMessage('launches', plan),
@@ -219,20 +230,31 @@ export async function getUserUsage(): Promise<{
 
     console.log("getUserUsage: User data:", userData);
 
-    // Get current launches count
-    const { data: launches, error: launchesError } = await supabase
+    const plan = (userData.plan as Plan) || 'free';
+    
+    // For free users: count ALL launches ever created (including deleted)
+    // For paid users: count only active and archived (exclude deleted)
+    let launchesQuery = supabase
       .from("launches")
-      .select("id")
-      .eq("userId", userId)
-      .neq("status", "completed");
+      .select("id", { count: 'exact', head: true })
+      .eq("userId", userId);
+
+    if (plan === 'free') {
+      // Count all launches for free users - no status filter
+    } else {
+      // For paid users, exclude deleted launches
+      // Include "planning" for backward compatibility with existing launches
+      launchesQuery = launchesQuery.in("status", ['active', 'archived', 'planning']);
+    }
+
+    const { count: currentLaunches, error: launchesError } = await launchesQuery;
 
     if (launchesError) {
       console.error("Error getting launches for usage:", launchesError);
       return null;
     }
-
-    const plan = (userData.plan as Plan) || 'free';
-    const currentLaunches = launches?.length || 0;
+    
+    const launchCount = currentLaunches ?? 0;
     let currentAiCalls = userData.ai_calls_used || 0;
 
     // Check if we need to reset monthly usage
@@ -249,7 +271,7 @@ export async function getUserUsage(): Promise<{
 
     return {
       plan,
-      currentLaunches,
+      currentLaunches: launchCount,
       maxLaunches: limits.maxLaunches,
       currentAiCalls,
       maxAiCalls: limits.maxAiCalls

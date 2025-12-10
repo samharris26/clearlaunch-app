@@ -7,6 +7,13 @@ import { Button } from "@/components/ui/button";
 import { createTask, CreateTaskState } from "@/lib/actions/tasks";
 import { Loader2, Calendar as CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface CreateTaskModalProps {
     isOpen: boolean;
@@ -44,6 +51,7 @@ export default function CreateTaskModal({ isOpen, onClose, launchId }: CreateTas
     const createTaskWithId = createTask.bind(null, launchId);
     const [state, dispatch, isPending] = useActionState(createTaskWithId, initialState);
     const [phase, setPhase] = useState("pre-launch");
+    const [platform, setPlatform] = useState("");
 
     useEffect(() => {
         if (state.message === "success") {
@@ -81,17 +89,20 @@ export default function CreateTaskModal({ isOpen, onClose, launchId }: CreateTas
                             <label htmlFor="phase" className="text-sm font-medium text-[color:var(--muted)]">
                                 Phase
                             </label>
-                            <select
-                                id="phase"
-                                name="phase"
+                            <Select
                                 value={phase}
-                                onChange={(e) => setPhase(e.target.value)}
-                                className="w-full rounded-md border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_94%,transparent)] px-3 py-2 text-sm text-[color:var(--text)] focus:border-sky-500/50 focus:outline-none focus:ring-1 focus:ring-sky-500/50 cursor-pointer"
+                                onValueChange={(value) => setPhase(value)}
                             >
-                                <option value="pre-launch">Pre-launch</option>
-                                <option value="launch-day">Launch Day</option>
-                                <option value="post-launch">Post-launch</option>
-                            </select>
+                                <SelectTrigger id="phase" className="w-full">
+                                    <SelectValue placeholder="Select phase" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="pre-launch">Pre-launch</SelectItem>
+                                    <SelectItem value="launch-day">Launch Day</SelectItem>
+                                    <SelectItem value="post-launch">Post-launch</SelectItem>
+                                </SelectContent>
+                            </Select>
+                            <input type="hidden" name="phase" value={phase} />
                         </div>
 
                         <div className="space-y-2">
@@ -114,21 +125,25 @@ export default function CreateTaskModal({ isOpen, onClose, launchId }: CreateTas
                         <label htmlFor="platform" className="text-sm font-medium text-[color:var(--muted)]">
                             Platform (Optional)
                         </label>
-                        <select
-                            id="platform"
-                            name="platform"
-                            className="w-full rounded-md border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_94%,transparent)] px-3 py-2 text-sm text-[color:var(--text)] focus:border-sky-500/50 focus:outline-none focus:ring-1 focus:ring-sky-500/50 cursor-pointer"
+                        <Select
+                            value={platform}
+                            onValueChange={(value) => setPlatform(value)}
                         >
-                            <option value="">Select platform...</option>
-                            <option value="email">Email</option>
-                            <option value="instagram">Instagram</option>
-                            <option value="twitter">Twitter/X</option>
-                            <option value="linkedin">LinkedIn</option>
-                            <option value="website">Website</option>
-                            <option value="youtube">YouTube</option>
-                            <option value="facebook">Facebook</option>
-                            <option value="other">Other</option>
-                        </select>
+                            <SelectTrigger id="platform" className="w-full">
+                                <SelectValue placeholder="Select platform..." />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="email">Email</SelectItem>
+                                <SelectItem value="instagram">Instagram</SelectItem>
+                                <SelectItem value="twitter">Twitter/X</SelectItem>
+                                <SelectItem value="linkedin">LinkedIn</SelectItem>
+                                <SelectItem value="website">Website</SelectItem>
+                                <SelectItem value="youtube">YouTube</SelectItem>
+                                <SelectItem value="facebook">Facebook</SelectItem>
+                                <SelectItem value="other">Other</SelectItem>
+                            </SelectContent>
+                        </Select>
+                        <input type="hidden" name="platform" value={platform} />
                     </div>
 
                     <div className="space-y-2">

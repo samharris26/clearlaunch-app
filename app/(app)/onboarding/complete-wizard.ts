@@ -65,7 +65,7 @@ export async function completeOnboardingWizard(payload: OnboardingWizardPayload)
       launch_date: payload.launchDate,
       target_date: payload.launchDate,
       template_id: payload.templateId,
-      status: "planning",
+      status: "active",
       phase: "Research & Setup",
       progress: 0,
       launchType: template.name,

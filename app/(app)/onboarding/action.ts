@@ -54,7 +54,7 @@ export async function submitOnboardingStep(data: OnboardingData) {
         launchName: data.launch_name, // Using existing column name
         description: data.launch_description,
         target_date: data.launch_date,
-        status: "planning",
+        status: "active",
         progress: 0, // Starting progress
         launchType: data.launch_category, // Map category to launch type
         toneOfVoice: "professional", // Default tone

@@ -5,6 +5,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Button } from "@/components/ui/button";
 import { updateLaunch } from "@/app/(app)/launch/[id]/update-launch/action";
 import { useRouter } from "next/navigation";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface LaunchSettingsModalProps {
   isOpen: boolean;
@@ -131,20 +138,23 @@ export default function LaunchSettingsModal({ isOpen, onClose, launch }: LaunchS
               <label htmlFor="launchType" className="text-sm font-medium text-[color:var(--muted)]">
                 Launch Type
               </label>
-              <select
-                id="launchType"
+              <Select
                 value={formData.launchType}
-                onChange={(e) => setFormData({ ...formData, launchType: e.target.value })}
-                className="w-full rounded-md border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_94%,transparent)] px-3 py-2 text-sm text-[color:var(--text)] focus:border-sky-500/50 focus:outline-none focus:ring-1 focus:ring-sky-500/50 cursor-pointer"
+                onValueChange={(value) => setFormData({ ...formData, launchType: value })}
               >
-                <option value="">Select a type</option>
-                <option value="product">Product</option>
-                <option value="service">Service</option>
-                <option value="course">Course</option>
-                <option value="app">App</option>
-                <option value="saas">SaaS</option>
-                <option value="other">Other</option>
-              </select>
+                <SelectTrigger id="launchType" className="w-full">
+                  <SelectValue placeholder="Select a type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">Select a type</SelectItem>
+                  <SelectItem value="product">Product</SelectItem>
+                  <SelectItem value="service">Service</SelectItem>
+                  <SelectItem value="course">Course</SelectItem>
+                  <SelectItem value="app">App</SelectItem>
+                  <SelectItem value="saas">SaaS</SelectItem>
+                  <SelectItem value="other">Other</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
 

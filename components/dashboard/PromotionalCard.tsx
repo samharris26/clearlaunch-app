@@ -77,7 +77,7 @@ export default function PromotionalCard({ type, onUpgrade, onAddLaunch, variant 
 
           <ul className="space-y-3 text-sm text-[color:var(--text)]" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
             {[
-              "3 active launches",
+              "3 launch slots",
               "100 AI calls per month",
               "Priority support",
               "Advanced analytics"
@@ -125,22 +125,15 @@ export default function PromotionalCard({ type, onUpgrade, onAddLaunch, variant 
       <div className="relative flex flex-col gap-7">
         {/* Card Header */}
         <div className="flex flex-col gap-2">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-sky-500/10 border border-sky-500/30 text-sky-300 group-hover:bg-sky-500/20 transition-colours">
-              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-              </svg>
-            </div>
-            <h3
-              className="text-xl font-semibold text-[color:var(--heading)] sm:text-2xl"
-              style={{
-                fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif",
-                lineHeight: "calc(var(--spacing) * 8)",
-              }}
-            >
-              Create New Launch
-            </h3>
-          </div>
+          <h3
+            className="text-xl font-semibold text-[color:var(--heading)] sm:text-2xl"
+            style={{
+              fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif",
+              lineHeight: "calc(var(--spacing) * 8)",
+            }}
+          >
+            Create New Launch
+          </h3>
           <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-3">
             <span className="text-base text-[color:var(--muted)]" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
               Start planning your next launch
@@ -174,7 +167,7 @@ export default function PromotionalCard({ type, onUpgrade, onAddLaunch, variant 
       <div className="relative">
         <button
           onClick={onAddLaunch}
-          className="relative w-full rounded-full bg-gradient-to-r from-sky-400 via-indigo-500 to-emerald-400 py-2.5 text-sm font-semibold text-slate-950 shadow-lg shadow-sky-900/30 transition-transform hover:-translate-y-0.5"
+          className="inline-flex w-full items-center justify-center rounded-full bg-gradient-to-r from-sky-400 via-indigo-500 to-emerald-400 py-2.5 text-sm font-semibold text-white shadow-lg shadow-sky-900/30 transition-transform hover:-translate-y-0.5 hover:shadow-sky-900/40"
           style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}
         >
           Create Launch

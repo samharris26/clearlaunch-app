@@ -26,7 +26,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     if (typeof document === "undefined") return;
     const root = document.documentElement;
     root.dataset.theme = theme;
-    root.classList.toggle("theme-light", theme === "light");
+    root.classList.toggle("theme-dark", theme === "dark");
     window.localStorage.setItem("cl-theme", theme);
   }, [theme]);
 

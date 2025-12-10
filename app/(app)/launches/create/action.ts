@@ -3,6 +3,7 @@
 import { getUser, createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { checkLaunchLimit } from "@/lib/usage-checks-simple";
+import { generateAILaunchPlan } from "@/app/(app)/launch/[id]/generate-ai-plan/action";
 
 export async function createLaunch(formData: FormData) {
   const user = await getUser();
@@ -21,9 +22,22 @@ export async function createLaunch(formData: FormData) {
   const description = formData.get("description") as string;
   const targetDate = formData.get("targetDate") as string;
   const launchType = formData.get("launchType") as string;
+  const toneOfVoice = formData.get("toneOfVoice") as string;
+  const platformsJson = formData.get("platforms") as string;
 
   if (!launchName) {
     throw new Error("Launch name is required");
+  }
+
+  // Parse platforms array from JSON string, or use empty array
+  let platforms: string[] = [];
+  if (platformsJson) {
+    try {
+      platforms = JSON.parse(platformsJson);
+    } catch (e) {
+      console.error("Error parsing platforms:", e);
+      platforms = [];
+    }
   }
 
   try {
@@ -34,12 +48,15 @@ export async function createLaunch(formData: FormData) {
         userId: userId,
         launchName: launchName,
         description: description || "",
+        context_notes: description || "", // Also save as context_notes for AI generation
         target_date: targetDate || null,
-        status: "planning",
+        launch_date: targetDate || null, // Also set launch_date
+        status: "active",
         progress: 0,
         launchType: launchType || "Product",
-        toneOfVoice: "professional",
-        platforms: [],
+        launch_type: launchType || "Product", // Also set launch_type
+        toneOfVoice: toneOfVoice || "professional",
+        platforms: platforms || [],
       })
       .select()
       .single();
@@ -47,6 +64,33 @@ export async function createLaunch(formData: FormData) {
     if (error) {
       console.error("Error creating launch:", error);
       throw new Error("Failed to create launch");
+    }
+
+    // Save platforms to launch_platforms table if provided
+    if (platforms && platforms.length > 0) {
+      const platformInserts = platforms.map((platform) => ({
+        launch_id: launch.id,
+        platform: platform,
+      }));
+      const { error: platformError } = await supabase
+        .from("launch_platforms")
+        .insert(platformInserts);
+      
+      if (platformError) {
+        console.error("Error saving platforms:", platformError);
+        // Continue anyway - platforms are optional
+      }
+    }
+
+    // Automatically generate AI tasks for the new launch
+    try {
+      console.log("Auto-generating AI tasks for new launch:", launch.id);
+      await generateAILaunchPlan(launch.id);
+      console.log("✅ AI tasks generated successfully");
+    } catch (aiError) {
+      console.error("Error generating AI tasks:", aiError);
+      // Don't fail the launch creation if AI generation fails
+      // User can manually regenerate later
     }
 
     // Redirect to the new launch page

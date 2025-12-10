@@ -4,7 +4,9 @@ import type { LaunchTemplate } from "@/lib/launchTemplates";
 export function buildLaunchPlanPrompt(
   context: LaunchContext,
   daysToLaunch: number,
-  template?: LaunchTemplate
+  beats?: LaunchTemplate["beats"],
+  templateName?: string,
+  templateDescription?: string
 ): string {
   let planType: "Short Sprint" | "Medium Runway" | "Full Runway";
 
@@ -21,8 +23,8 @@ export function buildLaunchPlanPrompt(
       ? context.platforms.map((platform) => `- ${platform}`).join("\n")
       : "- No channels supplied. Recommend the most relevant ones.";
 
-  const beatSection = template
-    ? template.beats
+  const beatSection = beats && beats.length
+    ? beats
       .map(
         (beat) =>
           `- code: "${beat.code}"\n  label: "${beat.label}"\n  phase: "${beat.phase}"\n  default_day_offset: ${beat.defaultDayOffset}\n  recommended_platforms: [${beat.recommendedPlatforms.join(
@@ -68,7 +70,11 @@ ${platformHandles}
 ----------------------------------------------------------------------
 TEMPLATE BEATS TO HONOUR
 ----------------------------------------------------------------------
-${template ? `Template: ${template.name} — ${template.description}` : "Use common launch beats."}
+${beats && beats.length
+    ? templateName
+      ? `Template: ${templateName}${templateDescription ? ` — ${templateDescription}` : ""}`
+      : "Combined beats (template + user signals)."
+    : "Use common launch beats."}
 
 ${beatSection}
 
@@ -86,10 +92,13 @@ HOW TO BUILD THE PLAN
    - **Course/Digital**: Focus on curriculum completion, beta testers, webinars, and email sequences.
 
 3. **Platform Specifics**:
+   - Use ONLY the platforms provided in the context (or template recommendations if none were provided).
+   - If **YouTube**: include behind-the-scenes series, script outlines, shot lists, upload cadence, thumbnails, titles, descriptions, end-screen/CTA, and community posts to support episodes.
    - If **Instagram**: Include Stories, Reels, and "Link in Bio" updates.
    - If **LinkedIn**: Include thought leadership, carousel posts, and personal stories.
    - If **Email**: Include specific subject line ideas or sequence beats (Welcome, Nurture, Sales).
    - If **TikTok**: Include trends, behind-the-scenes, and raw video content.
+   - Rotate platforms intelligently so no single platform gets all tasks (unless only one was provided).
 
 4. **STRICT UK ENGLISH**:
    - Use British spelling for ALL text (e.g., **colour**, **optimise**, **centre**, **behaviour**, **programme**, **licence**, **analyse**).

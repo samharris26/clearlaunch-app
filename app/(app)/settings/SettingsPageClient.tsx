@@ -1,11 +1,28 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useUsage } from "@/hooks/useUsage";
 import { getPlanLimits, getNextPlan } from "@/lib/plans";
 import Link from "next/link";
-import { Zap, Crown, Users, Rocket, Sparkles, FileText } from "lucide-react";
+import { Zap, Crown, Users, Rocket, Sparkles, FileText, Archive, Trash2, Eye, ExternalLink } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { archiveLaunch, unarchiveLaunch } from "@/app/(app)/launch/[id]/archive/action";
+import { deleteLaunch } from "@/app/(app)/launch/[id]/delete/action";
+import { isFreePlan } from "@/lib/plans";
+
+interface Launch {
+  id: string;
+  name: string;
+  status: string;
+  targetDate?: string | null;
+  createdAt?: string | null;
+  archivedAt?: string | null;
+}
+
+interface SettingsPageClientProps {
+  launches: Launch[];
+}
 
 const planIcons = {
   free: <Crown className="h-5 w-5 text-[color:var(--muted)]" />,
@@ -19,9 +36,11 @@ const planColors = {
   team: "bg-purple-50 text-purple-700 border-purple-200"
 };
 
-export default function SettingsPageClient() {
+export default function SettingsPageClient({ launches }: SettingsPageClientProps) {
+  const router = useRouter();
   const { usage, loading, error } = useUsage();
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
+  const [processingLaunchId, setProcessingLaunchId] = useState<string | null>(null);
 
   if (loading) {
     return (
@@ -76,7 +95,7 @@ export default function SettingsPageClient() {
         </div>
 
         {/* Current Plan Card */}
-        <div className="relative overflow-hidden rounded-3xl border border-[color:var(--border)] bg-[color:var(--card)] p-8 shadow-[var(--shadow-subtle)]">
+        <div className="relative overflow-hidden rounded-xl border border-[color:var(--border)] bg-[color:var(--card)] p-8 shadow-[var(--shadow-subtle)]">
           <div className="relative flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-8">
             <div className="flex items-center gap-5">
               <div className={`flex h-16 w-16 items-center justify-center rounded-2xl border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_94%,transparent)] shadow-[var(--shadow-subtle)] ${usage.plan === 'pro' ? 'text-sky-500' :
@@ -94,7 +113,7 @@ export default function SettingsPageClient() {
                   >
                     {usage.plan} Plan
                   </h2>
-                  <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium border ${usage.plan === 'pro' ? 'bg-cyan-500/10 text-cyan-300 border-cyan-500/20' :
+                  <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium border ${usage.plan === 'pro' ? 'bg-cyan-500/10 text-cyan-600 border-cyan-500/20 dark:text-cyan-400' :
                     usage.plan === 'power' ? 'bg-purple-100 text-purple-700 border-purple-300' :
                       'bg-[color-mix(in_srgb,var(--surface)_92%,transparent)] text-[color:var(--muted)] border-[color:var(--border)]'
                     }`}>
@@ -202,6 +221,133 @@ export default function SettingsPageClient() {
             </p>
           </div>
         </div>
+
+        {/* Manage Launches */}
+        {launches.length > 0 && (
+          <div className="rounded-2xl border border-[color:var(--border)] bg-[var(--card)] p-6 shadow-[var(--shadow-subtle)]">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="text-lg font-semibold text-[color:var(--heading)]">Manage Launches</h3>
+                <p className="text-sm text-[color:var(--muted)] mt-1">
+                  View and manage all your launches ({launches.length} total)
+                </p>
+              </div>
+              <Link
+                href="/launches"
+                className="inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_90%,transparent)] px-4 py-2 text-sm font-medium text-[color:var(--text)] hover:bg-[color-mix(in_srgb,var(--surface)_85%,transparent)] hover:border-[color:var(--border-strong)] transition-colors"
+              >
+                View All
+                <ExternalLink className="h-4 w-4" />
+              </Link>
+            </div>
+            <div className="space-y-2 max-h-96 overflow-y-auto">
+              {launches.slice(0, 5).map((launch) => {
+                const isArchived = launch.status === "archived";
+                const isFree = usage ? isFreePlan(usage.plan) : true;
+                
+                const handleArchive = async () => {
+                  if (processingLaunchId) return;
+                  setProcessingLaunchId(launch.id);
+                  try {
+                    if (isArchived) {
+                      await unarchiveLaunch(launch.id);
+                    } else {
+                      await archiveLaunch(launch.id);
+                    }
+                    router.refresh();
+                  } catch (err) {
+                    console.error("Error archiving launch:", err);
+                  } finally {
+                    setProcessingLaunchId(null);
+                  }
+                };
+
+                const handleDelete = async () => {
+                  if (processingLaunchId) return;
+                  if (!confirm(`Are you sure you want to ${isFree ? 'archive' : 'delete'} "${launch.name}"?`)) {
+                    return;
+                  }
+                  setProcessingLaunchId(launch.id);
+                  try {
+                    await deleteLaunch(launch.id);
+                    router.refresh();
+                  } catch (err) {
+                    console.error("Error deleting launch:", err);
+                  } finally {
+                    setProcessingLaunchId(null);
+                  }
+                };
+
+                return (
+                  <div
+                    key={launch.id}
+                    className="flex items-center justify-between gap-4 p-3 rounded-lg border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_94%,transparent)] hover:bg-[color-mix(in_srgb,var(--surface)_90%,transparent)] transition-colors"
+                  >
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <Link
+                          href={`/launch/${launch.id}`}
+                          className="font-medium text-[color:var(--heading)] hover:text-sky-500 transition-colors truncate"
+                        >
+                          {launch.name}
+                        </Link>
+                        <span
+                          className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                            isArchived
+                              ? "bg-amber-500/10 text-amber-600 border border-amber-500/20"
+                              : "bg-emerald-500/10 text-emerald-600 border border-emerald-500/20"
+                          }`}
+                        >
+                          {isArchived ? "Archived" : "Active"}
+                        </span>
+                      </div>
+                      {launch.targetDate && (
+                        <p className="text-xs text-[color:var(--muted)] mt-1">
+                          Target: {new Date(launch.targetDate).toLocaleDateString()}
+                        </p>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Link
+                        href={`/launch/${launch.id}`}
+                        className="p-2 rounded-lg border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_90%,transparent)] text-[color:var(--muted)] hover:text-[color:var(--text)] hover:border-[color:var(--border-strong)] transition-colors"
+                        title="View"
+                      >
+                        <Eye className="h-4 w-4" />
+                      </Link>
+                      <button
+                        onClick={handleArchive}
+                        disabled={processingLaunchId === launch.id}
+                        className="p-2 rounded-lg border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_90%,transparent)] text-[color:var(--muted)] hover:text-[color:var(--text)] hover:border-[color:var(--border-strong)] transition-colors disabled:opacity-50"
+                        title={isArchived ? "Unarchive" : "Archive"}
+                      >
+                        <Archive className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={handleDelete}
+                        disabled={processingLaunchId === launch.id}
+                        className="p-2 rounded-lg border border-red-500/20 bg-red-500/10 text-red-600 hover:bg-red-500/20 hover:border-red-500/40 transition-colors disabled:opacity-50"
+                        title={isFree ? "Archive" : "Delete"}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+              {launches.length > 5 && (
+                <div className="pt-2 text-center">
+                  <Link
+                    href="/launches"
+                    className="text-sm text-sky-500 hover:text-sky-600 transition-colors"
+                  >
+                    View {launches.length - 5} more launches →
+                  </Link>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Theme */}
         <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] p-6 shadow-[var(--shadow-subtle)]">

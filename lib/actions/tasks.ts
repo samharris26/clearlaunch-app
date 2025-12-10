@@ -63,7 +63,6 @@ export async function createTask(
         platform: platform || null,
         status: "todo",
         order: newOrder,
-        owner_name: "You", // Defaulting to "You" for now as per other tasks
     });
 
     if (error) {

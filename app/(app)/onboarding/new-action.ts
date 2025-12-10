@@ -143,7 +143,7 @@ export async function submitNewOnboarding(data: NewOnboardingData) {
         launchType: data.launch_type,
         target_date: data.launch_date,
         description: data.context_notes || null,
-        status: "planning",
+        status: "active",
         progress: 0,
         
         // New fields

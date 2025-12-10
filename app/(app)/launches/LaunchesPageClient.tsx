@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import LaunchCardNew from "@/components/dashboard/LaunchCardNew";
 import PromotionalCard from "@/components/dashboard/PromotionalCard";
 import AddLaunchCard from "@/components/dashboard/AddLaunchCard";
@@ -8,6 +9,7 @@ import CTABanner from "@/components/dashboard/CTABanner";
 import { useUsage } from "@/hooks/useUsage";
 import { cn } from "@/lib/utils";
 import { AI_BUTTON_ACTIVE_CLASS } from "@/lib/aiButtonStyles";
+import { Settings } from "lucide-react";
 
 type Launch = {
   id: string;
@@ -22,9 +24,10 @@ type Launch = {
 
 interface LaunchesPageClientProps {
   launches: Launch[];
+  archivedLaunches?: Launch[];
 }
 
-export default function LaunchesPageClient({ launches }: LaunchesPageClientProps) {
+export default function LaunchesPageClient({ launches, archivedLaunches = [] }: LaunchesPageClientProps) {
   const { usage, canCreateLaunch, launchesRemaining, loading } = useUsage();
 
   const handleCreateLaunch = () => {
@@ -49,59 +52,64 @@ export default function LaunchesPageClient({ launches }: LaunchesPageClientProps
 
   const createButtonLabel = canCreateLaunch ? "Create new launch" : "Upgrade to add more";
   const createButtonClassName = cn(
-    "inline-flex items-center justify-center rounded-full px-5 py-2 text-sm font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer",
+    "inline-flex items-center justify-center rounded-full px-6 py-2.5 text-sm font-semibold transition-transform disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer",
     canCreateLaunch
-      ? "border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_90%,transparent)] text-[color:var(--text)] hover:bg-[color-mix(in_srgb,var(--surface)_80%,transparent)] hover:border-[color:var(--border-strong)] shadow-[var(--shadow-subtle)]"
+      ? "bg-gradient-to-r from-sky-400 via-indigo-500 to-emerald-400 text-white shadow-lg shadow-sky-900/30 hover:-translate-y-0.5 hover:shadow-sky-900/40"
       : "bg-gradient-to-r from-indigo-500 to-cyan-500 text-white shadow-[var(--shadow-subtle)] hover:shadow-[var(--shadow-soft)] hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-[color:var(--background)]"
   );
 
   return (
     <>
-      <div className="flex w-full flex-col items-center gap-12 px-4 pt-12 pb-20">
+      <div className="flex w-full max-w-6xl flex-col items-center gap-14 px-2 sm:px-4 pt-14 pb-24">
         {/* Header */}
-        <div className="flex w-full max-w-6xl flex-col gap-4 rounded-3xl border border-[color:var(--border)] bg-[var(--card)]/80 p-7 shadow-[var(--shadow-subtle)] backdrop-blur">
-          <div className="flex flex-col gap-2">
-            <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-[color:var(--muted)]">
-              Launch library
-            </p>
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-              <div className="flex flex-col gap-2">
-                <h1
-                  className="text-2xl font-semibold text-[color:var(--heading)] sm:text-3xl"
-                  style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" }}
-                >
-                  My launches
-                </h1>
-                <p
-                  className="text-base text-[color:var(--muted)]"
-                  style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}
-                >
-                  {usageSummary}
-                </p>
-              </div>
-              <div className="flex flex-col items-start gap-2 sm:items-end">
-                <button
-                  type="button"
-                  onClick={handleCreateLaunch}
-                  className={createButtonClassName}
-                  disabled={loading}
-                  style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}
-                >
-                  {createButtonLabel}
-                </button>
-                {usage && typeof usage.maxLaunches === "number" && canCreateLaunch && (
-                  <span className="text-xs text-[color:var(--muted)]" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
-                    {safeLaunchesRemaining} launch{safeLaunchesRemaining === 1 ? "" : "es"} remaining
-                  </span>
-                )}
+        <div className="flex w-full max-w-6xl flex-col gap-4 rounded-2xl border border-[color:var(--border)] bg-[var(--card)]/80 p-7 shadow-[var(--shadow-subtle)] backdrop-blur">
+            <div className="flex flex-col gap-2">
+              <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-[color:var(--muted)]">
+                Launch library
+              </p>
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <div className="flex flex-col gap-2">
+                  <h1
+                    className="text-2xl font-semibold text-[color:var(--heading)] sm:text-3xl"
+                    style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" }}
+                  >
+                    My launches
+                  </h1>
+                  <p
+                    className="text-base text-[color:var(--muted)]"
+                    style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}
+                  >
+                    {usageSummary}
+                  </p>
+                </div>
+                <div className="flex items-start sm:items-end">
+                  <button
+                    type="button"
+                    onClick={handleCreateLaunch}
+                    className={createButtonClassName}
+                    disabled={loading}
+                    style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}
+                  >
+                    {createButtonLabel}
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
         </div>
 
         {/* Launch cards */}
         {launches.length > 0 ? (
           <div className="w-full max-w-6xl">
+            <div className="mb-6 flex items-center justify-between">
+              <div className="flex-1" />
+              <Link
+                href="/settings"
+                className="flex items-center justify-center rounded-lg border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_90%,transparent)] p-2 text-[color:var(--muted)] transition-colors hover:border-[color:var(--border-strong)] hover:text-[color:var(--text)] hover:bg-[color-mix(in_srgb,var(--surface)_85%,transparent)]"
+                title="Manage launches"
+              >
+                <Settings className="h-4 w-4" />
+              </Link>
+            </div>
             <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
               {launches.map((launch) => (
                 <LaunchCardNew
@@ -163,9 +171,9 @@ export default function LaunchesPageClient({ launches }: LaunchesPageClientProps
             <button
               onClick={handleCreateLaunch}
               className={cn(
-                "inline-flex items-center justify-center rounded-full px-5 py-2 text-sm font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer",
+                "inline-flex items-center justify-center rounded-full px-6 py-2.5 text-sm font-semibold transition-transform disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer",
                 canCreateLaunch
-                  ? AI_BUTTON_ACTIVE_CLASS
+                  ? "bg-gradient-to-r from-sky-400 via-indigo-500 to-emerald-400 text-white shadow-lg shadow-sky-900/30 hover:-translate-y-0.5 hover:shadow-sky-900/40"
                   : "bg-gradient-to-r from-indigo-500 to-cyan-500 text-white shadow-[var(--shadow-subtle)] hover:shadow-[var(--shadow-soft)] hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-[color:var(--background)]"
               )}
               style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}
@@ -173,6 +181,35 @@ export default function LaunchesPageClient({ launches }: LaunchesPageClientProps
             >
               {canCreateLaunch ? "Create Your First Launch" : "Upgrade to add more"}
             </button>
+          </div>
+        )}
+
+        {/* Archived Launches Section */}
+        {archivedLaunches.length > 0 && (
+          <div className="w-full max-w-6xl">
+            <div className="mb-4">
+              <h2
+                className="text-xl font-semibold text-[color:var(--heading)]"
+                style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" }}
+              >
+                Archived Launches
+              </h2>
+              <p
+                className="text-sm text-[color:var(--muted)] mt-1"
+                style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}
+              >
+                Archived launches are hidden from your main view but still count toward your launch slot limit.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
+              {archivedLaunches.map((launch) => (
+                <LaunchCardNew
+                  key={launch.id}
+                  launch={launch}
+                  href={`/launch/${launch.id}`}
+                />
+              ))}
+            </div>
           </div>
         )}
 

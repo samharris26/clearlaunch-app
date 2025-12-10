@@ -11,6 +11,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface OnboardingData {
   // Brand data (Step 1)
@@ -411,18 +418,21 @@ export default function ConversationalOnboarding({
                           </DropdownMenuContent>
                         </DropdownMenu>
                       ) : field.type === "select" ? (
-                        <select
+                        <Select
                           value={formData[field.id as keyof OnboardingData] as string}
-                          onChange={(e) => updateFormData(field.id as keyof OnboardingData, e.target.value)}
-                          className="w-full px-3 py-2 border border-slate-300 rounded-md focus:border-cyan-500 focus:outline-none bg-white"
+                          onValueChange={(value) => updateFormData(field.id as keyof OnboardingData, value)}
                         >
-                          <option value="">Select {field.label.toLowerCase()}</option>
-                          {hasOptions(field) && field.options.map((option) => (
-                            <option key={option.value} value={option.value}>
-                              {option.label}
-                            </option>
-                          ))}
-                        </select>
+                          <SelectTrigger className="w-full px-3 py-2 border border-slate-300 rounded-md focus:border-cyan-500 focus:outline-none bg-white">
+                            <SelectValue placeholder={`Select ${field.label.toLowerCase()}`} />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white border border-slate-300">
+                            {hasOptions(field) && field.options.map((option) => (
+                              <SelectItem key={option.value} value={option.value}>
+                                {option.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       ) : (
                         <input
                           type="text"

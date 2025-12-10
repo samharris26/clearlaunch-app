@@ -1,7 +1,7 @@
 import OpenAI from "openai";
 import { buildLaunchPlanPrompt } from "@/lib/ai/LaunchPlanPrompt";
 import { buildTaskCopyPrompt } from "@/lib/ai/TaskCopyPrompt";
-import type { LaunchTemplate } from "@/lib/launchTemplates";
+import type { LaunchTemplate, LaunchBeat, LaunchPhase } from "@/lib/launchTemplates";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -82,6 +82,589 @@ function defaultOffsetForPhase(phase: string, index: number, total: number): num
   return -7;
 }
 
+// Signal extraction and beat merging helpers
+type LaunchSignals = {
+  platforms: string[];           // e.g. ["youtube", "instagram", "linkedin"]
+  contentFormats: string[];      // e.g. ["bts_series", "newsletter", "launch_announcement"]
+  cadence: "one_off" | "episodic" | "weekly" | "unknown";
+  primaryGoal: "sales" | "signups" | "awareness" | "audience" | "unknown";
+  intent: "product_launch" | "content_series" | "service_launch" | "unknown";
+};
+
+// Foundation beats that are always included for balanced plans
+const FOUNDATION_BEATS: LaunchBeat[] = [
+  {
+    code: "LANDING_PAGE_UPDATE",
+    label: "Update landing page",
+    description: "Ensure landing page is optimised for launch with clear CTAs and value proposition",
+    defaultDayOffset: -14,
+    phase: "Pre-launch",
+    recommendedPlatforms: [],
+  },
+  {
+    code: "PRODUCT_POSITIONING",
+    label: "Finalise product positioning",
+    description: "Lock in key messaging, value props, and differentiation points",
+    defaultDayOffset: -21,
+    phase: "Pre-launch",
+    recommendedPlatforms: [],
+  },
+  {
+    code: "EMAIL_LAUNCH_ANNOUNCEMENT",
+    label: "Email launch announcement",
+    description: "Send launch announcement to email list with exclusive offer",
+    defaultDayOffset: 0,
+    phase: "Launch Day",
+    recommendedPlatforms: ["email"],
+  },
+  {
+    code: "STORY_COUNTDOWN",
+    label: "Story countdown sequence",
+    description: "Create countdown Stories to build anticipation",
+    defaultDayOffset: -3,
+    phase: "Pre-launch",
+    recommendedPlatforms: ["instagram"],
+  },
+  {
+    code: "GRID_ANNOUNCEMENT",
+    label: "Grid announcement post",
+    description: "Publish main launch announcement on Instagram grid",
+    defaultDayOffset: 0,
+    phase: "Launch Day",
+    recommendedPlatforms: ["instagram"],
+  },
+  {
+    code: "POST_LAUNCH_RECAP",
+    label: "Post-launch recap",
+    description: "Share launch results, metrics, and thank supporters",
+    defaultDayOffset: 3,
+    phase: "Post-launch",
+    recommendedPlatforms: [],
+  },
+  {
+    code: "REVIEWS_REQUEST",
+    label: "Request reviews and testimonials",
+    description: "Reach out to early users for reviews and social proof",
+    defaultDayOffset: 7,
+    phase: "Post-launch",
+    recommendedPlatforms: [],
+  },
+];
+
+// Beat weights for proportional merging
+const BEAT_WEIGHTS = {
+  template: 3,
+  signal: 1,
+  foundation: 4,
+};
+
+function extractSignalsFromDescription(description: string): LaunchSignals {
+  if (!description) {
+    return { 
+      platforms: [], 
+      contentFormats: [], 
+      cadence: "unknown", 
+      primaryGoal: "unknown",
+      intent: "unknown"
+    };
+  }
+
+  const text = description.toLowerCase();
+  const platforms = new Set<string>();
+  const contentFormats = new Set<string>();
+  let cadence: "one_off" | "episodic" | "weekly" | "unknown" = "unknown";
+  let primaryGoal: "sales" | "signups" | "awareness" | "audience" | "unknown" = "unknown";
+  let intent: "product_launch" | "content_series" | "service_launch" | "unknown" = "unknown";
+
+  // Platform detection
+  if (/youtube|yt\b|bts|behind\s*the\s*scenes|shorts/.test(text)) {
+    platforms.add("youtube");
+    contentFormats.add("bts_series");
+    cadence = "episodic";
+    intent = "content_series";
+  }
+  if (/newsletter|email\s*list|mailing\s*list/.test(text)) {
+    contentFormats.add("newsletter");
+    platforms.add("email");
+  }
+  if (/instagram|ig\b/.test(text)) {
+    platforms.add("instagram");
+  }
+  if (/linkedin|li\b/.test(text)) {
+    platforms.add("linkedin");
+  }
+  if (/tiktok/.test(text)) {
+    platforms.add("tiktok");
+  }
+  if (/twitter|x\b/.test(text)) {
+    platforms.add("x");
+  }
+
+  // Intent detection
+  if (/launch\s*beans|release|drop|product\s*launch|new\s*product/.test(text)) {
+    intent = "product_launch";
+  } else if (/series|episode|ep\s*\d+|content\s*series/.test(text)) {
+    intent = "content_series";
+  } else if (/service|consulting|offer/.test(text)) {
+    intent = "service_launch";
+  }
+
+  // Goal detection
+  if (/sales|revenue|conversion|purchase|buy/.test(text)) {
+    primaryGoal = "sales";
+  } else if (/sign\s*up|waitlist|beta\s*access|email\s*signups|early\s*access/.test(text)) {
+    primaryGoal = "signups";
+  } else if (/awareness|exposure|visibility|reach/.test(text)) {
+    primaryGoal = "awareness";
+  } else if (/followers|audience|community|growth/.test(text)) {
+    primaryGoal = "audience";
+  }
+
+  return {
+    platforms: Array.from(platforms),
+    contentFormats: Array.from(contentFormats),
+    cadence,
+    primaryGoal,
+    intent,
+  };
+}
+
+function buildSignalBeats(signals: LaunchSignals, context: LaunchContext): LaunchBeat[] {
+  const beats: LaunchBeat[] = [];
+
+  const hasYouTube = signals.platforms.includes("youtube") || signals.contentFormats.includes("bts_series");
+  const hasInstagram = signals.platforms.includes("instagram");
+  const hasLinkedIn = signals.platforms.includes("linkedin");
+  const hasNewsletter = signals.contentFormats.includes("newsletter") || signals.platforms.includes("email");
+
+  if (hasYouTube) {
+    beats.push({
+      code: "YOUTUBE_EP1_SCRIPT",
+      label: "YouTube EP1 Script",
+      description: "Write script and storyboard for episode 1",
+      defaultDayOffset: -21,
+      phase: "Pre-launch",
+      recommendedPlatforms: ["youtube"],
+    });
+    beats.push({
+      code: "YOUTUBE_EP1_RECORD",
+      label: "Record EP1",
+      description: "Record video and capture b-roll",
+      defaultDayOffset: -18,
+      phase: "Pre-launch",
+      recommendedPlatforms: ["youtube"],
+    });
+    beats.push({
+      code: "YOUTUBE_EP1_EDIT",
+      label: "Edit EP1",
+      description: "Edit, add music, captions, and graphics",
+      defaultDayOffset: -14,
+      phase: "Pre-launch",
+      recommendedPlatforms: ["youtube"],
+    });
+    beats.push({
+      code: "YOUTUBE_EP1_UPLOAD",
+      label: "Upload & metadata",
+      description: "Upload, optimise title/description/thumbnail, end screens",
+      defaultDayOffset: -10,
+      phase: "Pre-launch",
+      recommendedPlatforms: ["youtube"],
+    });
+    if (hasInstagram) {
+      beats.push({
+        code: "YOUTUBE_EP1_PROMO_IG",
+        label: "Cross-promote EP1 on Instagram",
+        description: "Clip and cross-post to Instagram",
+        defaultDayOffset: -7,
+        phase: "Pre-launch",
+        recommendedPlatforms: ["instagram"],
+      });
+    }
+    if (hasLinkedIn) {
+      beats.push({
+        code: "YOUTUBE_EP1_PROMO_LINKEDIN",
+        label: "Cross-promote EP1 on LinkedIn",
+        description: "Share episode on LinkedIn",
+        defaultDayOffset: -7,
+        phase: "Pre-launch",
+        recommendedPlatforms: ["linkedin"],
+      });
+    }
+    beats.push({
+      code: "YOUTUBE_LAUNCH_DAY",
+      label: "Launch day push",
+      description: "Publish episode with live push",
+      defaultDayOffset: 0,
+      phase: "Launch Day",
+      recommendedPlatforms: ["youtube"],
+    });
+    beats.push({
+      code: "YOUTUBE_POST_FOLLOWUP",
+      label: "Post-launch recap",
+      description: "Community post + follow-up CTA",
+      defaultDayOffset: 3,
+      phase: "Post-launch",
+      recommendedPlatforms: ["youtube"],
+    });
+  }
+
+  if (hasNewsletter) {
+    beats.push({
+      code: "NEWSLETTER_DRAFT",
+      label: "Draft newsletter",
+      description: "Draft copy with CTA aligned to launch",
+      defaultDayOffset: -10,
+      phase: "Pre-launch",
+      recommendedPlatforms: ["email"],
+    });
+    beats.push({
+      code: "NEWSLETTER_SCHEDULE",
+      label: "Schedule newsletter",
+      description: "Segment list and schedule send",
+      defaultDayOffset: -5,
+      phase: "Pre-launch",
+      recommendedPlatforms: ["email"],
+    });
+    beats.push({
+      code: "NEWSLETTER_LAUNCH",
+      label: "Launch day send",
+      description: "Send launch announcement email",
+      defaultDayOffset: 0,
+      phase: "Launch Day",
+      recommendedPlatforms: ["email"],
+    });
+    beats.push({
+      code: "NEWSLETTER_FOLLOWUP",
+      label: "Follow-up email",
+      description: "Share outcomes, replay, next steps",
+      defaultDayOffset: 3,
+      phase: "Post-launch",
+      recommendedPlatforms: ["email"],
+    });
+  }
+
+  if (hasInstagram) {
+    beats.push({
+      code: "INSTAGRAM_REELS",
+      label: "Instagram Reels",
+      description: "Design and create Reels for launch",
+      defaultDayOffset: -12,
+      phase: "Pre-launch",
+      recommendedPlatforms: ["instagram"],
+    });
+    beats.push({
+      code: "INSTAGRAM_STORIES",
+      label: "Instagram Stories",
+      description: "Create Stories sequence for launch",
+      defaultDayOffset: -10,
+      phase: "Pre-launch",
+      recommendedPlatforms: ["instagram"],
+    });
+    beats.push({
+      code: "INSTAGRAM_GRID_LAUNCH",
+      label: "Instagram Grid Launch",
+      description: "Publish launch announcement on grid",
+      defaultDayOffset: 0,
+      phase: "Launch Day",
+      recommendedPlatforms: ["instagram"],
+    });
+  }
+
+  return beats;
+}
+
+function mergeBeats(
+  templateBeats: LaunchBeat[] | undefined, 
+  signalBeats: LaunchBeat[], 
+  foundationBeats: LaunchBeat[]
+): LaunchBeat[] {
+  const seen = new Set<string>();
+  const merged: LaunchBeat[] = [];
+  
+  // Weighted merging: foundation beats (highest priority), then template, then signal
+  // Foundation beats always included
+  for (const beat of foundationBeats) {
+    if (!seen.has(beat.code)) {
+      seen.add(beat.code);
+      merged.push(beat);
+    }
+  }
+  
+  // Template beats (weight 3)
+  if (templateBeats) {
+    for (const beat of templateBeats) {
+      if (!seen.has(beat.code)) {
+        seen.add(beat.code);
+        merged.push(beat);
+      }
+    }
+  }
+  
+  // Signal beats (weight 1 - lowest priority, only if not conflicting)
+  for (const beat of signalBeats) {
+    if (!seen.has(beat.code)) {
+      seen.add(beat.code);
+      merged.push(beat);
+    }
+  }
+
+  return merged;
+}
+
+// Category mapping for balancing
+type TaskCategory = "product" | "email" | "social" | "content" | "launch" | "postlaunch" | "promo" | "optimisation";
+
+function getTaskCategory(task: LaunchPlanTask): TaskCategory {
+  const title = (task.title || "").toLowerCase();
+  const description = (task.description || "").toLowerCase();
+  const platform = (task.platform || "").toLowerCase();
+  const beatCode = (task.beat_code || "").toLowerCase();
+  
+  if (platform.includes("email") || beatCode.includes("email") || beatCode.includes("newsletter")) {
+    return "email";
+  }
+  if (platform.includes("instagram") || platform.includes("tiktok") || platform.includes("linkedin") || platform.includes("twitter") || platform.includes("x")) {
+    return "social";
+  }
+  if (platform.includes("youtube") || title.includes("video") || title.includes("script") || beatCode.includes("youtube")) {
+    return "content";
+  }
+  if (title.includes("landing") || title.includes("page") || title.includes("website")) {
+    return "product";
+  }
+  if (task.phase?.toLowerCase().includes("launch day") || beatCode.includes("launch") || title.includes("announce")) {
+    return "launch";
+  }
+  if (task.phase?.toLowerCase().includes("post") || title.includes("follow") || title.includes("recap") || title.includes("review")) {
+    return "postlaunch";
+  }
+  if (title.includes("promo") || title.includes("cross") || title.includes("share")) {
+    return "promo";
+  }
+  if (title.includes("optimise") || title.includes("analys") || title.includes("metric")) {
+    return "optimisation";
+  }
+  
+  // Default based on phase
+  if (task.phase?.toLowerCase().includes("pre")) {
+    return "product";
+  }
+  return "launch";
+}
+
+function applyCategoryBalancing(
+  tasks: LaunchPlanTask[],
+  launchDate: Date,
+  launchStartDate: Date | null
+): LaunchPlanTask[] {
+  const requiredCategories: TaskCategory[] = [
+    "product",
+    "email",
+    "social",
+    "content",
+    "launch",
+    "postlaunch",
+    "promo",
+    "optimisation",
+  ];
+  
+  const categoryCounts = new Map<TaskCategory, number>();
+  tasks.forEach((task) => {
+    const category = getTaskCategory(task);
+    categoryCounts.set(category, (categoryCounts.get(category) || 0) + 1);
+  });
+  
+  const missingCategories: TaskCategory[] = [];
+  requiredCategories.forEach((cat) => {
+    if (!categoryCounts.has(cat) || categoryCounts.get(cat)! === 0) {
+      missingCategories.push(cat);
+    }
+  });
+  
+  if (missingCategories.length === 0) {
+    return tasks;
+  }
+  
+  // Generate supplemental tasks for missing categories
+  const additions: LaunchPlanTask[] = [];
+  const baseDate = launchStartDate ? new Date(launchStartDate) : new Date(launchDate);
+  
+  const categoryTaskMap: Record<TaskCategory, { title: string; description: string; offset: number; phase: string }> = {
+    product: {
+      title: "Product positioning and messaging",
+      description: "Finalise product positioning, key messages, and value propositions for launch.",
+      offset: -14,
+      phase: "Pre-launch",
+    },
+    email: {
+      title: "Email launch sequence",
+      description: "Create and schedule email launch announcement sequence.",
+      offset: -5,
+      phase: "Pre-launch",
+    },
+    social: {
+      title: "Social media launch campaign",
+      description: "Plan and prepare social media content for launch across platforms.",
+      offset: -10,
+      phase: "Pre-launch",
+    },
+    content: {
+      title: "Launch content creation",
+      description: "Create key launch content assets and materials.",
+      offset: -12,
+      phase: "Pre-launch",
+    },
+    launch: {
+      title: "Launch day coordination",
+      description: "Coordinate launch day activities and announcements across all channels.",
+      offset: 0,
+      phase: "Launch Day",
+    },
+    postlaunch: {
+      title: "Post-launch follow-up",
+      description: "Follow up with early users, collect feedback, and share results.",
+      offset: 3,
+      phase: "Post-launch",
+    },
+    promo: {
+      title: "Cross-platform promotion",
+      description: "Promote launch across multiple channels and platforms.",
+      offset: -7,
+      phase: "Pre-launch",
+    },
+    optimisation: {
+      title: "Launch optimisation and analysis",
+      description: "Analyse launch performance and optimise based on early results.",
+      offset: 7,
+      phase: "Post-launch",
+    },
+  };
+  
+  missingCategories.forEach((category, index) => {
+    const taskDef = categoryTaskMap[category];
+    const dueDate = new Date(baseDate);
+    dueDate.setDate(dueDate.getDate() + taskDef.offset);
+    
+    additions.push({
+      title: taskDef.title,
+      description: taskDef.description,
+      beat_code: `supplemental_${category}`,
+      platform: "",
+      day_offset: taskDef.offset,
+      outline: "Plan; Execute; Review",
+      phase: taskDef.phase,
+      order: tasks.length + additions.length,
+      due_date: dueDate.toISOString(),
+      category: "General",
+    });
+  });
+  
+  return [...tasks, ...additions];
+}
+
+function ensurePhaseCoverage(tasks: LaunchPlanTask[], launchDate: Date, launchStartDate: Date | null): LaunchPlanTask[] {
+  const hasPhase = (phase: string) => {
+    const phaseLower = phase.toLowerCase();
+    return tasks.some((t) => {
+      const taskPhase = (t.phase || "").toLowerCase();
+      // Check for exact match or variations (with/without spaces, dashes, etc.)
+      return (
+        taskPhase === phaseLower ||
+        taskPhase.includes(phaseLower) ||
+        taskPhase.includes(phaseLower.replace(" ", "-")) ||
+        taskPhase.includes(phaseLower.replace("-", " "))
+      );
+    });
+  };
+
+  // Log warnings if phases are missing, but don't add filler tasks
+  if (!hasPhase("Pre-launch")) {
+    console.warn("⚠️ No Pre-launch tasks generated. The AI should generate pre-launch tasks.");
+  }
+  if (!hasPhase("Launch Day")) {
+    console.warn("⚠️ No Launch Day tasks generated. The AI should generate launch day tasks.");
+  }
+  if (!hasPhase("Post-launch")) {
+    console.warn("⚠️ No Post-launch tasks generated. The AI should generate post-launch tasks.");
+  }
+
+  return tasks;
+}
+
+function enforceMinimumTasks(
+  tasks: LaunchPlanTask[],
+  launchDate: Date,
+  launchStartDate: Date | null,
+  daysToLaunch: number
+): LaunchPlanTask[] {
+  // Dynamic minimum based on runway
+  let minTasks: number;
+  if (daysToLaunch <= 3) {
+    minTasks = 8;
+  } else if (daysToLaunch <= 7) {
+    minTasks = 12;
+  } else if (daysToLaunch <= 14) {
+    minTasks = 16;
+  } else {
+    minTasks = 20;
+  }
+  
+  // Prevent overload on short runways
+  const maxPreLaunchPerDay = 2;
+  const maxPreLaunchTasks = Math.max(1, daysToLaunch * maxPreLaunchPerDay);
+  
+  // Count pre-launch tasks
+  const preLaunchTasks = tasks.filter((t) => {
+    const phase = (t.phase || "").toLowerCase();
+    return phase.includes("pre") || (t.day_offset < 0);
+  });
+  
+  // If we have too many pre-launch tasks, compress or shift some post-launch
+  if (preLaunchTasks.length > maxPreLaunchTasks && daysToLaunch <= 14) {
+    console.warn(
+      `⚠️ Too many pre-launch tasks (${preLaunchTasks.length}) for short runway (${daysToLaunch} days). ` +
+      `Max recommended: ${maxPreLaunchTasks}. Compressing tasks.`
+    );
+    
+    // Shift some pre-launch tasks to post-launch
+    const excessCount = preLaunchTasks.length - maxPreLaunchTasks;
+    const tasksToShift = tasks
+      .filter((t) => {
+        const phase = (t.phase || "").toLowerCase();
+        return phase.includes("pre") || (t.day_offset < 0);
+      })
+      .slice(maxPreLaunchTasks)
+      .slice(0, excessCount);
+    
+    const shiftedTasks = tasksToShift.map((task) => ({
+      ...task,
+      day_offset: Math.max(0, task.day_offset + daysToLaunch),
+      phase: "Post-launch",
+      due_date: (() => {
+        const baseDate = launchStartDate ? new Date(launchStartDate) : new Date(launchDate);
+        baseDate.setDate(baseDate.getDate() + Math.max(0, task.day_offset + daysToLaunch));
+        return baseDate.toISOString();
+      })(),
+    }));
+    
+    // Replace shifted tasks
+    const otherTasks = tasks.filter((t) => !tasksToShift.includes(t));
+    return [...otherTasks, ...shiftedTasks];
+  }
+  
+  if (tasks.length >= minTasks) {
+    return tasks;
+  }
+  
+  // Log warning but don't add filler tasks - the AI should generate enough tasks
+  console.warn(
+    `⚠️ Only ${tasks.length} tasks generated, expected minimum ${minTasks} for ${daysToLaunch}-day runway. ` +
+    `The AI prompt should ensure at least ${minTasks} tasks are generated.`
+  );
+
+  return tasks;
+}
+
 export async function generateLaunchPlan(context: LaunchContext): Promise<LaunchPlanTask[]> {
   console.log("Starting AI launch plan generation with context:", context);
   
@@ -96,22 +679,36 @@ export async function generateLaunchPlan(context: LaunchContext): Promise<Launch
   const daysToLaunch = Math.ceil((launchDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
   console.log(`Days to launch: ${daysToLaunch}`);
   
+  // Extract signals from launch description
+  const signals = extractSignalsFromDescription(context.launch_description || "");
+  console.log("Extracted signals:", signals);
+  
   // Load template if template_id is provided
   let template: LaunchTemplate | undefined;
-  let beatPhaseMap: Record<string, string> | undefined;
   if (context.template_id) {
     const { getLaunchTemplateById } = await import("@/lib/launchTemplates");
     template = getLaunchTemplateById(context.template_id);
     if (template) {
       console.log(`Using template: ${template.name} with ${template.beats.length} beats`);
-      beatPhaseMap = template.beats.reduce<Record<string, string>>((acc, beat) => {
-        acc[beat.code] = beat.phase;
-        return acc;
-      }, {});
     }
   }
   
-  const prompt = buildLaunchPlanPrompt(context, daysToLaunch, template);
+  // Build signal beats and merge with template beats + foundation beats
+  const signalBeats = buildSignalBeats(signals, context);
+  console.log(`Built ${signalBeats.length} signal beats`);
+  const mergedBeats = mergeBeats(template?.beats, signalBeats, FOUNDATION_BEATS);
+  console.log(`Merged beats: ${mergedBeats.length} total (${template?.beats.length || 0} template + ${signalBeats.length} signal + ${FOUNDATION_BEATS.length} foundation)`);
+  
+  // Build beatPhaseMap from merged beats
+  let beatPhaseMap: Record<string, string> | undefined;
+  if (mergedBeats.length > 0) {
+    beatPhaseMap = mergedBeats.reduce<Record<string, string>>((acc, beat) => {
+      acc[beat.code] = beat.phase;
+      return acc;
+    }, {});
+  }
+  
+  const prompt = buildLaunchPlanPrompt(context, daysToLaunch, mergedBeats, template?.name, template?.description);
   console.log("Generated prompt:", prompt.substring(0, 200) + "...");
 
   const isPhasedTaskObject = (payload: any): boolean => {
@@ -401,7 +998,28 @@ export async function generateLaunchPlan(context: LaunchContext): Promise<Launch
     });
 
     console.log("Mapped tasks:", mappedTasks);
-    return mappedTasks;
+    
+    // Apply category balancing, phase coverage, and dynamic minimum task enforcement
+    let finalTasks = applyCategoryBalancing(mappedTasks, launchDate, launchStartDate);
+    finalTasks = ensurePhaseCoverage(finalTasks, launchDate, launchStartDate);
+    finalTasks = enforceMinimumTasks(finalTasks, launchDate, launchStartDate, daysToLaunch);
+    
+    // Sort final tasks by day_offset ascending
+    finalTasks = finalTasks.sort((a, b) => {
+      if (a.day_offset === b.day_offset) {
+        return (a.order || 0) - (b.order || 0);
+      }
+      return a.day_offset - b.day_offset;
+    });
+    
+    // Reassign order indices after sorting
+    finalTasks = finalTasks.map((task, index) => ({
+      ...task,
+      order: index,
+    }));
+    
+    console.log(`Final tasks: ${finalTasks.length} (${mappedTasks.length} original + ${finalTasks.length - mappedTasks.length} added)`);
+    return finalTasks;
 
   } catch (error) {
     console.error("Error generating launch plan:", error);
