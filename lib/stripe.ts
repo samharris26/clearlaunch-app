@@ -3,8 +3,14 @@ import Stripe from "stripe";
 /**
  * Assert that required environment variables are set
  * Throws an error if any required env var is missing
+ * Only checks at runtime, not during build
  */
 function assertEnv() {
+  // Skip check during build time
+  if (process.env.NEXT_PHASE === "phase-production-build") {
+    return;
+  }
+
   const required = [
     "STRIPE_SECRET_KEY",
     "STRIPE_WEBHOOK_SECRET",
@@ -22,18 +28,8 @@ function assertEnv() {
   }
 }
 
-// Assert env vars on module load (only in production/server)
-if (typeof window === "undefined") {
-  try {
-    assertEnv();
-  } catch (error) {
-    // Only throw in production - allow dev to continue with warnings
-    if (process.env.NODE_ENV === "production") {
-      throw error;
-    }
-    console.warn("Stripe environment variables not fully configured:", error);
-  }
-}
+// Don't assert env vars on module load - let API routes handle it at runtime
+// This prevents build-time errors when env vars aren't available
 
 if (!process.env.STRIPE_SECRET_KEY) {
   throw new Error("STRIPE_SECRET_KEY is not set in environment variables");
