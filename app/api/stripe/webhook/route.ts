@@ -115,7 +115,8 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
   const subscriptionId = subscription.id;
   const status = subscription.status;
   const priceId = subscription.items.data[0]?.price.id;
-  const currentPeriodEnd = subscription.currentPeriodEnd;
+  // Access current_period_end using bracket notation for TypeScript compatibility
+  const currentPeriodEnd = (subscription as any).current_period_end as number;
 
   if (!customerId || !priceId) {
     console.error("Missing customerId or priceId in subscription");
