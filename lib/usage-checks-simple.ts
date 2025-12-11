@@ -57,7 +57,7 @@ export async function checkLaunchLimit(): Promise<UsageCheckResult> {
       return {
         allowed: false,
         message: getUpgradeMessage('launches', plan),
-        upgradeUrl: "/pricing"
+        upgradeUrl: "/billing"
       };
     }
 
@@ -117,7 +117,7 @@ export async function checkAiCallLimit(): Promise<UsageCheckResult> {
       return {
         allowed: false,
         message: getUpgradeMessage('ai', plan),
-        upgradeUrl: "/pricing"
+        upgradeUrl: "/billing"
       };
     }
 

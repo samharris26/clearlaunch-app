@@ -1,5 +1,6 @@
 import { getUser, createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { Check, Zap, Crown, Sparkles, HelpCircle, Clock } from "lucide-react";
 import CheckoutButton from "@/components/CheckoutButton";
 
@@ -27,7 +28,7 @@ const plans = [
     period: '/month',
     description: 'For growing businesses',
     features: [
-      '3 active launches',
+      '5 active launches',
       '100 AI calls/month',
       'Full AI access',
       'Task rewrites',
@@ -225,6 +226,19 @@ export default async function PricingPage({
           );
         })}
       </div>
+
+      {/* Manage Subscription Link */}
+      {currentPlan === "pro" && (
+        <div className="relative z-10 max-w-2xl w-full text-center">
+          <Link
+            href="/billing"
+            className="inline-flex items-center gap-2 text-sm text-[color:var(--muted)] hover:text-[color:var(--text)] transition-colors"
+            style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}
+          >
+            Manage your subscription
+          </Link>
+        </div>
+      )}
 
       {/* FAQ Section */}
       <div className="relative z-10 max-w-4xl w-full pt-12 pb-20">

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { stripe, getPlanFromPriceId } from "@/lib/stripe";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/server";
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
@@ -83,16 +83,23 @@ export async function POST(request: NextRequest) {
 async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   const userId = session.metadata?.userId;
   const plan = session.metadata?.plan;
+  const customerId = session.customer as string;
 
-  if (!userId || !plan) {
-    console.error("Missing userId or plan in checkout session metadata");
+  if (!userId || !plan || !customerId) {
+    console.error("Missing userId, plan, or customerId in checkout session");
     return;
   }
 
-  // Update user plan in Supabase
+  const supabase = await createClient();
+
+  // Update user with subscription info
   const { error } = await supabase
     .from("users")
-    .update({ plan: plan })
+    .update({
+      plan: plan,
+      stripe_customer_id: customerId,
+      subscription_status: "active",
+    })
     .eq("userId", userId);
 
   if (error) {
@@ -100,15 +107,18 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     throw error;
   }
 
-  console.log(`✅ Updated user ${userId} to plan: ${plan}`);
+  console.log(`✅ Updated user ${userId} to plan: ${plan} (checkout completed)`);
 }
 
 async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
-  const userId = subscription.metadata?.userId;
+  const customerId = subscription.customer as string;
+  const subscriptionId = subscription.id;
+  const status = subscription.status;
   const priceId = subscription.items.data[0]?.price.id;
+  const currentPeriodEnd = subscription.current_period_end;
 
-  if (!userId || !priceId) {
-    console.error("Missing userId or priceId in subscription");
+  if (!customerId || !priceId) {
+    console.error("Missing customerId or priceId in subscription");
     return;
   }
 
@@ -118,40 +128,83 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
     return;
   }
 
-  // Update user plan in Supabase
-  const { error } = await supabase
+  const supabase = await createClient();
+
+  // Find user by stripe_customer_id
+  const { data: userData, error: findError } = await supabase
     .from("users")
-    .update({ plan: plan })
-    .eq("userId", userId);
+    .select("userId")
+    .eq("stripe_customer_id", customerId)
+    .maybeSingle();
 
-  if (error) {
-    console.error("Error updating user plan:", error);
-    throw error;
-  }
-
-  console.log(`✅ Updated user ${userId} to plan: ${plan} (from subscription)`);
-}
-
-async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
-  const userId = subscription.metadata?.userId;
-
-  if (!userId) {
-    console.error("Missing userId in subscription");
+  if (findError || !userData) {
+    console.error("Error finding user by stripe_customer_id:", findError);
     return;
   }
 
-  // Downgrade user to free plan
-  const { error } = await supabase
-    .from("users")
-    .update({ plan: "free" })
-    .eq("userId", userId);
+  // Convert current_period_end (Unix timestamp) to timestamptz
+  const renewsAt = new Date(currentPeriodEnd * 1000).toISOString();
 
-  if (error) {
-    console.error("Error downgrading user plan:", error);
-    throw error;
+  // Update user subscription info
+  const { error: updateError } = await supabase
+    .from("users")
+    .update({
+      plan: plan,
+      stripe_subscription_id: subscriptionId,
+      subscription_status: status,
+      subscription_renews_at: renewsAt,
+    })
+    .eq("userId", userData.userId);
+
+  if (updateError) {
+    console.error("Error updating user subscription:", updateError);
+    throw updateError;
   }
 
-  console.log(`✅ Downgraded user ${userId} to free plan`);
+  console.log(
+    `✅ Updated user ${userData.userId} to plan: ${plan}, status: ${status}`
+  );
+}
+
+async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
+  const customerId = subscription.customer as string;
+
+  if (!customerId) {
+    console.error("Missing customerId in subscription");
+    return;
+  }
+
+  const supabase = await createClient();
+
+  // Find user by stripe_customer_id
+  const { data: userData, error: findError } = await supabase
+    .from("users")
+    .select("userId")
+    .eq("stripe_customer_id", customerId)
+    .maybeSingle();
+
+  if (findError || !userData) {
+    console.error("Error finding user by stripe_customer_id:", findError);
+    return;
+  }
+
+  // Downgrade user to free plan and clear subscription fields
+  const { error: updateError } = await supabase
+    .from("users")
+    .update({
+      plan: "free",
+      subscription_status: "canceled",
+      stripe_subscription_id: null,
+      subscription_renews_at: null,
+    })
+    .eq("userId", userData.userId);
+
+  if (updateError) {
+    console.error("Error downgrading user plan:", updateError);
+    throw updateError;
+  }
+
+  console.log(`✅ Downgraded user ${userData.userId} to free plan`);
 }
 
 async function handlePaymentSucceeded(invoice: Stripe.Invoice) {

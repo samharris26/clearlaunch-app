@@ -440,7 +440,9 @@ export function TaskModal({ task, open, onClose, onTaskChange }: TaskModalProps)
 
   // For free plan users, AI is only allowed if initialAIGenerated is false (initial generation)
   // For pro/power users, AI is always allowed (subject to usage limits)
-  const canUseAI = !isFreePlan || (isFreePlan && initialAIGenerated === false);
+  // Free users can generate launch plan but NOT task-level content
+  // Pro/Power users have full AI access
+  const canUseAI = !isFreePlan;
 
   // Initialize workspace content from task whenever modal opens or task changes
   useEffect(() => {
@@ -754,6 +756,14 @@ export function TaskModal({ task, open, onClose, onTaskChange }: TaskModalProps)
 
   const handleGenerateContent = async () => {
     if (isGeneratingContent || isSaving) return;
+    
+    // Gate task-level AI content for Free users
+    if (isFreePlan) {
+      // Redirect to billing page for upgrade
+      window.location.href = "/billing";
+      return;
+    }
+    
     if (!localTask.launchId) {
       setAiError("Launch reference missing for this task.");
       return;
@@ -1003,7 +1013,7 @@ export function TaskModal({ task, open, onClose, onTaskChange }: TaskModalProps)
                       disabled={isGeneratingContent || isSaving || !canUseAI || safeCredits === 0}
                       title={
                         !canUseAI && isFreePlan
-                          ? "Upgrade to Pro to unlock AI-powered editing and content tools."
+                          ? "Upgrade to Pro to generate content with AI"
                           : safeCredits === 0
                             ? "You've hit your monthly AI limit. Upgrade for more calls."
                             : undefined
@@ -1028,7 +1038,7 @@ export function TaskModal({ task, open, onClose, onTaskChange }: TaskModalProps)
                     )}
                     {(!canUseAI && isFreePlan) && (
                       <Link
-                        href="/pricing"
+                        href="/billing"
                         className="text-xs font-medium text-sky-400 hover:text-sky-300 underline"
                         style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}
                       >
@@ -1037,7 +1047,7 @@ export function TaskModal({ task, open, onClose, onTaskChange }: TaskModalProps)
                     )}
                     {safeCredits === 0 && canUseAI && (
                       <Link
-                        href="/pricing"
+                        href="/billing"
                         className="text-xs font-medium text-sky-400 hover:text-sky-300 underline"
                         style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}
                       >

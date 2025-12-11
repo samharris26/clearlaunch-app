@@ -17,14 +17,14 @@ export const PLAN_LIMITS: Record<Plan, PlanLimits> = {
     priceMonthly: 0
   },
   pro: {
-    maxLaunches: 3,
+    maxLaunches: 5, // 5 launches for Pro
     maxAiCalls: 100,
     name: 'Pro',
     description: 'For growing businesses',
     priceMonthly: 10
   },
   power: {
-    maxLaunches: 10,
+    maxLaunches: Infinity, // Unlimited launches for Power
     maxAiCalls: 300,
     name: 'Power',
     description: 'For power users and agencies',
@@ -38,6 +38,10 @@ export function getPlanLimits(plan: Plan): PlanLimits {
 
 export function canCreateLaunch(plan: Plan, currentLaunches: number): boolean {
   const limits = getPlanLimits(plan);
+  // For unlimited plans (Infinity), always allow
+  if (limits.maxLaunches === Infinity) {
+    return true;
+  }
   return currentLaunches < limits.maxLaunches;
 }
 
@@ -51,9 +55,13 @@ export function getUpgradeMessage(type: 'launches' | 'ai', currentPlan: Plan): s
   
   if (type === 'launches') {
     if (currentPlan === 'free') {
-      return `Free plan includes 1 launch slot. Archive or reset your current launch, or upgrade to create more.`;
+      return `You've reached the Free plan limit of 1 launch. Upgrade to Pro to create more launches.`;
     }
-    return `You've reached your plan limit of ${limits.maxLaunches} launch slot${limits.maxLaunches === 1 ? '' : 's'}. Upgrade to create more launches.`;
+    if (currentPlan === 'pro') {
+      return `You've reached your Pro plan limit of ${limits.maxLaunches} launches. Upgrade to Power for unlimited launches.`;
+    }
+    // Power has unlimited launches, so this shouldn't happen
+    return `You've reached your plan limit. Upgrade to create more launches.`;
   } else {
     return `You've reached your monthly AI limit of ${limits.maxAiCalls} calls. Upgrade to unlock more AI-powered features.`;
   }

@@ -25,15 +25,25 @@ export default function CheckoutButton({
       return;
     }
 
+    // Block Power plan checkout (coming soon)
+    if (plan === "power") {
+      return;
+    }
+
+    // Only allow Pro plan checkout
+    if (plan !== "pro") {
+      console.warn("Only Pro plan checkout is available");
+      return;
+    }
+
     setIsLoading(true);
 
     try {
-      const response = await fetch("/api/stripe/checkout", {
+      const response = await fetch("/api/billing/create-checkout-session", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ plan }),
       });
 
       const data = await response.json();
@@ -56,7 +66,7 @@ export default function CheckoutButton({
     }
   };
 
-  const isDisabled = isLoading || currentPlan === plan || (currentPlan === "power" && plan === "pro");
+  const isDisabled = isLoading || currentPlan === plan || (currentPlan === "power" && plan === "pro") || plan === "power";
 
   return (
     <button

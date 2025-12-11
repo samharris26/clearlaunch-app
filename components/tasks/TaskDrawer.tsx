@@ -384,7 +384,9 @@ export function TaskDrawer({ task, tasks, open, onClose, onTaskChange }: TaskDra
     fetchLaunchData();
   }, [localTask?.launchId, isFreePlan]);
 
-  const canUseAI = !isFreePlan || (isFreePlan && initialAIGenerated === false);
+  // Free users can generate launch plan but NOT task-level content
+  // Pro/Power users have full AI access
+  const canUseAI = !isFreePlan;
 
   useEffect(() => {
     if (!task) return;
@@ -675,6 +677,14 @@ export function TaskDrawer({ task, tasks, open, onClose, onTaskChange }: TaskDra
 
   const handleGenerateContent = async () => {
     if (isGeneratingContent || isSaving || !localTask) return;
+    
+    // Gate task-level AI content for Free users
+    if (isFreePlan) {
+      // Redirect to billing page for upgrade
+      router.push("/billing");
+      return;
+    }
+    
     if (!localTask.launchId) {
       setAiError("Launch reference missing for this task.");
       return;
@@ -1001,6 +1011,13 @@ export function TaskDrawer({ task, tasks, open, onClose, onTaskChange }: TaskDra
                         style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}
                         onClick={handleGenerateContent}
                         disabled={isGeneratingContent || isSaving || !canUseAI || safeCredits === 0}
+                        title={
+                          isFreePlan
+                            ? "Upgrade to Pro to generate content with AI"
+                            : !canUseAI || safeCredits === 0
+                            ? "AI credits exhausted. Upgrade for more."
+                            : undefined
+                        }
                       >
                         {isGeneratingContent ? (
                           <>
