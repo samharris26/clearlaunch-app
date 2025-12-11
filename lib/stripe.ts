@@ -15,7 +15,8 @@ function assertEnv() {
     "STRIPE_SECRET_KEY",
     "STRIPE_WEBHOOK_SECRET",
     "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY",
-    "STRIPE_PRICE_PRO_MONTHLY",
+    // Support both old and new env var names
+    process.env.STRIPE_PRICE_PRO_MONTHLY ? "STRIPE_PRICE_PRO_MONTHLY" : "STRIPE_PRICE_ID_PRO",
     "NEXT_PUBLIC_APP_URL",
   ];
 
@@ -41,11 +42,11 @@ export const stripe = new Stripe(stripeSecretKey, {
 });
 
 // Map our plan names to Stripe Price IDs
-// Using new environment variable names as specified
+// Support both old and new env var names for backward compatibility
 export const STRIPE_PRICE_IDS = {
   free: null, // Free plan doesn't need a price ID
-  pro: process.env.STRIPE_PRICE_PRO_MONTHLY || "",
-  power: process.env.STRIPE_PRICE_POWER_MONTHLY || "",
+  pro: process.env.STRIPE_PRICE_PRO_MONTHLY || process.env.STRIPE_PRICE_ID_PRO || "",
+  power: process.env.STRIPE_PRICE_POWER_MONTHLY || process.env.STRIPE_PRICE_ID_POWER || "",
 } as const;
 
 // Map Stripe Price IDs to our plan names (reverse lookup)

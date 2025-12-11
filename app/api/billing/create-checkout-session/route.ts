@@ -55,23 +55,25 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Get Pro plan price ID from environment
-    const priceId = process.env.STRIPE_PRICE_PRO_MONTHLY;
+    // Get Pro plan price ID from environment (support both old and new env var names)
+    const priceId = process.env.STRIPE_PRICE_PRO_MONTHLY || process.env.STRIPE_PRICE_ID_PRO;
 
     if (!priceId || priceId.trim() === "") {
-      console.error("STRIPE_PRICE_PRO_MONTHLY is missing or empty");
+      console.error("Pro plan price ID is missing or empty");
       console.error("Available env vars:", {
         hasStripeSecret: !!process.env.STRIPE_SECRET_KEY,
         hasWebhookSecret: !!process.env.STRIPE_WEBHOOK_SECRET,
         hasPublishableKey: !!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
         hasAppUrl: !!process.env.NEXT_PUBLIC_APP_URL,
-        hasPricePro: !!process.env.STRIPE_PRICE_PRO_MONTHLY,
-        priceProValue: process.env.STRIPE_PRICE_PRO_MONTHLY || "NOT SET",
+        hasPriceProMonthly: !!process.env.STRIPE_PRICE_PRO_MONTHLY,
+        hasPriceIdPro: !!process.env.STRIPE_PRICE_ID_PRO,
+        priceProMonthlyValue: process.env.STRIPE_PRICE_PRO_MONTHLY || "NOT SET",
+        priceIdProValue: process.env.STRIPE_PRICE_ID_PRO || "NOT SET",
       });
       return NextResponse.json(
         {
           error: "Pro plan price not configured",
-          details: `STRIPE_PRICE_PRO_MONTHLY is not set. Current value: ${process.env.STRIPE_PRICE_PRO_MONTHLY || "undefined"}`,
+          details: `Neither STRIPE_PRICE_PRO_MONTHLY nor STRIPE_PRICE_ID_PRO is set. Please set one of these environment variables.`,
         },
         { status: 500 }
       );
