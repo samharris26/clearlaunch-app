@@ -68,6 +68,7 @@ export async function POST(request: NextRequest) {
         },
       ],
       customer_email: email || undefined,
+      allow_promotion_codes: true,
       success_url: `${process.env.NEXT_PUBLIC_APP_URL || "https://www.clearlaunch.co.uk"}/pricing?success=true&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || "https://www.clearlaunch.co.uk"}/pricing?canceled=true`,
       metadata: {
