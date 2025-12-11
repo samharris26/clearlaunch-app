@@ -91,7 +91,7 @@ export function OnboardingWizard() {
   }, [form.goalType]);
 
   const gradientBtn =
-    "bg-gradient-to-r from-sky-400 via-indigo-500 to-emerald-400 text-slate-950 hover:from-sky-300 hover:via-indigo-400 hover:to-emerald-300 shadow-lg shadow-sky-900/30";
+    "bg-gradient-to-r from-sky-500 to-indigo-500 text-white shadow-lg shadow-sky-900/20 hover:from-sky-400 hover:to-indigo-400 hover:shadow-sky-900/40";
 
   const updateForm = <K extends keyof WizardFormState>(key: K, value: WizardFormState[K]) => {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -168,7 +168,7 @@ export function OnboardingWizard() {
   };
 
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col gap-8 rounded-xl border border-slate-200 bg-white p-8 shadow-[0_24px_55px_-28px_rgba(14,165,233,0.25)] relative overflow-hidden">
+    <div className="mx-auto flex w-full max-w-5xl flex-col gap-8 rounded-xl border border-slate-200 bg-white p-8 shadow-[0_24px_55px_-28px_rgba(14,165,233,0.15)] relative overflow-hidden">
       <LoadingOverlay
         show={isPending || showGenerating}
         description="Give us a few seconds while we build your plan."
@@ -198,7 +198,7 @@ export function OnboardingWizard() {
         </div>
       )}
 
-      <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+      <section className="rounded-md border border-slate-200 bg-white p-6 shadow-sm">
         {step === 0 && (
           <div className="grid gap-5 md:grid-cols-2">
             <div className="md:col-span-2">
@@ -206,7 +206,7 @@ export function OnboardingWizard() {
                 Launch name
               </label>
               <input
-                className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 placeholder-slate-400 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100"
+                className="mt-2 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900 placeholder-slate-400 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
                 value={form.launchName}
                 onChange={(event) => updateForm("launchName", event.target.value)}
                 placeholder="e.g. Batch 001 Coffee Drop"
@@ -217,7 +217,7 @@ export function OnboardingWizard() {
                 Launch summary
               </label>
               <textarea
-                className="mt-2 h-28 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 placeholder-slate-400 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100"
+                className="mt-2 h-28 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900 placeholder-slate-400 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
                 value={form.summary}
                 onChange={(event) => updateForm("summary", event.target.value)}
                 placeholder="Describe the drop, promise, or campaign angle in a few sentences."
@@ -231,7 +231,7 @@ export function OnboardingWizard() {
                 value={form.goalType}
                 onValueChange={(value) => updateForm("goalType", value)}
               >
-                <SelectTrigger className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-left text-slate-900 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100">
+                <SelectTrigger className="mt-2 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-left text-slate-900 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500">
                   <SelectValue placeholder="Select goal type" />
                 </SelectTrigger>
                 <SelectContent>
@@ -250,7 +250,7 @@ export function OnboardingWizard() {
               <input
                 type="number"
                 min={0}
-                className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 placeholder-slate-400 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100"
+                className="mt-2 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900 placeholder-slate-400 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
                 value={form.goalValue}
                 onChange={(event) => updateForm("goalValue", event.target.value)}
                 placeholder={goalPlaceholder}
@@ -262,7 +262,7 @@ export function OnboardingWizard() {
               </label>
               <input
                 type="date"
-                className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100"
+                className="mt-2 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
                 value={form.launchDate}
                 onChange={(event) => updateForm("launchDate", event.target.value)}
                 min={new Date().toISOString().split("T")[0]}
@@ -280,9 +280,9 @@ export function OnboardingWizard() {
                   type="button"
                   key={platform.id}
                   className={cn(
-                    "rounded-2xl border px-4 py-4 text-left transition focus:outline-none",
+                    "rounded-md border px-4 py-3 text-left transition focus:outline-none",
                     active
-                      ? "border-sky-200 bg-sky-50 shadow-sm"
+                      ? "border-cyan-200 bg-cyan-50 shadow-sm"
                       : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50 shadow-sm"
                   )}
                   onClick={() => togglePlatform(platform.id)}
@@ -297,7 +297,7 @@ export function OnboardingWizard() {
                     <span
                       className={cn(
                         "inline-flex h-6 items-center rounded-full px-3 text-[0.65rem] font-semibold uppercase tracking-wide",
-                        active ? "bg-sky-100 text-sky-700 border border-sky-200" : "bg-slate-100 text-slate-600 border border-slate-200"
+                        active ? "bg-cyan-100 text-cyan-700 border border-cyan-200" : "bg-slate-100 text-slate-600 border border-slate-200"
                       )}
                     >
                       {active ? "Selected" : "Tap to add"}
@@ -326,9 +326,9 @@ export function OnboardingWizard() {
                   key={template.id}
                   onClick={() => updateForm("templateId", template.id)}
                   className={cn(
-                    "h-full rounded-2xl border p-4 text-left transition hover:border-sky-200 hover:bg-sky-50",
+                    "h-full rounded-md border p-4 text-left transition hover:border-cyan-200 hover:bg-cyan-50",
                     active
-                      ? "border-sky-300 bg-sky-50 shadow-sm"
+                      ? "border-cyan-300 bg-cyan-50 shadow-sm"
                       : "border-slate-200 bg-white shadow-sm"
                   )}
                 >
@@ -353,7 +353,7 @@ export function OnboardingWizard() {
           type="button"
           onClick={goBack}
           disabled={step === 0 || isPending}
-          className="rounded-xl border border-slate-200 px-5 py-3 text-sm font-medium text-slate-700 transition disabled:opacity-40 hover:bg-slate-50"
+          className="rounded-md border border-slate-300 px-4 py-2.5 text-sm font-medium text-slate-700 transition disabled:opacity-40 hover:bg-slate-50"
         >
           Back
         </button>
@@ -362,7 +362,7 @@ export function OnboardingWizard() {
             type="button"
             onClick={goNext}
             disabled={isPending}
-            className={cn("rounded-xl px-5 py-3 text-sm font-semibold text-white transition disabled:opacity-40", gradientBtn)}
+            className={cn("rounded-md px-4 py-2.5 text-sm font-semibold text-white transition disabled:opacity-40", gradientBtn)}
           >
             Next
           </button>
@@ -371,7 +371,7 @@ export function OnboardingWizard() {
             type="button"
             onClick={handleSubmit}
             disabled={isPending}
-            className={cn("inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold text-white transition disabled:opacity-40", gradientBtn)}
+            className={cn("inline-flex items-center gap-2 rounded-md px-4 py-2.5 text-sm font-semibold text-white transition disabled:opacity-40", gradientBtn)}
           >
             {isPending ? "Creating launch…" : "Finish & create launch"}
           </button>
