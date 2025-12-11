@@ -161,124 +161,120 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
 }
 
 async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
+  // 1. Correctly read the Stripe Subscription object
   const customerId = subscription.customer as string;
   const subscriptionId = subscription.id;
   const status = subscription.status;
-  const priceId = subscription.items.data[0]?.price.id;
-  // Access current_period_end using bracket notation for TypeScript compatibility
-  const currentPeriodEnd = (subscription as any).current_period_end as number;
+
+  // 4. Extract the priceId from the subscription
+  const priceId = subscription.items.data[0]?.price?.id;
 
   if (!customerId || !priceId) {
-    console.error("Missing customerId or priceId in subscription");
+    console.error("[Stripe] Missing customerId or priceId in subscription");
     return;
   }
 
-  const plan = getPlanFromPriceId(priceId);
-  if (!plan) {
-    console.error(`Unknown price ID: ${priceId}`);
+  // 2. Extract the correct timestamp
+  // Stripe sends current_period_end as a Unix timestamp in seconds
+  const currentPeriodEndIso =
+    subscription.current_period_end != null
+      ? new Date(subscription.current_period_end * 1000).toISOString()
+      : null;
+
+  // Log it for debugging
+  console.log("[Stripe] Subscription period end:", {
+    raw: subscription.current_period_end,
+    iso: currentPeriodEndIso,
+  });
+
+  // 4. Map priceId to plan
+  let plan: "free" | "pro" | "power" = "free";
+  const proPriceId = process.env.STRIPE_PRICE_PRO_MONTHLY || process.env.STRIPE_PRICE_ID_PRO;
+  const powerPriceId = process.env.STRIPE_PRICE_POWER_MONTHLY || process.env.STRIPE_PRICE_ID_POWER;
+
+  if (priceId === proPriceId) {
+    plan = "pro";
+  } else if (priceId === powerPriceId) {
+    plan = "power";
+  } else {
+    console.error(`[Stripe] Unknown price ID: ${priceId}`);
     return;
   }
 
   const supabase = await createClient();
 
-  // Find user by stripe_customer_id
-  const { data: userData, error: findError } = await supabase
+  // 3. Look up the correct user profile using stripe_customer_id
+  const { data: profile, error: findError } = await supabase
     .from("users")
     .select("userId")
     .eq("stripe_customer_id", customerId)
-    .maybeSingle();
+    .single();
 
-  if (findError || !userData) {
-    console.error("Error finding user by stripe_customer_id:", findError);
+  if (findError || !profile) {
+    console.error("[Stripe] No profile found for customer:", subscription.customer);
     return;
   }
 
-  // Convert current_period_end (Unix timestamp) to timestamptz
-  // Handle both Unix timestamp (seconds) and ensure it's valid
-  let renewsAt: string | null = null;
-  if (currentPeriodEnd) {
-    try {
-      // Handle both Unix timestamp (seconds) and milliseconds
-      const timestamp = typeof currentPeriodEnd === 'number' 
-        ? (currentPeriodEnd < 10000000000 ? currentPeriodEnd * 1000 : currentPeriodEnd) // If seconds, convert to ms
-        : Date.parse(String(currentPeriodEnd));
-      
-      if (!isNaN(timestamp)) {
-        renewsAt = new Date(timestamp).toISOString();
-      } else {
-        console.error("Invalid current_period_end value:", currentPeriodEnd);
-      }
-    } catch (error) {
-      console.error("Error parsing current_period_end:", error, "Value:", currentPeriodEnd);
-    }
-  }
-
-  // Update user subscription info
-  const updateData: any = {
-    plan: plan,
-    stripe_subscription_id: subscriptionId,
-    subscription_status: status,
-  };
-
-  // Only set renewsAt if we successfully parsed it
-  if (renewsAt) {
-    updateData.subscription_renews_at = renewsAt;
-  }
-
+  // 5. Update the profile INCLUDING subscription_renews_at
   const { error: updateError } = await supabase
     .from("users")
-    .update(updateData)
-    .eq("userId", userData.userId);
+    .update({
+      plan,
+      stripe_subscription_id: subscriptionId,
+      subscription_status: status,
+      subscription_renews_at: currentPeriodEndIso,
+    })
+    .eq("userId", profile.userId);
 
   if (updateError) {
-    console.error("Error updating user subscription:", updateError);
+    console.error("[Stripe] Error updating user subscription:", updateError);
     throw updateError;
   }
 
   console.log(
-    `✅ Updated user ${userData.userId} to plan: ${plan}, status: ${status}`
+    `✅ Updated user ${profile.userId} to plan: ${plan}, status: ${status}, renews_at: ${currentPeriodEndIso}`
   );
 }
 
 async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
+  // 6. Handle subscription cancellations
   const customerId = subscription.customer as string;
 
   if (!customerId) {
-    console.error("Missing customerId in subscription");
+    console.error("[Stripe] Missing customerId in subscription");
     return;
   }
 
   const supabase = await createClient();
 
-  // Find user by stripe_customer_id
-  const { data: userData, error: findError } = await supabase
+  // Look up user by stripe_customer_id
+  const { data: profile, error: findError } = await supabase
     .from("users")
     .select("userId")
     .eq("stripe_customer_id", customerId)
-    .maybeSingle();
+    .single();
 
-  if (findError || !userData) {
-    console.error("Error finding user by stripe_customer_id:", findError);
+  if (findError || !profile) {
+    console.error("[Stripe] No profile found for customer:", subscription.customer);
     return;
   }
 
-  // Downgrade user to free plan and clear subscription fields
+  // Update profile: set to free plan and clear subscription_renews_at
   const { error: updateError } = await supabase
     .from("users")
     .update({
       plan: "free",
-      subscription_status: "canceled",
-      stripe_subscription_id: null,
+      subscription_status: subscription.status,
       subscription_renews_at: null,
     })
-    .eq("userId", userData.userId);
+    .eq("userId", profile.userId);
 
   if (updateError) {
-    console.error("Error downgrading user plan:", updateError);
+    console.error("[Stripe] Error downgrading user plan:", updateError);
     throw updateError;
   }
 
-  console.log(`✅ Downgraded user ${userData.userId} to free plan`);
+  console.log(`✅ Downgraded user ${profile.userId} to free plan`);
 }
 
 async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
