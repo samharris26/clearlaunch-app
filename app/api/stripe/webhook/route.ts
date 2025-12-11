@@ -179,9 +179,8 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
   // Some Stripe API versions put current_period_end on the subscription,
   // others on the first subscription_item. Handle both.
   const rawCurrentPeriodEnd =
-    // @ts-expect-error - depending on api_version this may exist
     (subscription as any).current_period_end ??
-    subscription.items.data[0]?.current_period_end ??
+    (subscription.items.data[0] as any)?.current_period_end ??
     null;
 
   const currentPeriodEndIso =
