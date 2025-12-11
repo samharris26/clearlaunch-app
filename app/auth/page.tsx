@@ -60,7 +60,7 @@ function AuthForm() {
     try {
       if (isSignup) {
         // Sign up
-        const { data, error: signUpError } = await supabase.auth.signUp({
+        let { data, error: signUpError } = await supabase.auth.signUp({
           email,
           password,
         });
@@ -69,30 +69,47 @@ function AuthForm() {
           throw signUpError;
         }
 
-        // Check if session exists (email confirmations disabled)
-        if (data.session && data.user) {
-          // Create user record in users table
-          try {
-            const response = await fetch('/api/auth/create-user', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ userId: data.user.id, email: data.user.email }),
-            });
+        // Ensure we have a session (email confirmations are off, but double check)
+        let session = data.session;
+        let sessionUser = data.user;
 
-            if (!response.ok) {
-              console.error('Failed to create user record:', await response.text());
-            }
-          } catch (err) {
-            console.error('Error creating user record:', err);
+        if (!session || !sessionUser) {
+          // Try to sign in immediately (in case session wasn't returned)
+          const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+          });
+
+          if (signInError) {
+            throw signInError;
           }
 
-          // Redirect to app
-          router.push("/app");
-          router.refresh();
-        } else {
-          // This shouldn't happen if email confirmations are disabled, but handle it
-          setError("Account created but email confirmation is required. Please check your email.");
+          session = signInData.session;
+          sessionUser = signInData.user;
         }
+
+        if (!session || !sessionUser) {
+          throw new Error("Account created but we could not sign you in. Please try again.");
+        }
+
+        // Create user record in users table
+        try {
+          const response = await fetch('/api/auth/create-user', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId: sessionUser.id, email: sessionUser.email }),
+          });
+
+          if (!response.ok) {
+            console.error('Failed to create user record:', await response.text());
+          }
+        } catch (err) {
+          console.error('Error creating user record:', err);
+        }
+
+        // Redirect to app
+        router.push("/app");
+        router.refresh();
       } else {
         // Sign in
         const { error: signInError } = await supabase.auth.signInWithPassword({
