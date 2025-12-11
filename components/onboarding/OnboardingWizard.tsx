@@ -161,21 +161,21 @@ export function OnboardingWizard() {
   };
 
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col gap-8 rounded-3xl border border-slate-800 bg-slate-950/70 p-8 shadow-2xl shadow-slate-950/60 backdrop-blur relative overflow-hidden">
+    <div className="mx-auto flex w-full max-w-5xl flex-col gap-8 rounded-3xl border border-slate-200 bg-white p-8 shadow-[0_24px_55px_-28px_rgba(14,165,233,0.25)] relative overflow-hidden">
       <LoadingOverlay
         show={isPending || showGenerating}
         description="Give us a few seconds while we build your plan."
       />
       <header className="flex flex-col gap-2">
-        <p className="text-sm uppercase tracking-[0.2em] text-slate-500">
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
           Launch setup · Step {step + 1} of 3
         </p>
-        <h1 className="text-3xl font-semibold text-white">
+        <h1 className="text-3xl font-semibold text-slate-900">
           {step === 0 && "Tell us about your launch"}
           {step === 1 && "Choose your platforms"}
           {step === 2 && "Get your launch timeline"}
         </h1>
-        <p className="text-base text-slate-400">
+        <p className="text-base text-slate-600">
           {step === 0 &&
             "We'll use these details to size your runway, plan goals, and map the right timeline."}
           {step === 1 &&
@@ -186,42 +186,42 @@ export function OnboardingWizard() {
       </header>
 
       {error && (
-        <div className="rounded-xl border border-rose-500/50 bg-rose-500/10 px-4 py-3 text-sm text-rose-200">
+        <div className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
           {error}
         </div>
       )}
 
-      <section className="rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
+      <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
         {step === 0 && (
           <div className="grid gap-5 md:grid-cols-2">
             <div className="md:col-span-2">
-              <label className="text-sm font-medium text-slate-200">
+              <label className="text-sm font-medium text-slate-700">
                 Launch name
               </label>
               <input
-                className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-4 py-3 text-slate-100 focus:border-sky-400/60 focus:outline-none focus:ring-2 focus:ring-sky-400/15"
+                className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 placeholder-slate-400 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100"
                 value={form.launchName}
                 onChange={(event) => updateForm("launchName", event.target.value)}
                 placeholder="e.g. Batch 001 Coffee Drop"
               />
             </div>
             <div className="md:col-span-2">
-              <label className="text-sm font-medium text-slate-200">
+              <label className="text-sm font-medium text-slate-700">
                 Launch summary
               </label>
               <textarea
-                className="mt-2 h-28 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-4 py-3 text-slate-100 focus:border-sky-400/60 focus:outline-none focus:ring-2 focus:ring-sky-400/15"
+                className="mt-2 h-28 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 placeholder-slate-400 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100"
                 value={form.summary}
                 onChange={(event) => updateForm("summary", event.target.value)}
                 placeholder="Describe the drop, promise, or campaign angle in a few sentences."
               />
             </div>
             <div>
-              <label className="text-sm font-medium text-slate-200">
+              <label className="text-sm font-medium text-slate-700">
                 Goal type
               </label>
               <select
-                className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-4 py-3 text-slate-100 focus:border-sky-400/60 focus:outline-none focus:ring-2 focus:ring-sky-400/15"
+                className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100"
                 value={form.goalType}
                 onChange={(event) => updateForm("goalType", event.target.value)}
               >
@@ -233,25 +233,25 @@ export function OnboardingWizard() {
               </select>
             </div>
             <div>
-              <label className="text-sm font-medium text-slate-200">
+              <label className="text-sm font-medium text-slate-700">
                 Goal value
               </label>
               <input
                 type="number"
                 min={0}
-                className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-4 py-3 text-slate-100 focus:border-sky-400/60 focus:outline-none focus:ring-2 focus:ring-sky-400/15"
+                className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 placeholder-slate-400 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100"
                 value={form.goalValue}
                 onChange={(event) => updateForm("goalValue", event.target.value)}
                 placeholder={goalPlaceholder}
               />
             </div>
             <div>
-              <label className="text-sm font-medium text-slate-200">
+              <label className="text-sm font-medium text-slate-700">
                 Launch date
               </label>
               <input
                 type="date"
-                className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950/60 px-4 py-3 text-slate-100 focus:border-sky-400/60 focus:outline-none focus:ring-2 focus:ring-sky-400/15"
+                className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100"
                 value={form.launchDate}
                 onChange={(event) => updateForm("launchDate", event.target.value)}
                 min={new Date().toISOString().split("T")[0]}
@@ -271,22 +271,22 @@ export function OnboardingWizard() {
                   className={cn(
                     "rounded-2xl border px-4 py-4 text-left transition focus:outline-none",
                     active
-                      ? "border-sky-500/70 bg-sky-500/10 shadow-lg shadow-sky-500/20"
-                      : "border-slate-800 bg-slate-950/40 hover:border-slate-700 hover:bg-slate-900/60"
+                      ? "border-sky-200 bg-sky-50 shadow-sm"
+                      : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50 shadow-sm"
                   )}
                   onClick={() => togglePlatform(platform.id)}
                 >
                   <div className="flex items-center justify-between gap-2">
                     <div>
-                      <p className="text-base font-semibold text-slate-100">{platform.label}</p>
-                      <p className="text-sm text-slate-400">
+                      <p className="text-base font-semibold text-slate-900">{platform.label}</p>
+                      <p className="text-sm text-slate-600">
                         {"We'll suggest best windows and content types."}
                       </p>
                     </div>
                     <span
                       className={cn(
                         "inline-flex h-6 items-center rounded-full px-3 text-[0.65rem] font-semibold uppercase tracking-wide",
-                        active ? "bg-sky-500/20 text-sky-200 border border-sky-500/40" : "bg-slate-900/70 text-slate-400 border border-slate-700"
+                        active ? "bg-sky-100 text-sky-700 border border-sky-200" : "bg-slate-100 text-slate-600 border border-slate-200"
                       )}
                     >
                       {active ? "Selected" : "Tap to add"}
@@ -300,9 +300,9 @@ export function OnboardingWizard() {
 
         {step === 2 && (
           <div className="space-y-4">
-            <div className="space-y-2 text-slate-300" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
-              <p className="text-base text-slate-200">Pick the template closest to your launch format.</p>
-              <p className="text-sm text-slate-400">
+            <div className="space-y-2 text-slate-700" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
+              <p className="text-base text-slate-900">Pick the template closest to your launch format.</p>
+              <p className="text-sm text-slate-600">
                 Each template includes the essential beats, recommended platforms, and timing guidance. You can always tweak tasks later.
               </p>
             </div>
@@ -315,15 +315,15 @@ export function OnboardingWizard() {
                   key={template.id}
                   onClick={() => updateForm("templateId", template.id)}
                   className={cn(
-                    "h-full rounded-2xl border p-4 text-left transition hover:border-sky-500/60 hover:bg-slate-900/50",
+                    "h-full rounded-2xl border p-4 text-left transition hover:border-sky-200 hover:bg-sky-50",
                     active
-                      ? "border-sky-500 bg-sky-500/10 shadow-lg shadow-sky-500/30"
-                      : "border-slate-800 bg-slate-950/40"
+                      ? "border-sky-300 bg-sky-50 shadow-sm"
+                      : "border-slate-200 bg-white shadow-sm"
                   )}
                 >
-                  <p className="text-sm uppercase tracking-wide text-slate-400">{template.name}</p>
-                  <p className="mt-2 text-lg font-semibold text-white leading-[calc(var(--spacing)*8)]">{template.description}</p>
-                  <div className="mt-3 space-y-1 text-sm text-slate-400">
+                  <p className="text-sm uppercase tracking-wide text-slate-500">{template.name}</p>
+                  <p className="mt-2 text-lg font-semibold text-slate-900 leading-[calc(var(--spacing)*8)]">{template.description}</p>
+                  <div className="mt-3 space-y-1 text-sm text-slate-600">
                     <p>{template.beats.length} beats · {template.beats[0]?.label} → {template.beats[template.beats.length - 1]?.label}</p>
                     <p className="text-xs text-slate-500">
                       Best for: {template.beats.slice(0, 2).map((beat) => beat.label).join(", ")}…
@@ -342,7 +342,7 @@ export function OnboardingWizard() {
           type="button"
           onClick={goBack}
           disabled={step === 0 || isPending}
-          className="rounded-xl border border-slate-800 px-5 py-3 text-sm font-medium text-slate-300 transition disabled:opacity-40"
+          className="rounded-xl border border-slate-200 px-5 py-3 text-sm font-medium text-slate-700 transition disabled:opacity-40 hover:bg-slate-50"
         >
           Back
         </button>
@@ -351,7 +351,7 @@ export function OnboardingWizard() {
             type="button"
             onClick={goNext}
             disabled={isPending}
-            className={cn("rounded-xl px-5 py-3 text-sm font-semibold transition disabled:opacity-40", gradientBtn)}
+            className={cn("rounded-xl px-5 py-3 text-sm font-semibold text-white transition disabled:opacity-40", gradientBtn)}
           >
             Next
           </button>
@@ -360,7 +360,7 @@ export function OnboardingWizard() {
             type="button"
             onClick={handleSubmit}
             disabled={isPending}
-            className={cn("inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold transition disabled:opacity-40", gradientBtn)}
+            className={cn("inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold text-white transition disabled:opacity-40", gradientBtn)}
           >
             {isPending ? "Creating launch…" : "Finish & create launch"}
           </button>
