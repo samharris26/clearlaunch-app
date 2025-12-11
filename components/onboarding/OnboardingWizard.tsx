@@ -168,21 +168,21 @@ export function OnboardingWizard() {
   };
 
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col gap-8 rounded-xl border border-slate-200 bg-white p-8 shadow-[0_24px_55px_-28px_rgba(14,165,233,0.15)] relative overflow-hidden">
+    <div className="mx-auto flex w-full max-w-5xl flex-col gap-8 rounded-xl border border-[color:var(--border)] bg-[var(--card)] p-8 shadow-[var(--shadow-soft)] relative overflow-hidden">
       <LoadingOverlay
         show={isPending || showGenerating}
         description="Give us a few seconds while we build your plan."
       />
       <header className="flex flex-col gap-2">
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--muted)]">
           Launch setup · Step {step + 1} of 3
         </p>
-        <h1 className="text-3xl font-semibold text-slate-900">
+        <h1 className="text-3xl font-semibold text-[color:var(--heading)]">
           {step === 0 && "Tell us about your launch"}
           {step === 1 && "Choose your platforms"}
           {step === 2 && "Get your launch timeline"}
         </h1>
-        <p className="text-base text-slate-600">
+        <p className="text-base text-[color:var(--muted)]">
           {step === 0 &&
             "We'll use these details to size your runway, plan goals, and map the right timeline."}
           {step === 1 &&
@@ -193,20 +193,20 @@ export function OnboardingWizard() {
       </header>
 
       {error && (
-        <div className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+        <div className="rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
           {error}
         </div>
       )}
 
-      <section className="rounded-md border border-slate-200 bg-white p-6 shadow-sm">
+      <section className="rounded-md border border-[color:var(--border)] bg-[var(--card)] p-6 shadow-sm">
         {step === 0 && (
           <div className="grid gap-5 md:grid-cols-2">
             <div className="md:col-span-2">
-              <label className="text-sm font-medium text-slate-700">
+              <label className="text-sm font-medium text-[color:var(--muted)]">
                 Launch name
               </label>
               <input
-                className="mt-2 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900 placeholder-slate-400 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                className="mt-2 w-full rounded-md border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_94%,transparent)] px-3 py-2 text-sm text-[color:var(--text)] placeholder:text-[color:var(--muted)] focus:border-sky-500/50 focus:outline-none focus:ring-1 focus:ring-sky-500/50"
                 value={form.launchName}
                 onChange={(event) => updateForm("launchName", event.target.value)}
                 placeholder="e.g. Batch 001 Coffee Drop"
@@ -217,7 +217,7 @@ export function OnboardingWizard() {
                 Launch summary
               </label>
               <textarea
-                className="mt-2 h-28 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900 placeholder-slate-400 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                className="mt-2 h-28 w-full rounded-md border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_94%,transparent)] px-3 py-2 text-sm text-[color:var(--text)] placeholder:text-[color:var(--muted)] focus:border-sky-500/50 focus:outline-none focus:ring-1 focus:ring-sky-500/50 resize-none"
                 value={form.summary}
                 onChange={(event) => updateForm("summary", event.target.value)}
                 placeholder="Describe the drop, promise, or campaign angle in a few sentences."
@@ -231,7 +231,7 @@ export function OnboardingWizard() {
                 value={form.goalType}
                 onValueChange={(value) => updateForm("goalType", value)}
               >
-                <SelectTrigger className="mt-2 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-left text-slate-900 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500">
+                <SelectTrigger className="mt-2 w-full">
                   <SelectValue placeholder="Select goal type" />
                 </SelectTrigger>
                 <SelectContent>
@@ -250,7 +250,7 @@ export function OnboardingWizard() {
               <input
                 type="number"
                 min={0}
-                className="mt-2 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900 placeholder-slate-400 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                className="mt-2 w-full rounded-md border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_94%,transparent)] px-3 py-2 text-sm text-[color:var(--text)] placeholder:text-[color:var(--muted)] focus:border-sky-500/50 focus:outline-none focus:ring-1 focus:ring-sky-500/50"
                 value={form.goalValue}
                 onChange={(event) => updateForm("goalValue", event.target.value)}
                 placeholder={goalPlaceholder}
@@ -262,7 +262,7 @@ export function OnboardingWizard() {
               </label>
               <input
                 type="date"
-                className="mt-2 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                className="mt-2 w-full rounded-md border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_94%,transparent)] px-3 py-2 text-sm text-[color:var(--text)] focus:border-sky-500/50 focus:outline-none focus:ring-1 focus:ring-sky-500/50"
                 value={form.launchDate}
                 onChange={(event) => updateForm("launchDate", event.target.value)}
                 min={new Date().toISOString().split("T")[0]}
@@ -282,22 +282,22 @@ export function OnboardingWizard() {
                   className={cn(
                     "rounded-md border px-4 py-3 text-left transition focus:outline-none",
                     active
-                      ? "border-cyan-200 bg-cyan-50 shadow-sm"
-                      : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50 shadow-sm"
+                      ? "border-sky-200 bg-sky-50 shadow-sm"
+                      : "border-[color:var(--border)] bg-[var(--card)] hover:border-[color:var(--border-strong)] hover:bg-[color-mix(in_srgb,var(--surface)_96%,transparent)] shadow-sm"
                   )}
                   onClick={() => togglePlatform(platform.id)}
                 >
                   <div className="flex items-center justify-between gap-2">
                     <div>
-                      <p className="text-base font-semibold text-slate-900">{platform.label}</p>
-                      <p className="text-sm text-slate-600">
+                      <p className="text-base font-semibold text-[color:var(--heading)]">{platform.label}</p>
+                      <p className="text-sm text-[color:var(--muted)]">
                         {"We'll suggest best windows and content types."}
                       </p>
                     </div>
                     <span
                       className={cn(
                         "inline-flex h-6 items-center rounded-full px-3 text-[0.65rem] font-semibold uppercase tracking-wide",
-                        active ? "bg-cyan-100 text-cyan-700 border border-cyan-200" : "bg-slate-100 text-slate-600 border border-slate-200"
+                        active ? "bg-sky-100 text-sky-700 border border-sky-200" : "bg-slate-100 text-slate-600 border border-slate-200"
                       )}
                     >
                       {active ? "Selected" : "Tap to add"}
@@ -311,9 +311,9 @@ export function OnboardingWizard() {
 
         {step === 2 && (
           <div className="space-y-4">
-            <div className="space-y-2 text-slate-700" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
-              <p className="text-base text-slate-900">Pick the template closest to your launch format.</p>
-              <p className="text-sm text-slate-600">
+            <div className="space-y-2 text-[color:var(--text)]" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
+              <p className="text-base text-[color:var(--heading)]">Pick the template closest to your launch format.</p>
+              <p className="text-sm text-[color:var(--muted)]">
                 Each template includes the essential beats, recommended platforms, and timing guidance. You can always tweak tasks later.
               </p>
             </div>
@@ -326,17 +326,17 @@ export function OnboardingWizard() {
                   key={template.id}
                   onClick={() => updateForm("templateId", template.id)}
                   className={cn(
-                    "h-full rounded-md border p-4 text-left transition hover:border-cyan-200 hover:bg-cyan-50",
+                    "h-full rounded-md border p-4 text-left transition hover:border-sky-200 hover:bg-sky-50",
                     active
-                      ? "border-cyan-300 bg-cyan-50 shadow-sm"
-                      : "border-slate-200 bg-white shadow-sm"
+                      ? "border-sky-300 bg-sky-50 shadow-sm"
+                      : "border-[color:var(--border)] bg-[var(--card)] shadow-sm"
                   )}
                 >
-                  <p className="text-sm uppercase tracking-wide text-slate-500">{template.name}</p>
-                  <p className="mt-2 text-lg font-semibold text-slate-900 leading-[calc(var(--spacing)*8)]">{template.description}</p>
-                  <div className="mt-3 space-y-1 text-sm text-slate-600">
+                  <p className="text-sm uppercase tracking-wide text-[color:var(--muted)]">{template.name}</p>
+                  <p className="mt-2 text-lg font-semibold text-[color:var(--heading)] leading-[calc(var(--spacing)*8)]">{template.description}</p>
+                  <div className="mt-3 space-y-1 text-sm text-[color:var(--muted)]">
                     <p>{template.beats.length} beats · {template.beats[0]?.label} → {template.beats[template.beats.length - 1]?.label}</p>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-xs text-[color:var(--muted)]">
                       Best for: {template.beats.slice(0, 2).map((beat) => beat.label).join(", ")}…
                     </p>
                   </div>
@@ -353,7 +353,7 @@ export function OnboardingWizard() {
           type="button"
           onClick={goBack}
           disabled={step === 0 || isPending}
-          className="rounded-md border border-slate-300 px-4 py-2.5 text-sm font-medium text-slate-700 transition disabled:opacity-40 hover:bg-slate-50"
+          className="rounded-md border border-[color:var(--border)] px-4 py-2.5 text-sm font-medium text-[color:var(--text)] transition disabled:opacity-40 hover:bg-[color-mix(in_srgb,var(--surface)_96%,transparent)]"
         >
           Back
         </button>
