@@ -57,8 +57,8 @@ export default function PromotionalCard({ type, onUpgrade, onAddLaunch, variant 
               <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-emerald-400">
                 Upgrade
               </p>
-              <div className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-1 text-xs font-medium text-emerald-300">
-                £10<span className="text-emerald-300/60">/mo</span>
+              <div className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-1 text-xs font-medium text-emerald-600 dark:text-emerald-400">
+                £10<span className="text-emerald-600/70 dark:text-emerald-400/70">/mo</span>
               </div>
             </div>
 
