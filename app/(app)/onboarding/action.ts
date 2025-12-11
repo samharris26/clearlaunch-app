@@ -20,7 +20,7 @@ interface OnboardingData {
 export async function submitOnboardingStep(data: OnboardingData) {
   const user = await getUser();
   if (!user) {
-    redirect("/login");
+    redirect("/auth?mode=login");
   }
   const userId = user.id;
 
@@ -100,7 +100,7 @@ export async function submitOnboardingStep(data: OnboardingData) {
 export async function submitOnboarding(formData: FormData) {
   const user = await getUser();
   if (!user) {
-    redirect("/login");
+    redirect("/auth?mode=login");
   }
   const userId = user.id;
 

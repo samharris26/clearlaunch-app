@@ -70,7 +70,7 @@ export default async function PricingPage({
 }) {
   const user = await getUser();
   if (!user) {
-    redirect("/login");
+    redirect("/auth?mode=login");
   }
   const userId = user.id;
 

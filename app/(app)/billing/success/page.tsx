@@ -11,7 +11,7 @@ export default async function BillingSuccessPage({
 }) {
   const user = await getUser();
   if (!user) {
-    redirect("/login");
+    redirect("/auth?mode=login");
   }
 
   const params = await searchParams;

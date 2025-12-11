@@ -9,7 +9,7 @@ import Link from "next/link";
 export default async function AnalyticsPage() {
     const user = await getUser();
     if (!user) {
-        redirect("/login");
+        redirect("/auth?mode=login");
     }
     const userId = user.id;
 
@@ -23,7 +23,7 @@ export default async function AnalyticsPage() {
         .single();
 
     if (userError || !userData) {
-        redirect("/login");
+        redirect("/auth?mode=login");
     }
 
     const plan = (userData.plan as Plan) || 'free';

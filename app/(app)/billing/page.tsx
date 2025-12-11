@@ -5,7 +5,7 @@ import BillingClient from "./BillingClient";
 export default async function BillingPage() {
   const user = await getUser();
   if (!user) {
-    redirect("/login");
+    redirect("/auth?mode=login");
   }
 
   const userId = user.id;

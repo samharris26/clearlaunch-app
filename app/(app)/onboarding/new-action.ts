@@ -25,7 +25,7 @@ interface NewOnboardingData {
 export async function submitNewOnboarding(data: NewOnboardingData) {
   const user = await getUser();
   if (!user) {
-    redirect("/login");
+    redirect("/auth?mode=login");
   }
   const userId = user.id;
 

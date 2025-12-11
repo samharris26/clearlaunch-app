@@ -7,7 +7,7 @@ import SectionHeader from "@/components/dashboard/SectionHeader";
 export default async function ProfilePage() {
   const user = await getUser();
   if (!user) {
-    redirect("/login");
+    redirect("/auth?mode=login");
   }
   const userId = user.id;
 

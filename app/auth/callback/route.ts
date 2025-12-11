@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     
     if (error) {
       console.error("Error exchanging code for session:", error);
-      return NextResponse.redirect(`${origin}/login?error=${encodeURIComponent(error.message)}`);
+      return NextResponse.redirect(`${origin}/auth?mode=login&error=${encodeURIComponent(error.message)}`);
     }
 
     // Ensure user record exists in users table for new OAuth users
@@ -40,9 +40,9 @@ export async function GET(request: NextRequest) {
         // Sign out the OAuth session so user can sign in with their existing account
         await supabase.auth.signOut();
         
-        return NextResponse.redirect(
-          `${origin}/login?error=${encodeURIComponent("An account with this email already exists. Please sign in with your existing account instead.")}`
-        );
+      return NextResponse.redirect(
+        `${origin}/auth?mode=login&error=${encodeURIComponent("An account with this email already exists. Please sign in with your existing account instead.")}`
+      );
       }
 
       // Use the existing user record (prefer by userId, fallback to email)
@@ -138,7 +138,7 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  // Redirect to dashboard - it will handle onboarding redirect if needed
-  return NextResponse.redirect(`${origin}/dashboard`);
+  // Redirect to app - it will handle onboarding redirect if needed
+  return NextResponse.redirect(`${origin}/app`);
 }
 

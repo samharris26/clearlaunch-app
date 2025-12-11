@@ -1,10 +1,20 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
-import Link from "next/link";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
+export default function LoginPage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.replace("/auth?mode=login");
+  }, [router]);
+
+  return null;
+}
+
+// Legacy code below - kept for reference but not used
+/*
 function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

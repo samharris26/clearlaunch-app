@@ -15,7 +15,7 @@ type Params = { params: Promise<{ id: string }> };
 export default async function LaunchDetailPage({ params }: Params) {
   const user = await getUser();
   if (!user) {
-    redirect("/login");
+    redirect("/auth?mode=login");
   }
   const userId = user.id;
 

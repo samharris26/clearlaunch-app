@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 export default async function DebugTasksPage() {
   const user = await getUser();
   if (!user) {
-    redirect("/login");
+    redirect("/auth?mode=login");
   }
   const userId = user.id;
 

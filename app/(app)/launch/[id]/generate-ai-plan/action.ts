@@ -13,7 +13,7 @@ export async function generateAILaunchPlan(launchId: string) {
   const user = await getUser();
   if (!user) {
     console.error("No user found");
-    redirect("/login");
+    redirect("/auth?mode=login");
   }
   const userId = user.id;
 

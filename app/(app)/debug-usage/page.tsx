@@ -5,7 +5,7 @@ import { getUserUsage } from "@/lib/usage-checks-simple";
 export default async function DebugUsagePage() {
   const user = await getUser();
   if (!user) {
-    redirect("/login");
+    redirect("/auth?mode=login");
   }
   const userId = user.id;
 

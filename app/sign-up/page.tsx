@@ -1,10 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
-import Link from "next/link";
 
+export default function SignUpPage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.replace("/auth?mode=signup");
+  }, [router]);
+
+  return null;
+}
+
+// Legacy code below - kept for reference but not used
+/*
 export default function SignUpPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -226,4 +236,5 @@ export default function SignUpPage() {
     </div>
   );
 }
+*/
 

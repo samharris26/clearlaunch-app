@@ -5,7 +5,7 @@ import SettingsPageClient from "./SettingsPageClient";
 export default async function SettingsPage() {
   const user = await getUser();
   if (!user) {
-    redirect("/login");
+    redirect("/auth?mode=login");
   }
   const userId = user.id;
 

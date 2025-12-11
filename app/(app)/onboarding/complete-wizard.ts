@@ -25,7 +25,7 @@ export interface OnboardingWizardPayload {
 export async function completeOnboardingWizard(payload: OnboardingWizardPayload) {
   const user = await getUser();
   if (!user) {
-    redirect("/login");
+    redirect("/auth?mode=login");
   }
   const userId = user!.id;
 

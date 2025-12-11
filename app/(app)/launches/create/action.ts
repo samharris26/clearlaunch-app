@@ -8,7 +8,7 @@ import { generateAILaunchPlan } from "@/app/(app)/launch/[id]/generate-ai-plan/a
 export async function createLaunch(formData: FormData) {
   const user = await getUser();
   if (!user) {
-    redirect("/login");
+    redirect("/auth?mode=login");
   }
   const userId = user.id;
 

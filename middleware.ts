@@ -35,22 +35,23 @@ export async function middleware(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   // Public routes that don't require authentication
-  const publicRoutes = ["/", "/login", "/sign-up"];
+  const publicRoutes = ["/", "/auth", "/login", "/sign-up"];
   const isPublicRoute = publicRoutes.some((route) =>
     request.nextUrl.pathname.startsWith(route)
   );
 
-  // If not authenticated and trying to access protected route, redirect to login
+  // If not authenticated and trying to access protected route, redirect to auth
   if (!user && !isPublicRoute) {
     const url = request.nextUrl.clone();
-    url.pathname = "/login";
+    url.pathname = "/auth";
+    url.searchParams.set("mode", "login");
     return NextResponse.redirect(url);
   }
 
-  // If authenticated and trying to access login/signup, redirect to dashboard
-  if (user && (request.nextUrl.pathname === "/login" || request.nextUrl.pathname === "/sign-up")) {
+  // If authenticated and trying to access auth/login/signup, redirect to app
+  if (user && (request.nextUrl.pathname === "/auth" || request.nextUrl.pathname === "/login" || request.nextUrl.pathname === "/sign-up")) {
     const url = request.nextUrl.clone();
-    url.pathname = "/dashboard";
+    url.pathname = "/app";
     return NextResponse.redirect(url);
   }
 

@@ -16,12 +16,12 @@ export default function LogoutPage() {
           console.error("Logout error:", error);
         }
         // Clear any local storage or session data if needed
-        // Redirect to login page
-        window.location.href = "/login";
+        // Redirect to auth page
+        window.location.href = "/auth?mode=login";
       } catch (error) {
         console.error("Logout error:", error);
         // Still redirect even if there's an error
-        window.location.href = "/login";
+        window.location.href = "/auth?mode=login";
       }
     };
 
