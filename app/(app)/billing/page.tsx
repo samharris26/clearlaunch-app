@@ -23,12 +23,17 @@ export default async function BillingPage() {
   const subscriptionRenewsAt = userData?.subscription_renews_at || null;
   const hasStripeCustomer = !!userData?.stripe_customer_id;
 
+  // Derive view model
+  const isPro = currentPlan === "pro" && subscriptionStatus === "active";
+  const isFree = currentPlan === "free";
+  const renewsOn =
+    isPro && subscriptionRenewsAt ? new Date(subscriptionRenewsAt) : null;
+
   // Format renewal date if available
   let renewalDateFormatted: string | null = null;
-  if (subscriptionRenewsAt) {
+  if (renewsOn) {
     try {
-      const date = new Date(subscriptionRenewsAt);
-      renewalDateFormatted = date.toLocaleDateString("en-GB", {
+      renewalDateFormatted = renewsOn.toLocaleDateString("en-GB", {
         day: "numeric",
         month: "long",
         year: "numeric",
@@ -37,6 +42,9 @@ export default async function BillingPage() {
       console.error("Error formatting renewal date:", e);
     }
   }
+
+  // Check for past_due status (show warning banner)
+  const isPastDue = subscriptionStatus === "past_due";
 
   return (
     <div className="flex flex-col items-center gap-16 py-12 px-4 sm:px-6 lg:px-8 min-h-screen bg-[var(--background)]">
@@ -56,66 +64,86 @@ export default async function BillingPage() {
         </p>
       </div>
 
-      {/* Current Plan Status */}
-      <div className="relative z-10 max-w-2xl w-full">
-        <div className="rounded-2xl border border-[color:var(--border)] bg-[var(--card)] p-6 shadow-[var(--shadow-subtle)]">
-          <h2 className="text-lg font-semibold text-[color:var(--heading)] mb-4" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" }}>
-            Current Plan
-          </h2>
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-[color:var(--muted)]" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
-                Plan
-              </span>
-              <span className="text-sm font-semibold text-[color:var(--heading)] capitalize" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
-                {currentPlan === "free" ? "Free" : currentPlan === "pro" ? "Pro – £10/month" : "Power – £30/month"}
-              </span>
-            </div>
-            {subscriptionStatus && (
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-[color:var(--muted)]" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
-                  Status
-                </span>
-                <span className={`text-sm font-semibold capitalize ${
-                  subscriptionStatus === "active" || subscriptionStatus === "trialing"
-                    ? "text-emerald-600 dark:text-emerald-400"
-                    : subscriptionStatus === "past_due"
-                    ? "text-amber-600 dark:text-amber-400"
-                    : "text-[color:var(--muted)]"
-                }`} style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
-                  {subscriptionStatus === "active" ? "Active" : 
-                   subscriptionStatus === "trialing" ? "Trialing" :
-                   subscriptionStatus === "past_due" ? "Past Due" :
-                   subscriptionStatus === "canceled" ? "Canceled" :
-                   subscriptionStatus}
-                </span>
-              </div>
-            )}
-            {renewalDateFormatted && (subscriptionStatus === "active" || subscriptionStatus === "trialing") && (
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-[color:var(--muted)]" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
-                  Renews on
-                </span>
-                <span className="text-sm font-semibold text-[color:var(--heading)]" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
-                  {renewalDateFormatted}
-                </span>
-              </div>
-            )}
-            {currentPlan === "free" && (
-              <div className="pt-2 text-xs text-[color:var(--muted)]" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
-                You're on the Free plan. Upgrade to unlock more features.
-              </div>
-            )}
+      {/* Past Due Warning Banner */}
+      {isPastDue && (
+        <div className="relative z-10 max-w-2xl w-full">
+          <div className="rounded-xl border border-amber-500/20 bg-amber-500/10 p-4">
+            <p className="text-sm text-amber-600 dark:text-amber-400" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
+              <strong>Payment issue:</strong> We couldn't take your last payment. Please update your card in billing.
+            </p>
           </div>
+        </div>
+      )}
+
+      {/* Current Plan Summary */}
+      <div className="relative z-10 max-w-2xl w-full">
+        <div className="rounded-2xl border border-[color:var(--border)] bg-[var(--card)] p-8 shadow-[var(--shadow-subtle)]">
+          <h2 className="text-sm font-semibold text-[color:var(--muted)] mb-4 uppercase tracking-wide" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
+            Current plan
+          </h2>
+          
+          {isFree ? (
+            <>
+              <div className="mb-4">
+                <h3 className="text-3xl font-bold text-[color:var(--heading)] mb-3" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" }}>
+                  Free
+                </h3>
+                <p className="text-[color:var(--muted)] leading-relaxed mb-6" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
+                  You can generate one launch with AI and edit all tasks manually.
+                  <br />
+                  Upgrade to Pro to unlock unlimited launches and AI content for every task.
+                </p>
+              </div>
+              <BillingClient
+                currentPlan={currentPlan}
+                hasStripeCustomer={hasStripeCustomer}
+                showUpgradeButton={true}
+              />
+            </>
+          ) : isPro ? (
+            <>
+              <div className="mb-4">
+                <h3 className="text-3xl font-bold text-[color:var(--heading)] mb-3" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" }}>
+                  Pro
+                </h3>
+                {renewalDateFormatted && (
+                  <p className="text-[color:var(--muted)] mb-2" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
+                    Renews on {renewalDateFormatted}.
+                  </p>
+                )}
+                <p className="text-[color:var(--muted)] leading-relaxed mb-6" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
+                  You have unlimited launches and full AI content access for every task.
+                </p>
+              </div>
+              <BillingClient
+                currentPlan={currentPlan}
+                hasStripeCustomer={hasStripeCustomer}
+                showManageButton={true}
+              />
+            </>
+          ) : (
+            <>
+              <div className="mb-4">
+                <h3 className="text-3xl font-bold text-[color:var(--heading)] mb-3" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" }}>
+                  Power
+                </h3>
+                <p className="text-[color:var(--muted)] leading-relaxed" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
+                  Coming soon.
+                </p>
+              </div>
+            </>
+          )}
         </div>
       </div>
 
       {/* Pricing Cards */}
-      <BillingClient
-        currentPlan={currentPlan}
-        hasStripeCustomer={hasStripeCustomer}
-        showManageButton={currentPlan === "pro" && hasStripeCustomer}
-      />
+      {!isPro && (
+        <BillingClient
+          currentPlan={currentPlan}
+          hasStripeCustomer={hasStripeCustomer}
+          showPricingCards={true}
+        />
+      )}
     </div>
   );
 }

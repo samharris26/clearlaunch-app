@@ -9,12 +9,16 @@ interface BillingClientProps {
   currentPlan: "free" | "pro" | "power";
   hasStripeCustomer: boolean;
   showManageButton?: boolean;
+  showUpgradeButton?: boolean;
+  showPricingCards?: boolean;
 }
 
 export default function BillingClient({
   currentPlan,
   hasStripeCustomer,
   showManageButton = false,
+  showUpgradeButton = false,
+  showPricingCards = false,
 }: BillingClientProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -28,10 +32,9 @@ export default function BillingClient({
       description: "Perfect for getting started",
       features: [
         "1 active launch",
-        "20 AI credits per month",
-        "AI-powered launch planning",
-        "Task management & tracking",
-        "Basic launch templates",
+        "AI-generated launch plan",
+        "Edit and reorder tasks manually",
+        "Calendar export for tasks",
       ],
       icon: Crown,
     },
@@ -39,17 +42,14 @@ export default function BillingClient({
       name: "Pro",
       price: "£10",
       period: "/month",
-      description: "For growing businesses",
+      description: "For solo founders who are actually launching",
       features: [
-        "5 active launches",
-        "100 AI calls/month",
-        "Full AI access",
-        "Task rewrites",
-        "Post generation",
-        "Idea generation",
-        "Content assist",
-        "Rewrite/refine steps",
-        "Basic analytics",
+        "Unlimited launches",
+        "AI content for every task",
+        "Rewrites & variations in one click",
+        "Smart timing suggestions",
+        "Calendar export & reminders",
+        "Priority support",
       ],
       icon: Zap,
       recommended: true,
@@ -58,14 +58,13 @@ export default function BillingClient({
       name: "Power",
       price: "£30",
       period: "/month",
-      description: "For power users and agencies",
+      description: "For small teams and agencies",
       features: [
-        "Unlimited launches",
-        "300 AI calls/month",
-        "All templates",
-        "Priority AI access",
-        "Advanced analytics",
-        "Dedicated support",
+        "Team access & collaborators",
+        "Higher AI limits",
+        "Saved templates & playbooks",
+        "Advanced reporting",
+        "Priority support",
       ],
       icon: Sparkles,
       comingSoon: true,
@@ -135,6 +134,54 @@ export default function BillingClient({
       setIsLoadingPortal(false);
     }
   };
+
+  // Show upgrade button if requested (for Free users in current plan card)
+  if (showUpgradeButton) {
+    return (
+      <button
+        onClick={handleUpgradeToPro}
+        disabled={isLoading}
+        className="w-full py-3 px-6 rounded-xl bg-gradient-to-r from-indigo-500 to-cyan-500 text-white font-semibold hover:from-indigo-400 hover:to-cyan-400 transition-all shadow-[var(--shadow-subtle)] hover:shadow-[var(--shadow-soft)] hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-[color:var(--background)] disabled:opacity-50 disabled:cursor-not-allowed"
+        style={{
+          fontFamily:
+            "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif",
+        }}
+      >
+        {isLoading ? "Loading..." : "Upgrade to Pro"}
+      </button>
+    );
+  }
+
+  // Show manage button if requested (for Pro users in current plan card)
+  if (showManageButton) {
+    return (
+      <div className="flex flex-col sm:flex-row gap-3">
+        <button
+          onClick={handleManageSubscription}
+          disabled={isLoadingPortal}
+          className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-[color-mix(in_srgb,var(--surface)_90%,transparent)] border border-[color:var(--border)] text-sm font-medium text-[color:var(--text)] hover:bg-[color-mix(in_srgb,var(--surface)_80%,transparent)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          style={{
+            fontFamily:
+              "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif",
+          }}
+        >
+          {isLoadingPortal ? (
+            "Loading..."
+          ) : (
+            <>
+              Manage billing
+              <ExternalLink className="h-4 w-4" />
+            </>
+          )}
+        </button>
+      </div>
+    );
+  }
+
+  // Show pricing cards if requested
+  if (!showPricingCards) {
+    return null;
+  }
 
   return (
     <>
@@ -285,16 +332,21 @@ export default function BillingClient({
                     Downgrade to Free
                   </button>
                 ) : isPower ? (
-                  <button
-                    disabled
-                    className="w-full py-3 px-6 rounded-xl bg-[color-mix(in_srgb,var(--surface)_70%,transparent)] border border-[color:var(--border)] text-[color:var(--muted)] font-medium cursor-not-allowed opacity-60"
-                    style={{
-                      fontFamily:
-                        "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif",
-                    }}
-                  >
-                    Coming Soon
-                  </button>
+                  <div className="space-y-2">
+                    <button
+                      disabled
+                      className="w-full py-3 px-6 rounded-xl bg-[color-mix(in_srgb,var(--surface)_70%,transparent)] border border-[color:var(--border)] text-[color:var(--muted)] font-medium cursor-not-allowed opacity-60"
+                      style={{
+                        fontFamily:
+                          "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif",
+                      }}
+                    >
+                      Coming Soon
+                    </button>
+                    <p className="text-xs text-center text-[color:var(--muted)]" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
+                      We'll email you when Power is available.
+                    </p>
+                  </div>
                 ) : (
                   <button
                     onClick={handleUpgradeToPro}
@@ -318,49 +370,6 @@ export default function BillingClient({
         })}
       </div>
 
-      {/* Manage Subscription Button */}
-      {showManageButton && currentPlan === "pro" && hasStripeCustomer && (
-        <div className="relative z-10 max-w-2xl w-full">
-          <div className="rounded-2xl border border-[color:var(--border)] bg-[var(--card)] p-6 shadow-[var(--shadow-subtle)]">
-            <h3
-              className="text-lg font-semibold text-[color:var(--heading)] mb-4"
-              style={{
-                fontFamily:
-                  "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif",
-              }}
-            >
-              Manage Subscription
-            </h3>
-            <p
-              className="text-sm text-[color:var(--muted)] mb-4"
-              style={{
-                fontFamily:
-                  "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif",
-              }}
-            >
-              Update your payment method, view invoices, or cancel your subscription.
-            </p>
-            <button
-              onClick={handleManageSubscription}
-              disabled={isLoadingPortal}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[color-mix(in_srgb,var(--surface)_90%,transparent)] border border-[color:var(--border)] text-sm font-medium text-[color:var(--text)] hover:bg-[color-mix(in_srgb,var(--surface)_80%,transparent)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              style={{
-                fontFamily:
-                  "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif",
-              }}
-            >
-              {isLoadingPortal ? (
-                "Loading..."
-              ) : (
-                <>
-                  Open Billing Portal
-                  <ExternalLink className="h-4 w-4" />
-                </>
-              )}
-            </button>
-          </div>
-        </div>
-      )}
     </>
   );
 }
