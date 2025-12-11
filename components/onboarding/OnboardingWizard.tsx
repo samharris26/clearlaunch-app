@@ -11,6 +11,13 @@ import {
 } from "@/app/(app)/onboarding/complete-wizard";
 import { cn } from "@/lib/utils";
 import LoadingOverlay from "@/components/LoadingOverlay";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const GOAL_TYPES = [
   { id: "sales", label: "Sales" },
@@ -161,7 +168,7 @@ export function OnboardingWizard() {
   };
 
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col gap-8 rounded-3xl border border-slate-200 bg-white p-8 shadow-[0_24px_55px_-28px_rgba(14,165,233,0.25)] relative overflow-hidden">
+    <div className="mx-auto flex w-full max-w-5xl flex-col gap-8 rounded-xl border border-slate-200 bg-white p-8 shadow-[0_24px_55px_-28px_rgba(14,165,233,0.25)] relative overflow-hidden">
       <LoadingOverlay
         show={isPending || showGenerating}
         description="Give us a few seconds while we build your plan."
@@ -191,7 +198,7 @@ export function OnboardingWizard() {
         </div>
       )}
 
-      <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
         {step === 0 && (
           <div className="grid gap-5 md:grid-cols-2">
             <div className="md:col-span-2">
@@ -220,17 +227,21 @@ export function OnboardingWizard() {
               <label className="text-sm font-medium text-slate-700">
                 Goal type
               </label>
-              <select
-                className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100"
+              <Select
                 value={form.goalType}
-                onChange={(event) => updateForm("goalType", event.target.value)}
+                onValueChange={(value) => updateForm("goalType", value)}
               >
-                {GOAL_TYPES.map((goal) => (
-                  <option key={goal.id} value={goal.id}>
-                    {goal.label}
-                  </option>
-                ))}
-              </select>
+                <SelectTrigger className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-left text-slate-900 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100">
+                  <SelectValue placeholder="Select goal type" />
+                </SelectTrigger>
+                <SelectContent>
+                  {GOAL_TYPES.map((goal) => (
+                    <SelectItem key={goal.id} value={goal.id}>
+                      {goal.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <label className="text-sm font-medium text-slate-700">
