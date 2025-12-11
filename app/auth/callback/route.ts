@@ -7,8 +7,10 @@ export async function GET(request: NextRequest) {
   const code = requestUrl.searchParams.get("code");
   const origin = requestUrl.origin;
 
+  // Create Supabase client once and reuse
+  const supabase = await createClient();
+
   if (code) {
-    const supabase = await createClient();
     const { error } = await supabase.auth.exchangeCodeForSession(code);
     
     if (error) {
