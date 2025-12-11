@@ -58,11 +58,20 @@ export async function POST(request: NextRequest) {
     // Get Pro plan price ID from environment
     const priceId = process.env.STRIPE_PRICE_PRO_MONTHLY;
 
-    if (!priceId) {
+    if (!priceId || priceId.trim() === "") {
+      console.error("STRIPE_PRICE_PRO_MONTHLY is missing or empty");
+      console.error("Available env vars:", {
+        hasStripeSecret: !!process.env.STRIPE_SECRET_KEY,
+        hasWebhookSecret: !!process.env.STRIPE_WEBHOOK_SECRET,
+        hasPublishableKey: !!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
+        hasAppUrl: !!process.env.NEXT_PUBLIC_APP_URL,
+        hasPricePro: !!process.env.STRIPE_PRICE_PRO_MONTHLY,
+        priceProValue: process.env.STRIPE_PRICE_PRO_MONTHLY || "NOT SET",
+      });
       return NextResponse.json(
         {
           error: "Pro plan price not configured",
-          details: "STRIPE_PRICE_PRO_MONTHLY is not set",
+          details: `STRIPE_PRICE_PRO_MONTHLY is not set. Current value: ${process.env.STRIPE_PRICE_PRO_MONTHLY || "undefined"}`,
         },
         { status: 500 }
       );
