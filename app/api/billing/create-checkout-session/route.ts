@@ -95,10 +95,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Create Checkout Session
-    const session = await stripe.checkout.sessions.create({
-      mode: "subscription",
+    const checkoutParams = {
+      mode: "subscription" as const,
       customer: customerId,
-      payment_method_types: ["card"],
+      payment_method_types: ["card"] as const,
       line_items: [
         {
           price: priceId,
@@ -118,6 +118,20 @@ export async function POST(request: NextRequest) {
           plan: "pro",
         },
       },
+    };
+
+    console.log("Creating checkout session with params:", {
+      ...checkoutParams,
+      customer: customerId.substring(0, 10) + "...", // Log partial customer ID
+      allow_promotion_codes: checkoutParams.allow_promotion_codes,
+    });
+
+    const session = await stripe.checkout.sessions.create(checkoutParams);
+
+    console.log("Checkout session created:", {
+      sessionId: session.id,
+      url: session.url,
+      allow_promotion_codes: (session as any).allow_promotion_codes,
     });
 
     return NextResponse.json({ url: session.url });
