@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getUser, createClient } from "@/lib/supabase/server";
 import { stripe } from "@/lib/stripe";
+import type Stripe from "stripe";
 
 export async function POST(request: NextRequest) {
   try {
@@ -95,10 +96,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Create Checkout Session
-    const checkoutParams = {
-      mode: "subscription" as const,
+    const checkoutParams: Stripe.Checkout.SessionCreateParams = {
+      mode: "subscription",
       customer: customerId,
-      payment_method_types: ["card"] as const,
+      payment_method_types: ["card"],
       line_items: [
         {
           price: priceId,
@@ -121,7 +122,7 @@ export async function POST(request: NextRequest) {
     };
 
     console.log("Creating checkout session with params:", {
-      ...checkoutParams,
+      mode: checkoutParams.mode,
       customer: customerId.substring(0, 10) + "...", // Log partial customer ID
       allow_promotion_codes: checkoutParams.allow_promotion_codes,
     });
