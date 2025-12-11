@@ -32,6 +32,21 @@ export async function POST(request: NextRequest) {
     // Get or create Stripe Customer
     let customerId = userData?.stripe_customer_id;
 
+    if (customerId) {
+      // Verify the customer exists in Stripe
+      try {
+        await stripe.customers.retrieve(customerId);
+      } catch (error: any) {
+        // If customer doesn't exist (404) or other error, create a new one
+        if (error?.statusCode === 404 || error?.code === "resource_missing") {
+          console.warn(`Customer ${customerId} not found in Stripe, creating new customer`);
+          customerId = null; // Reset to create new customer
+        } else {
+          throw error; // Re-throw other errors
+        }
+      }
+    }
+
     if (!customerId) {
       // Create new Stripe customer
       const customer = await stripe.customers.create({
