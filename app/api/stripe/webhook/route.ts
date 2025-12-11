@@ -176,16 +176,22 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
 
   // 2. Extract the correct timestamp
   // Stripe sends current_period_end as a Unix timestamp in seconds
-  // Access via type assertion since TypeScript types may not expose it directly
-  const currentPeriodEnd = (subscription as any).current_period_end as number | undefined;
+  // Some Stripe API versions put current_period_end on the subscription,
+  // others on the first subscription_item. Handle both.
+  const rawCurrentPeriodEnd =
+    // @ts-expect-error - depending on api_version this may exist
+    (subscription as any).current_period_end ??
+    subscription.items.data[0]?.current_period_end ??
+    null;
+
   const currentPeriodEndIso =
-    currentPeriodEnd != null
-      ? new Date(currentPeriodEnd * 1000).toISOString()
+    rawCurrentPeriodEnd != null
+      ? new Date(rawCurrentPeriodEnd * 1000).toISOString()
       : null;
 
   // Log it for debugging
   console.log("[Stripe] Subscription period end:", {
-    raw: currentPeriodEnd,
+    raw: rawCurrentPeriodEnd,
     iso: currentPeriodEndIso,
   });
 
