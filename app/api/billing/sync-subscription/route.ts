@@ -80,17 +80,45 @@ export async function POST(request: NextRequest) {
     }
 
     // Update user's plan
-    const currentPeriodEnd = (subscription as any).current_period_end as number;
-    const renewsAt = new Date(currentPeriodEnd * 1000).toISOString();
+    // Access current_period_end safely - it might be in different formats
+    const currentPeriodEnd = (subscription as any).current_period_end || (subscription as any).currentPeriodEnd;
+    
+    if (!currentPeriodEnd) {
+      console.warn("No current_period_end found in subscription:", subscription.id);
+    }
+
+    let renewsAt: string | null = null;
+    if (currentPeriodEnd) {
+      try {
+        // Handle both Unix timestamp (seconds) and milliseconds
+        const timestamp = typeof currentPeriodEnd === 'number' 
+          ? (currentPeriodEnd < 10000000000 ? currentPeriodEnd * 1000 : currentPeriodEnd) // If seconds, convert to ms
+          : Date.parse(String(currentPeriodEnd));
+        
+        if (isNaN(timestamp)) {
+          console.error("Invalid timestamp:", currentPeriodEnd);
+        } else {
+          renewsAt = new Date(timestamp).toISOString();
+        }
+      } catch (error) {
+        console.error("Error parsing current_period_end:", error, "Value:", currentPeriodEnd);
+      }
+    }
+
+    const updateData: any = {
+      plan: plan,
+      stripe_subscription_id: subscription.id,
+      subscription_status: subscription.status,
+    };
+
+    // Only set renewsAt if we successfully parsed it
+    if (renewsAt) {
+      updateData.subscription_renews_at = renewsAt;
+    }
 
     const { error: updateError } = await supabase
       .from("users")
-      .update({
-        plan: plan,
-        stripe_subscription_id: subscription.id,
-        subscription_status: subscription.status,
-        subscription_renews_at: renewsAt,
-      })
+      .update(updateData)
       .eq("userId", userId);
 
     if (updateError) {

@@ -194,17 +194,40 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
   }
 
   // Convert current_period_end (Unix timestamp) to timestamptz
-  const renewsAt = new Date(currentPeriodEnd * 1000).toISOString();
+  // Handle both Unix timestamp (seconds) and ensure it's valid
+  let renewsAt: string | null = null;
+  if (currentPeriodEnd) {
+    try {
+      // Handle both Unix timestamp (seconds) and milliseconds
+      const timestamp = typeof currentPeriodEnd === 'number' 
+        ? (currentPeriodEnd < 10000000000 ? currentPeriodEnd * 1000 : currentPeriodEnd) // If seconds, convert to ms
+        : Date.parse(String(currentPeriodEnd));
+      
+      if (!isNaN(timestamp)) {
+        renewsAt = new Date(timestamp).toISOString();
+      } else {
+        console.error("Invalid current_period_end value:", currentPeriodEnd);
+      }
+    } catch (error) {
+      console.error("Error parsing current_period_end:", error, "Value:", currentPeriodEnd);
+    }
+  }
 
   // Update user subscription info
+  const updateData: any = {
+    plan: plan,
+    stripe_subscription_id: subscriptionId,
+    subscription_status: status,
+  };
+
+  // Only set renewsAt if we successfully parsed it
+  if (renewsAt) {
+    updateData.subscription_renews_at = renewsAt;
+  }
+
   const { error: updateError } = await supabase
     .from("users")
-    .update({
-      plan: plan,
-      stripe_subscription_id: subscriptionId,
-      subscription_status: status,
-      subscription_renews_at: renewsAt,
-    })
+    .update(updateData)
     .eq("userId", userData.userId);
 
   if (updateError) {
