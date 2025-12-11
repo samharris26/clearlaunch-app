@@ -102,6 +102,42 @@ export async function GET(request: NextRequest) {
     }
   }
 
+  // Ensure user record exists in users table for email confirmation users
+  const user = await getUser();
+  if (user && user.email) {
+    // Check if user already exists
+    const { data: existingUser } = await supabase
+      .from("users")
+      .select("userId")
+      .eq("userId", user.id)
+      .maybeSingle();
+
+    if (!existingUser) {
+      // Create new user record
+      console.log(`[Auth Callback] Creating new user record for ${user.email}`);
+      const userData: any = {
+        userId: user.id,
+        email: user.email,
+        plan: 'free',
+        ai_calls_used: 0,
+        ai_calls_reset_date: new Date().toISOString().split('T')[0],
+        onboarded: false,
+      };
+
+      const { error: upsertError } = await supabase
+        .from("users")
+        .upsert(userData, {
+          onConflict: 'userId'
+        });
+
+      if (upsertError) {
+        console.error("[Auth Callback] Error creating user record:", upsertError);
+      } else {
+        console.log(`[Auth Callback] Successfully created new user record for ${user.email}`);
+      }
+    }
+  }
+
   // Redirect to dashboard - it will handle onboarding redirect if needed
   return NextResponse.redirect(`${origin}/dashboard`);
 }

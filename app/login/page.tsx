@@ -15,11 +15,19 @@ function LoginForm() {
   const searchParams = useSearchParams();
   const supabase = createClient();
 
-  // Check for OAuth errors in URL
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  // Check for OAuth errors or success messages in URL
   useEffect(() => {
     const errorParam = searchParams.get("error");
+    const messageParam = searchParams.get("message");
+    
     if (errorParam) {
       setError(decodeURIComponent(errorParam));
+    }
+    
+    if (messageParam) {
+      setSuccessMessage(decodeURIComponent(messageParam));
     }
   }, [searchParams]);
 
@@ -84,6 +92,12 @@ function LoginForm() {
         </div>
         
         <h1 className="mb-6 text-center text-2xl font-bold text-slate-800">Sign in to ClearLaunch</h1>
+        
+        {successMessage && (
+          <div className="mb-4 rounded bg-emerald-50 p-3 text-sm text-emerald-800 border border-emerald-200">
+            {successMessage}
+          </div>
+        )}
         
         {error && (
           <div className="mb-4 rounded bg-red-50 p-3 text-sm text-red-800">

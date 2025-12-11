@@ -33,18 +33,43 @@ export default function SignUpPage() {
 
     try {
       const appUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin;
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: `${appUrl}/dashboard`,
+          emailRedirectTo: `${appUrl}/auth/callback`,
         },
       });
 
       if (error) throw error;
 
-      router.push("/dashboard");
-      router.refresh();
+      // Check if user has a session (email confirmation might be disabled)
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (session && data.user) {
+        // User is immediately logged in (email confirmation disabled)
+        // Create user record in users table
+        try {
+          const response = await fetch('/api/auth/create-user', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId: data.user.id, email: data.user.email }),
+          });
+          
+          if (!response.ok) {
+            console.error('Failed to create user record:', await response.text());
+          }
+        } catch (err) {
+          console.error('Error creating user record:', err);
+        }
+
+        // Redirect to dashboard
+        router.push("/dashboard");
+        router.refresh();
+      } else {
+        // Email confirmation required - redirect to login with success message
+        router.push("/login?message=Account created! Please check your email to confirm your account, then sign in.");
+      }
     } catch (error: any) {
       setError(error.message || "Failed to sign up");
     } finally {
