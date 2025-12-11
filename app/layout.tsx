@@ -1,6 +1,7 @@
 // app/layout.tsx
 import type { Metadata } from "next";
 import Script from "next/script";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import Providers from "@/components/Providers";
 import { CookieConsent } from "@/components/CookieConsent";
@@ -40,6 +41,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Providers>
           {children}
           <CookieConsent />
+          <Analytics />
         </Providers>
       </body>
     </html>
