@@ -223,146 +223,99 @@ export default function CreateLaunchPage() {
       </div>
 
       {/* Form */}
-      <form onSubmit={handleSubmit} className="w-full max-w-2xl space-y-6">
+      <form onSubmit={handleSubmit} className="w-full max-w-2xl">
         {error && (
-          <div className="rounded-md border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-400">
+          <div className="mb-6 rounded-md border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-400">
             {error}
           </div>
         )}
 
-        {/* Launch Name */}
+        {/* All form fields in one block */}
         <div className="rounded-2xl border border-[color:var(--border)] bg-[var(--card)] p-6 shadow-[var(--shadow-subtle)]">
-          <label htmlFor="launchName" className="block text-sm font-medium text-[color:var(--heading)] mb-2">
-            Launch Name <span className="text-red-500">*</span>
-          </label>
-          <input
-            id="launchName"
-            type="text"
-            value={formData.launchName}
-            onChange={(e) => setFormData({ ...formData, launchName: e.target.value })}
-            required
-            className="w-full rounded-md border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_94%,transparent)] px-3 py-2 text-sm text-[color:var(--text)] placeholder:text-[color:var(--muted)] focus:border-sky-500/50 focus:outline-none focus:ring-1 focus:ring-sky-500/50"
-            placeholder="My Product Launch"
-          />
-        </div>
-
-        {/* Description */}
-        <div className="rounded-2xl border border-[color:var(--border)] bg-[var(--card)] p-6 shadow-[var(--shadow-subtle)]">
-          <label htmlFor="description" className="block text-sm font-medium text-[color:var(--heading)] mb-2">
-            Description
-          </label>
-          <textarea
-            id="description"
-            value={formData.description}
-            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-            rows={4}
-            className="w-full rounded-md border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_94%,transparent)] px-3 py-2 text-sm text-[color:var(--text)] placeholder:text-[color:var(--muted)] focus:border-sky-500/50 focus:outline-none focus:ring-1 focus:ring-sky-500/50 resize-none"
-            placeholder="Describe your launch..."
-          />
-        </div>
-
-        {/* Target Date & Launch Type */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <div className="rounded-2xl border border-[color:var(--border)] bg-[var(--card)] p-6 shadow-[var(--shadow-subtle)]">
-            <label htmlFor="targetDate" className="block text-sm font-medium text-[color:var(--heading)] mb-2">
-              Target Launch Date
-            </label>
-            <input
-              id="targetDate"
-              type="date"
-              value={formData.targetDate}
-              onChange={(e) => setFormData({ ...formData, targetDate: e.target.value })}
-              className="w-full rounded-md border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_94%,transparent)] px-3 py-2 text-sm text-[color:var(--text)] focus:border-sky-500/50 focus:outline-none focus:ring-1 focus:ring-sky-500/50"
-            />
-          </div>
-
-          <div className="rounded-2xl border border-[color:var(--border)] bg-[var(--card)] p-6 shadow-[var(--shadow-subtle)]">
-            <label htmlFor="launchType" className="block text-sm font-medium text-[color:var(--heading)] mb-2">
-              Launch Type <span className="text-red-500">*</span>
-            </label>
-            <Select
-              value={formData.launchType}
-              onValueChange={(value) => setFormData({ ...formData, launchType: value })}
-              required
-            >
-              <SelectTrigger id="launchType" className="w-full">
-                <SelectValue placeholder="Select launch type" />
-              </SelectTrigger>
-              <SelectContent>
-                {launchTypeOptions.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
-        {/* Tone of Voice */}
-        <div className="rounded-2xl border border-[color:var(--border)] bg-[var(--card)] p-6 shadow-[var(--shadow-subtle)]">
-          <label htmlFor="toneOfVoice" className="block text-sm font-medium text-[color:var(--heading)] mb-2">
-            Tone of Voice
-          </label>
-          <Select
-            value={formData.toneOfVoice}
-            onValueChange={(value) => setFormData({ ...formData, toneOfVoice: value })}
-          >
-            <SelectTrigger id="toneOfVoice" className="w-full">
-              <SelectValue placeholder="Select tone of voice" />
-            </SelectTrigger>
-            <SelectContent>
-              {toneOfVoiceOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Platforms */}
-        <div className="rounded-2xl border border-[color:var(--border)] bg-[var(--card)] p-6 shadow-[var(--shadow-subtle)]">
-          <label className="block text-sm font-medium text-[color:var(--heading)] mb-4">
-            Platforms (optional)
-          </label>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            {SUPPORTED_PLATFORMS.map((platform) => (
-              <label
-                key={platform.id}
-                className="flex items-center gap-2 p-3 rounded-lg border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_94%,transparent)] cursor-pointer hover:border-[color:var(--border-strong)] transition-colors"
-              >
-                <input
-                  type="checkbox"
-                  checked={formData.platforms.includes(platform.id)}
-                  onChange={() => handlePlatformToggle(platform.id)}
-                  className="rounded border-[color:var(--border)] text-sky-500 focus:ring-sky-500/50"
-                />
-                <span className="text-sm text-[color:var(--text)]">{platform.label}</span>
-              </label>
-            ))}
-          </div>
-        </div>
-
-        {/* Goal Fields */}
-        <div className="rounded-2xl border border-[color:var(--border)] bg-[var(--card)] p-6 shadow-[var(--shadow-subtle)]">
-          <label className="block text-sm font-medium text-[color:var(--heading)] mb-4">
-            Launch Goal (optional)
-          </label>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="space-y-6">
+            {/* Launch Name */}
             <div>
-              <label htmlFor="goalType" className="block text-xs font-medium text-[color:var(--muted)] mb-2">
-                Goal Type
+              <label htmlFor="launchName" className="block text-sm font-medium text-[color:var(--muted)] mb-2">
+                Launch Name <span className="text-red-500">*</span>
+              </label>
+              <input
+                id="launchName"
+                type="text"
+                value={formData.launchName}
+                onChange={(e) => setFormData({ ...formData, launchName: e.target.value })}
+                required
+                className="mt-2 w-full rounded-md border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_94%,transparent)] px-3 py-2 text-sm text-[color:var(--text)] placeholder:text-[color:var(--muted)] focus:border-sky-500/50 focus:outline-none focus:ring-1 focus:ring-sky-500/50"
+                placeholder="My Product Launch"
+              />
+            </div>
+
+            {/* Description */}
+            <div>
+              <label htmlFor="description" className="block text-sm font-medium text-[color:var(--muted)] mb-2">
+                Description
+              </label>
+              <textarea
+                id="description"
+                value={formData.description}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                rows={4}
+                className="mt-2 w-full rounded-md border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_94%,transparent)] px-3 py-2 text-sm text-[color:var(--text)] placeholder:text-[color:var(--muted)] focus:border-sky-500/50 focus:outline-none focus:ring-1 focus:ring-sky-500/50 resize-none"
+                placeholder="Describe your launch..."
+              />
+            </div>
+
+            {/* Target Date & Launch Type */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div>
+                <label htmlFor="targetDate" className="block text-sm font-medium text-[color:var(--muted)] mb-2">
+                  Target Launch Date
+                </label>
+                <input
+                  id="targetDate"
+                  type="date"
+                  value={formData.targetDate}
+                  onChange={(e) => setFormData({ ...formData, targetDate: e.target.value })}
+                  className="mt-2 w-full rounded-md border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_94%,transparent)] px-3 py-2 text-sm text-[color:var(--text)] focus:border-sky-500/50 focus:outline-none focus:ring-1 focus:ring-sky-500/50"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="launchType" className="block text-sm font-medium text-[color:var(--muted)] mb-2">
+                  Launch Type <span className="text-red-500">*</span>
+                </label>
+                <Select
+                  value={formData.launchType}
+                  onValueChange={(value) => setFormData({ ...formData, launchType: value })}
+                  required
+                >
+                  <SelectTrigger id="launchType" className="mt-2 w-full">
+                    <SelectValue placeholder="Select launch type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {launchTypeOptions.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            {/* Tone of Voice */}
+            <div>
+              <label htmlFor="toneOfVoice" className="block text-sm font-medium text-[color:var(--muted)] mb-2">
+                Tone of Voice
               </label>
               <Select
-                value={formData.goalType}
-                onValueChange={(value) => setFormData({ ...formData, goalType: value })}
+                value={formData.toneOfVoice}
+                onValueChange={(value) => setFormData({ ...formData, toneOfVoice: value })}
               >
-                <SelectTrigger id="goalType" className="w-full">
-                  <SelectValue placeholder="Select goal type" />
+                <SelectTrigger id="toneOfVoice" className="mt-2 w-full">
+                  <SelectValue placeholder="Select tone of voice" />
                 </SelectTrigger>
                 <SelectContent>
-                  {goalTypeOptions.map((option) => (
+                  {toneOfVoiceOptions.map((option) => (
                     <SelectItem key={option.value} value={option.value}>
                       {option.label}
                     </SelectItem>
@@ -370,38 +323,90 @@ export default function CreateLaunchPage() {
                 </SelectContent>
               </Select>
             </div>
+
+            {/* Platforms */}
             <div>
-              <label htmlFor="goalValue" className="block text-xs font-medium text-[color:var(--muted)] mb-2">
-                Goal Value
+              <label className="block text-sm font-medium text-[color:var(--muted)] mb-3">
+                Platforms (optional)
               </label>
-              <input
-                id="goalValue"
-                type="number"
-                min={0}
-                value={formData.goalValue}
-                onChange={(e) => setFormData({ ...formData, goalValue: e.target.value })}
-                className="w-full rounded-md border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_94%,transparent)] px-3 py-2 text-sm text-[color:var(--text)] placeholder:text-[color:var(--muted)] focus:border-sky-500/50 focus:outline-none focus:ring-1 focus:ring-sky-500/50"
-                placeholder="e.g. 150"
-              />
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                {SUPPORTED_PLATFORMS.map((platform) => (
+                  <label
+                    key={platform.id}
+                    className="flex items-center gap-2 p-3 rounded-md border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_94%,transparent)] cursor-pointer hover:border-[color:var(--border-strong)] transition-colors"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={formData.platforms.includes(platform.id)}
+                      onChange={() => handlePlatformToggle(platform.id)}
+                      className="rounded border-[color:var(--border)] text-sky-500 focus:ring-sky-500/50"
+                    />
+                    <span className="text-sm text-[color:var(--text)]">{platform.label}</span>
+                  </label>
+                ))}
+              </div>
             </div>
+
+            {/* Goal Fields */}
             <div>
-              <label htmlFor="goalUnit" className="block text-xs font-medium text-[color:var(--muted)] mb-2">
-                Unit
+              <label className="block text-sm font-medium text-[color:var(--muted)] mb-3">
+                Launch Goal (optional)
               </label>
-              <input
-                id="goalUnit"
-                type="text"
-                value={formData.goalUnit}
-                onChange={(e) => setFormData({ ...formData, goalUnit: e.target.value })}
-                className="w-full rounded-md border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_94%,transparent)] px-3 py-2 text-sm text-[color:var(--text)] placeholder:text-[color:var(--muted)] focus:border-sky-500/50 focus:outline-none focus:ring-1 focus:ring-sky-500/50"
-                placeholder="e.g. £, orders, signups"
-              />
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label htmlFor="goalType" className="block text-xs font-medium text-[color:var(--muted)] mb-2">
+                    Goal Type
+                  </label>
+                  <Select
+                    value={formData.goalType}
+                    onValueChange={(value) => setFormData({ ...formData, goalType: value })}
+                  >
+                    <SelectTrigger id="goalType" className="w-full">
+                      <SelectValue placeholder="Select goal type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {goalTypeOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <label htmlFor="goalValue" className="block text-xs font-medium text-[color:var(--muted)] mb-2">
+                    Goal Value
+                  </label>
+                  <input
+                    id="goalValue"
+                    type="number"
+                    min={0}
+                    value={formData.goalValue}
+                    onChange={(e) => setFormData({ ...formData, goalValue: e.target.value })}
+                    className="w-full rounded-md border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_94%,transparent)] px-3 py-2 text-sm text-[color:var(--text)] placeholder:text-[color:var(--muted)] focus:border-sky-500/50 focus:outline-none focus:ring-1 focus:ring-sky-500/50"
+                    placeholder="e.g. 150"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="goalUnit" className="block text-xs font-medium text-[color:var(--muted)] mb-2">
+                    Unit
+                  </label>
+                  <input
+                    id="goalUnit"
+                    type="text"
+                    value={formData.goalUnit}
+                    onChange={(e) => setFormData({ ...formData, goalUnit: e.target.value })}
+                    className="w-full rounded-md border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_94%,transparent)] px-3 py-2 text-sm text-[color:var(--text)] placeholder:text-[color:var(--muted)] focus:border-sky-500/50 focus:outline-none focus:ring-1 focus:ring-sky-500/50"
+                    placeholder="e.g. £, orders, signups"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
         {/* Submit Button */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 mt-6">
           <Link
             href="/launches"
             className="rounded-full border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_90%,transparent)] px-6 py-2.5 text-sm font-semibold text-[color:var(--text)] hover:bg-[color-mix(in_srgb,var(--surface)_85%,transparent)] hover:border-[color:var(--border-strong)] transition-colors"
