@@ -182,7 +182,7 @@ export default function CreateLaunchPage() {
   }
 
   return (
-    <div className="flex w-full max-w-6xl flex-col items-center gap-14 px-2 sm:px-4 pt-14 pb-24">
+    <div className="flex w-full max-w-6xl flex-col items-center gap-6 px-2 sm:px-4 pt-14 pb-24">
       {/* Breadcrumbs */}
       <nav className="flex w-full max-w-6xl items-center gap-1 text-sm text-[color:var(--muted)]" style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
         <Link href="/dashboard" className="hover:text-[color:var(--text)] transition-colors">
