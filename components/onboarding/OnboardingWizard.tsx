@@ -353,7 +353,7 @@ export function OnboardingWizard() {
           type="button"
           onClick={goBack}
           disabled={step === 0 || isPending}
-          className="rounded-md border border-[color:var(--border)] px-4 py-2.5 text-sm font-medium text-[color:var(--text)] transition disabled:opacity-40 hover:bg-[color-mix(in_srgb,var(--surface)_96%,transparent)]"
+          className="rounded-md border border-[color:var(--border)] px-6 py-3 text-sm font-medium text-[color:var(--text)] transition disabled:opacity-40 hover:bg-[color-mix(in_srgb,var(--surface)_96%,transparent)]"
         >
           Back
         </button>
@@ -362,7 +362,7 @@ export function OnboardingWizard() {
             type="button"
             onClick={goNext}
             disabled={isPending}
-            className={cn("rounded-md px-4 py-2.5 text-sm font-semibold text-white transition disabled:opacity-40", gradientBtn)}
+            className={cn("rounded-md px-6 py-3 text-sm font-semibold text-white transition disabled:opacity-40", gradientBtn)}
           >
             Next
           </button>
@@ -371,7 +371,7 @@ export function OnboardingWizard() {
             type="button"
             onClick={handleSubmit}
             disabled={isPending}
-            className={cn("inline-flex items-center gap-2 rounded-md px-4 py-2.5 text-sm font-semibold text-white transition disabled:opacity-40", gradientBtn)}
+            className={cn("inline-flex items-center gap-2 rounded-md px-6 py-3 text-sm font-semibold text-white transition disabled:opacity-40", gradientBtn)}
           >
             {isPending ? "Creating launch…" : "Finish & create launch"}
           </button>
