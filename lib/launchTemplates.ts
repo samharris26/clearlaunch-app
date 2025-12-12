@@ -84,7 +84,7 @@ const BASE_TEMPLATES: LaunchTemplate[] = [
         label: "Brand foundations",
         description: "Lock product story, photography, landing page, and offer.",
         defaultDayOffset: -35,
-        recommendedPlatforms: ["instagram", "email", "tiktok"],
+        recommendedPlatforms: ["instagram", "email", "other"],
         phase: "Research & Setup",
       },
       {
@@ -92,7 +92,7 @@ const BASE_TEMPLATES: LaunchTemplate[] = [
         label: "Teaser sequence",
         description: "Run visual teasers, close-up shots, and ingredient reveals.",
         defaultDayOffset: -21,
-        recommendedPlatforms: ["instagram", "tiktok"],
+        recommendedPlatforms: ["instagram", "other"],
         phase: "Pre-launch",
       },
       {
@@ -100,7 +100,7 @@ const BASE_TEMPLATES: LaunchTemplate[] = [
         label: "Countdown & hype",
         description: "Run a 5-day countdown with benefits, prices, and waitlist CTA.",
         defaultDayOffset: -5,
-        recommendedPlatforms: ["instagram", "email", "tiktok"],
+        recommendedPlatforms: ["instagram", "email", "other"],
         phase: "Pre-launch",
       },
       {
@@ -108,7 +108,7 @@ const BASE_TEMPLATES: LaunchTemplate[] = [
         label: "Drop day announcement",
         description: "Go live with a clear CTA, urgency, and real-time story coverage.",
         defaultDayOffset: 0,
-        recommendedPlatforms: ["email", "instagram", "tiktok"],
+        recommendedPlatforms: ["email", "instagram", "other"],
         phase: "Launch Day",
       },
       {
