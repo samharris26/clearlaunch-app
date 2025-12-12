@@ -98,7 +98,7 @@ export function BusinessOnboardingWizard() {
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-8 rounded-xl border border-[color:var(--border)] bg-[var(--card)] p-8 shadow-[var(--shadow-soft)] relative overflow-hidden">
       <LoadingOverlay
         show={isPending}
-        description="Saving your business details..."
+        title="Saving your business details..."
       />
       <header className="flex flex-col gap-2">
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--muted)]">
