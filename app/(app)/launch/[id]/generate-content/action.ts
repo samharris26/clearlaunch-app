@@ -44,9 +44,7 @@ async function getLaunchContext(
   const launchPlatformsRaw =
     (Array.isArray(launch.channels) && launch.channels) ||
     (Array.isArray(launch.platforms) && launch.platforms) ||
-    (profile?.platforms && Array.isArray(profile.platforms)
-      ? profile.platforms
-      : null);
+    null;
 
   const launchPlatforms =
     launchPlatformsRaw ||
