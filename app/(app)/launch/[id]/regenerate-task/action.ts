@@ -49,33 +49,35 @@ export async function regenerateTaskAction(launchId: string, taskId: string) {
     return { success: false, error: "Task not found." };
   }
 
-  // Fetch user profile for context
-  const { data: profile } = await supabase
-    .from("users")
-    .select("company_name, business_type, brand_description, audience_focus, tone_of_voice, target_audience, region, platforms")
-    .eq("userId", userId)
+  // Fetch business profile for context
+  const { data: businessProfile } = await supabase
+    .from("business_profiles")
+    .select("business_name, business_type, website_url, audience, tone_preset, timezone")
+    .eq("user_id", userId)
     .maybeSingle();
+
+  if (!businessProfile) {
+    throw new Error("Business profile not found. Please complete your business setup in Settings.");
+  }
 
   const launchPlatformsRaw =
     (Array.isArray(launch.channels) && launch.channels) ||
     (Array.isArray(launch.platforms) && launch.platforms) ||
-    (profile?.platforms && Array.isArray(profile.platforms) ? profile.platforms : null);
+    null;
 
   const launchPlatforms =
     launchPlatformsRaw ||
     (launch.channels && typeof launch.channels === "string"
       ? launch.channels.split(",").map((item: string) => item.trim()).filter(Boolean)
-      : profile?.platforms && typeof profile.platforms === "string"
-      ? profile.platforms.split(",").map((item: string) => item.trim()).filter(Boolean)
       : []);
 
   const context: LaunchContext = {
-    company_name: profile?.company_name || "Your Company",
-    business_type: profile?.business_type || "Product",
-    brand_description: profile?.brand_description || "A brilliant product ready to launch.",
-    audience_focus: profile?.target_audience || profile?.audience_focus || "General audience",
-    tone_of_voice: profile?.tone_of_voice || "Professional",
-    region: profile?.region || "United Kingdom",
+    company_name: businessProfile.business_name || "Your Company",
+    business_type: businessProfile.business_type || "Product",
+    brand_description: businessProfile.website_url ? `Visit us at ${businessProfile.website_url}` : "A brilliant product ready to launch.",
+    audience_focus: businessProfile.audience || "General audience",
+    tone_of_voice: businessProfile.tone_preset || "Professional",
+    region: businessProfile.timezone || "United Kingdom",
     launch_name: launch.launchName || "Untitled Launch",
     launch_description: launch.context_notes || launch.description || "A new product launch",
     launch_date: launch.target_date || new Date().toISOString().split("T")[0],

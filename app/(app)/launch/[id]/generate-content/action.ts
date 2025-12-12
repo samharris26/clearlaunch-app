@@ -29,13 +29,17 @@ async function getLaunchContext(
     throw new Error("Launch not found");
   }
 
-  const { data: profile } = await supabase
-    .from("users")
-    .select(
-      "company_name, business_type, brand_description, audience_focus, tone_of_voice, target_audience, region, platforms"
-    )
-    .eq("userId", userId)
+  // Get business profile for context
+  const { data: businessProfile } = await supabase
+    .from("business_profiles")
+    .select("business_name, business_type, website_url, audience, tone_preset, timezone")
+    .eq("user_id", userId)
     .maybeSingle();
+
+  // Check if business profile exists
+  if (!businessProfile) {
+    throw new Error("Business profile not found. Please complete your business setup in Settings.");
+  }
 
   const launchPlatformsRaw =
     (Array.isArray(launch.channels) && launch.channels) ||
@@ -51,24 +55,17 @@ async function getLaunchContext(
           .split(",")
           .map((item: string) => item.trim())
           .filter(Boolean)
-      : profile?.platforms && typeof profile.platforms === "string"
-      ? profile.platforms
-          .split(",")
-          .map((item: string) => item.trim())
-          .filter(Boolean)
       : []);
 
   return {
-    company_name: profile?.company_name || "Your Company",
-    business_type: profile?.business_type || "Product",
+    company_name: businessProfile.business_name || "Your Company",
+    business_type: businessProfile.business_type || "Product",
     brand_description:
-      profile?.brand_description || "A brilliant product ready to launch.",
+      businessProfile.website_url ? `Visit us at ${businessProfile.website_url}` : "A brilliant product ready to launch.",
     audience_focus:
-      profile?.target_audience ||
-      profile?.audience_focus ||
-      "General audience",
-    tone_of_voice: profile?.tone_of_voice || "Professional",
-    region: profile?.region || "United Kingdom",
+      businessProfile.audience || "General audience",
+    tone_of_voice: businessProfile.tone_preset || "Professional",
+    region: businessProfile.timezone || "United Kingdom",
     launch_name: launch.launchName || "Untitled Launch",
     launch_description:
       launch.context_notes ||

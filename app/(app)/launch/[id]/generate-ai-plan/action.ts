@@ -73,28 +73,33 @@ export async function generateAILaunchPlan(launchId: string) {
       }
     });
 
-    // Get user profile for context
-    console.log("Fetching user profile...");
-    const { data: profile, error: profileError } = await supabase
-      .from("users")
-      .select("company_name, business_type, brand_description, audience_focus, platforms, tone_of_voice, target_audience, region")
-      .eq("userId", userId)
-      .single();
+    // Get business profile for context
+    console.log("Fetching business profile...");
+    const { data: businessProfile, error: businessProfileError } = await supabase
+      .from("business_profiles")
+      .select("business_name, business_type, website_url, audience, tone_preset, timezone")
+      .eq("user_id", userId)
+      .maybeSingle();
 
-    if (profileError) {
-      console.error("Error fetching user profile:", profileError);
+    if (businessProfileError) {
+      console.error("Error fetching business profile:", businessProfileError);
     }
 
-    console.log("User profile:", profile);
+    // Check if business profile exists - required for AI generation
+    if (!businessProfile) {
+      throw new Error("Business profile not found. Please complete your business setup in Settings before generating AI tasks.");
+    }
+
+    console.log("Business profile:", businessProfile);
 
     // Prepare context for AI
     const context: LaunchContext = {
-      company_name: profile?.company_name || "Your Company",
-      business_type: profile?.business_type || "Product",
-      brand_description: profile?.brand_description || "A great product",
-      audience_focus: profile?.target_audience || profile?.audience_focus || "General audience",
-      tone_of_voice: profile?.tone_of_voice || "Professional",
-      region: profile?.region || "Global",
+      company_name: businessProfile.business_name || "Your Company",
+      business_type: businessProfile.business_type || "Product",
+      brand_description: businessProfile.website_url ? `Visit us at ${businessProfile.website_url}` : "A great product",
+      audience_focus: businessProfile.audience || "General audience",
+      tone_of_voice: businessProfile.tone_preset || "Professional",
+      region: businessProfile.timezone || "Global",
       launch_name: launch.launchName || "Untitled Launch",
       launch_description: launch.context_notes || launch.description || launch.summary || "A new product launch",
       summary: launch.summary || launch.description || "A new product launch",

@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { createLaunch } from "../create/action";
 import { useUsage } from "@/hooks/useUsage";
 import { SUPPORTED_PLATFORMS } from "@/lib/platforms";
 import Link from "next/link";
 import { ChevronRight, ArrowLeft } from "lucide-react";
+import { checkBusinessProfile } from "./check-business";
 import {
   Select,
   SelectContent,
@@ -49,6 +50,8 @@ export default function CreateLaunchPage() {
   const { usage, canCreateLaunch, loading: usageLoading } = useUsage();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [hasBusinessProfile, setHasBusinessProfile] = useState<boolean | null>(null);
+  const [checkingBusiness, setCheckingBusiness] = useState(true);
 
   const [formData, setFormData] = useState({
     launchName: "",
@@ -61,6 +64,16 @@ export default function CreateLaunchPage() {
     goalValue: "",
     goalUnit: "",
   });
+
+  // Check for business profile on mount
+  useEffect(() => {
+    async function checkProfile() {
+      const result = await checkBusinessProfile();
+      setHasBusinessProfile(result.exists);
+      setCheckingBusiness(false);
+    }
+    checkProfile();
+  }, []);
 
   const handlePlatformToggle = (platformId: string) => {
     setFormData((prev) => ({
@@ -108,12 +121,42 @@ export default function CreateLaunchPage() {
     }
   };
 
-  if (usageLoading) {
+  if (usageLoading || checkingBusiness) {
     return (
       <div className="flex w-full max-w-6xl flex-col items-center gap-14 px-2 sm:px-4 pt-14 pb-24">
         <div className="w-full max-w-2xl animate-pulse">
           <div className="h-8 bg-[color-mix(in_srgb,var(--surface)_92%,transparent)] rounded w-48 mb-4"></div>
           <div className="h-64 bg-[color-mix(in_srgb,var(--surface)_94%,transparent)] rounded-2xl"></div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show blocking message if no business profile
+  if (hasBusinessProfile === false) {
+    return (
+      <div className="flex w-full max-w-6xl flex-col items-center gap-14 px-2 sm:px-4 pt-14 pb-24">
+        <div className="w-full max-w-2xl rounded-2xl border border-[color:var(--border)] bg-[var(--card)] p-8 shadow-[var(--shadow-soft)]">
+          <div className="mb-6">
+            <h1 className="text-2xl font-semibold text-[color:var(--heading)] mb-2">Complete Your Business Setup</h1>
+            <p className="text-[color:var(--muted)]">
+              Before creating your first launch, we need some information about your business to personalize your launch plans and AI-generated content.
+            </p>
+          </div>
+          <div className="flex items-center gap-4">
+            <Link
+              href="/onboarding"
+              className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-indigo-500 to-cyan-500 px-6 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-subtle)] hover:shadow-[var(--shadow-soft)] hover:scale-[1.02] transition-all"
+            >
+              Complete Business Setup
+            </Link>
+            <Link
+              href="/dashboard"
+              className="inline-flex items-center justify-center rounded-full border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_90%,transparent)] px-6 py-2.5 text-sm font-semibold text-[color:var(--text)] hover:bg-[color-mix(in_srgb,var(--surface)_85%,transparent)] hover:border-[color:var(--border-strong)] transition-colors"
+            >
+              Back to Dashboard
+            </Link>
+          </div>
         </div>
       </div>
     );

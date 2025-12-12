@@ -43,11 +43,8 @@ export default async function DashboardPage() {
     .eq("userId", userId)
     .maybeSingle();
 
-  // Redirect to onboarding if no business profile exists
-  // Keep onboarded check as fallback for existing users who haven't migrated yet
-  if (!businessProfile && (!profile || profile.onboarded === false)) {
-    redirect("/onboarding");
-  }
+  // Don't auto-redirect - let DashboardClient show blocking CTA if needed
+  // We'll pass hasBusinessProfile to the client component
 
   const displayName = user.user_metadata?.full_name || user.email?.split("@")[0] || "friend";
 
@@ -144,7 +141,7 @@ export default async function DashboardPage() {
         />
 
         {/* Launch Cards with Promotional Card */}
-        <DashboardClient launches={launches} />
+        <DashboardClient launches={launches} hasBusinessProfile={!!businessProfile} />
       </div>
 
       {/* Your Toolkit Section */}
