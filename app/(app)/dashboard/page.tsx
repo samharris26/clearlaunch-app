@@ -52,7 +52,7 @@ export default async function DashboardPage() {
   const displayName = user.user_metadata?.full_name || user.email?.split("@")[0] || "friend";
 
   // Get user plan
-  const userPlan = (profile.plan as "free" | "pro" | "power") || "free";
+  const userPlan = (profile?.plan as "free" | "pro" | "power") || "free";
 
   // Fetch active launches (exclude deleted and archived)
   const { data: launchesData, error: launchesError } = await supabase
