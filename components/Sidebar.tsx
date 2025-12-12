@@ -21,7 +21,7 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="hidden w-64 flex-col border-r border-[color:var(--border)] bg-[var(--surface)] p-7 text-[color:var(--text)] md:flex">
+    <aside className="fixed left-0 top-0 h-screen hidden w-64 flex-col border-r border-[color:var(--border)] bg-[var(--surface)] p-7 text-[color:var(--text)] md:flex overflow-y-auto">
       {/* Logo */}
       <Link href="/dashboard" className="mb-12 flex items-center hover:opacity-80 transition-opacity">
         <img

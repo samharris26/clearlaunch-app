@@ -3,8 +3,8 @@ export const SUPPORTED_PLATFORMS = [
   { id: "linkedin", label: "LinkedIn" },
   { id: "instagram", label: "Instagram" },
   { id: "email", label: "Email" },
-  { id: "tiktok", label: "TikTok" },
   { id: "youtube", label: "YouTube" },
+  { id: "other", label: "Other" },
 ] as const;
 
 export type Platform = (typeof SUPPORTED_PLATFORMS)[number]["id"];
