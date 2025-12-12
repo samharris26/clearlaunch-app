@@ -165,7 +165,7 @@ export default function BusinessSettingsClient({ initialData }: BusinessSettings
                 Website URL
               </label>
               <input
-                type="url"
+                type="text"
                 className="mt-2 w-full rounded-md border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_94%,transparent)] px-3 py-2 text-sm text-[color:var(--text)] placeholder:text-[color:var(--muted)] focus:border-sky-500/50 focus:outline-none focus:ring-1 focus:ring-sky-500/50"
                 value={form.website_url}
                 onChange={(e) => updateForm("website_url", e.target.value)}
