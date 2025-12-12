@@ -24,6 +24,17 @@ const toneOfVoiceOptions = [
   { value: "bold", label: "Bold" },
 ];
 
+const goalTypeOptions = [
+  { value: "sales", label: "Sales" },
+  { value: "revenue", label: "Revenue" },
+  { value: "signups", label: "Sign-ups" },
+  { value: "waitlist", label: "Waitlist" },
+  { value: "awareness", label: "Awareness" },
+  { value: "traffic", label: "Traffic" },
+  { value: "validate", label: "Validate" },
+  { value: "other", label: "Other" },
+];
+
 const launchTypeOptions = [
   { value: "Product", label: "Product" },
   { value: "Service", label: "Service" },
@@ -46,6 +57,9 @@ export default function CreateLaunchPage() {
     launchType: "Product",
     toneOfVoice: "professional",
     platforms: [] as string[],
+    goalType: "",
+    goalValue: "",
+    goalUnit: "",
   });
 
   const handlePlatformToggle = (platformId: string) => {
@@ -81,6 +95,9 @@ export default function CreateLaunchPage() {
       formDataToSubmit.append("launchType", formData.launchType);
       formDataToSubmit.append("toneOfVoice", formData.toneOfVoice);
       formDataToSubmit.append("platforms", JSON.stringify(formData.platforms));
+      formDataToSubmit.append("goalType", formData.goalType);
+      formDataToSubmit.append("goalValue", formData.goalValue);
+      formDataToSubmit.append("goalUnit", formData.goalUnit);
 
       await createLaunch(formDataToSubmit);
       // Redirect happens in the action
@@ -281,6 +298,62 @@ export default function CreateLaunchPage() {
                 <span className="text-sm text-[color:var(--text)]">{platform.label}</span>
               </label>
             ))}
+          </div>
+        </div>
+
+        {/* Goal Fields */}
+        <div className="rounded-2xl border border-[color:var(--border)] bg-[var(--card)] p-6 shadow-[var(--shadow-subtle)]">
+          <label className="block text-sm font-medium text-[color:var(--heading)] mb-4">
+            Launch Goal (optional)
+          </label>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label htmlFor="goalType" className="block text-xs font-medium text-[color:var(--muted)] mb-2">
+                Goal Type
+              </label>
+              <Select
+                value={formData.goalType}
+                onValueChange={(value) => setFormData({ ...formData, goalType: value })}
+              >
+                <SelectTrigger id="goalType" className="w-full">
+                  <SelectValue placeholder="Select goal type" />
+                </SelectTrigger>
+                <SelectContent>
+                  {goalTypeOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <label htmlFor="goalValue" className="block text-xs font-medium text-[color:var(--muted)] mb-2">
+                Goal Value
+              </label>
+              <input
+                id="goalValue"
+                type="number"
+                min={0}
+                value={formData.goalValue}
+                onChange={(e) => setFormData({ ...formData, goalValue: e.target.value })}
+                className="w-full rounded-lg border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_94%,transparent)] px-4 py-2.5 text-sm text-[color:var(--text)] placeholder:text-[color:var(--muted)] focus:border-sky-500/50 focus:outline-none focus:ring-1 focus:ring-sky-500/50"
+                placeholder="e.g. 150"
+              />
+            </div>
+            <div>
+              <label htmlFor="goalUnit" className="block text-xs font-medium text-[color:var(--muted)] mb-2">
+                Unit
+              </label>
+              <input
+                id="goalUnit"
+                type="text"
+                value={formData.goalUnit}
+                onChange={(e) => setFormData({ ...formData, goalUnit: e.target.value })}
+                className="w-full rounded-lg border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_94%,transparent)] px-4 py-2.5 text-sm text-[color:var(--text)] placeholder:text-[color:var(--muted)] focus:border-sky-500/50 focus:outline-none focus:ring-1 focus:ring-sky-500/50"
+                placeholder="e.g. £, orders, signups"
+              />
+            </div>
           </div>
         </div>
 

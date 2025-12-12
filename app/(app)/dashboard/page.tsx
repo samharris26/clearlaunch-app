@@ -28,13 +28,24 @@ export default async function DashboardPage() {
   const userId = user.id;
 
   const supabase = await createClient();
+  
+  // Check for business profile first (new approach)
+  const { data: businessProfile } = await supabase
+    .from("business_profiles")
+    .select("id")
+    .eq("user_id", userId)
+    .maybeSingle();
+
+  // Fallback: check onboarded flag for existing users
   const { data: profile } = await supabase
     .from("users")
-    .select("launchName,onboarded,plan")
+    .select("onboarded,plan")
     .eq("userId", userId)
     .maybeSingle();
 
-  if (!profile || profile.onboarded === false) {
+  // Redirect to onboarding if no business profile exists
+  // Keep onboarded check as fallback for existing users who haven't migrated yet
+  if (!businessProfile && (!profile || profile.onboarded === false)) {
     redirect("/onboarding");
   }
 

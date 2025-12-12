@@ -1,3 +1,11 @@
+/**
+ * @deprecated This file is kept for reference but is no longer used.
+ * Launch creation has been moved to /launches/new page.
+ * Business onboarding is now handled by complete-business.ts
+ * 
+ * This file can be removed in a future cleanup if no longer needed.
+ */
+
 "use server";
 
 import { revalidatePath } from "next/cache";

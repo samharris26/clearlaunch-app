@@ -90,9 +90,9 @@ export default function DashboardClient({ launches }: DashboardClientProps) {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
               </svg>
             </div>
-            <h3 className="mb-2 text-lg font-semibold text-[color:var(--heading)]">No launches yet</h3>
+            <h3 className="mb-2 text-lg font-semibold text-[color:var(--heading)]">Create your first launch</h3>
             <p className="mb-4 text-sm text-[color:var(--muted)] leading-6">
-              Create your first launch to start planning and tracking your product launch.
+              Tell us what you're launching and we'll build your plan.
             </p>
             <button
               onClick={handleCreateLaunch}
@@ -100,7 +100,7 @@ export default function DashboardClient({ launches }: DashboardClientProps) {
               style={{ fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}
               disabled={!canCreateLaunch}
             >
-              Create Launch
+              New launch
             </button>
           </div>
         )}

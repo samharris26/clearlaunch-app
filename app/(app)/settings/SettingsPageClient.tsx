@@ -346,6 +346,23 @@ export default function SettingsPageClient({ launches }: SettingsPageClientProps
           </div>
         )}
 
+        {/* Business Settings */}
+        <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] p-6 shadow-[var(--shadow-subtle)]">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="space-y-1">
+              <h3 className="text-lg font-semibold text-[color:var(--heading)]">Business Profile</h3>
+              <p className="text-sm text-[color:var(--muted)]">Update your business information and preferences.</p>
+            </div>
+            <Link
+              href="/settings/business"
+              className="inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-[color-mix(in_srgb,var(--surface)_90%,transparent)] px-4 py-2 text-sm font-medium text-[color:var(--text)] hover:bg-[color-mix(in_srgb,var(--surface)_85%,transparent)] hover:border-[color:var(--border-strong)] transition-colors"
+            >
+              Manage Business
+              <ExternalLink className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+
         {/* Theme */}
         <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] p-6 shadow-[var(--shadow-subtle)]">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">

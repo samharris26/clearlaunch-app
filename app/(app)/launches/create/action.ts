@@ -24,6 +24,9 @@ export async function createLaunch(formData: FormData) {
   const launchType = formData.get("launchType") as string;
   const toneOfVoice = formData.get("toneOfVoice") as string;
   const platformsJson = formData.get("platforms") as string;
+  const goalType = formData.get("goalType") as string;
+  const goalValue = formData.get("goalValue") as string;
+  const goalUnit = formData.get("goalUnit") as string;
 
   if (!launchName) {
     throw new Error("Launch name is required");
@@ -57,6 +60,9 @@ export async function createLaunch(formData: FormData) {
         launch_type: launchType || "Product", // Also set launch_type
         toneOfVoice: toneOfVoice || "professional",
         platforms: platforms || [],
+        goal_type: goalType || null,
+        goal_value: goalValue ? parseFloat(goalValue) : null,
+        goal_unit: goalUnit || null,
       })
       .select()
       .single();
